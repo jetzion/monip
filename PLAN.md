@@ -1,0 +1,488 @@
+# MONIP Group Website Rebuild --- Implementation Plan
+
+**Document:** `PLAN.md`\
+**Status:** Initial implementation plan\
+**Companion documents:** `REQUIREMENTS.md`, `CLAUDE.md`
+
+## 1. Objective
+
+Deliver a modern, responsive, multi-page MONIP Group website using a
+custom Next.js frontend and Sanity headless CMS, deployed through
+Vercel. The site must provide an easy-to-maintain corporate presence and
+a CMS-driven product catalog.
+
+Use `REQUIREMENTS.md` as the functional source of truth. If
+implementation reveals a conflict or missing decision, document it and
+ask for clarification rather than silently inventing business
+requirements.
+
+## 2. Architecture
+
+### Core stack
+
+-   **Next.js** with App Router.
+-   **TypeScript** with strict type checking.
+-   **Sanity** for structured content and Sanity Studio.
+-   **Vercel** for preview and production deployment.
+-   A project-standard styling solution selected during setup; favor
+    accessible, reusable components and design tokens.
+-   A suitable email delivery service for form submissions, selected
+    only after the destination and credentials are confirmed.
+-   A testing stack appropriate to the chosen framework, including
+    unit/component tests and browser-based end-to-end tests.
+
+### Architectural principles
+
+-   Keep the frontend decoupled from CMS presentation templates.
+-   Use reusable page templates and components.
+-   Fetch public content through narrowly scoped, read-only queries.
+-   Use static generation or server rendering where appropriate.
+-   Use draft/preview mode only through protected server-side routes.
+-   Keep secrets and privileged tokens server-side.
+-   Use stable slugs and preserve URL continuity where possible.
+-   Avoid adding a database, authentication system, or integrations
+    without an approved requirement.
+
+## 3. Proposed Repository Layout
+
+Adapt to the current repository if one already exists; do not overwrite
+existing work without inspection.
+
+``` text
+/
+├── app/
+│   ├── (site)/
+│   │   ├── page.tsx
+│   │   ├── about/page.tsx
+│   │   ├── services/page.tsx
+│   │   ├── products/page.tsx
+│   │   ├── products/[slug]/page.tsx
+│   │   ├── sustainability/page.tsx
+│   │   ├── clients/page.tsx
+│   │   ├── contact/page.tsx
+│   │   ├── privacy/page.tsx
+│   │   └── ...
+│   ├── api/
+│   │   └── contact/route.ts
+│   ├── studio/[[...tool]]/page.tsx
+│   ├── preview/route.ts
+│   ├── layout.tsx
+│   ├── sitemap.ts
+│   ├── robots.ts
+│   └── not-found.tsx
+├── components/
+│   ├── layout/
+│   ├── navigation/
+│   ├── products/
+│   ├── forms/
+│   ├── content/
+│   └── ui/
+├── sanity/
+│   ├── lib/
+│   ├── queries/
+│   ├── schemas/
+│   └── structure.ts
+├── lib/
+│   ├── validation/
+│   ├── email/
+│   └── seo/
+├── public/
+├── tests/
+├── REQUIREMENTS.md
+├── PLAN.md
+├── CLAUDE.md
+└── ...
+```
+
+This is a suggested structure, not a requirement to create every
+directory immediately. Follow current framework conventions and avoid
+empty placeholder files.
+
+## 4. Data Model
+
+Implement and validate the following Sanity document types.
+
+### Product
+
+-   `name` --- required.
+-   `slug` --- required and unique.
+-   `summary` --- required for cards and previews.
+-   `description` --- rich text or structured content.
+-   `primaryImage` --- required for publication.
+-   `gallery` --- ordered image list with alt text/captions as needed.
+-   `category` --- reference to a category.
+-   `tags` --- optional.
+-   `materials` --- optional list.
+-   `customizationOptions` --- optional list.
+-   `applications` --- optional list.
+-   `publicSpecifications` --- optional structured fields.
+-   `featured` --- boolean.
+-   `labels` --- optional, controlled values.
+-   `seoTitle` and `seoDescription` --- optional with sensible
+    fallbacks.
+-   `status` --- use Sanity's draft/published workflow; add an explicit
+    business status only if it serves a separate purpose.
+-   `publishedAt` --- set or maintain consistently.
+
+Do not create public fields for supplier details, internal cost,
+internal notes, or other confidential information. Do not expose pricing
+or lead-time information unless MONIP explicitly approves it.
+
+### Product Category
+
+-   `title`, `slug`, `description`, `image` (optional), `sortOrder`,
+    `seoTitle`, `seoDescription`.
+
+### Service
+
+-   `title`, `slug`, `summary`, `body`, `image` (optional), `sortOrder`,
+    SEO fields.
+
+### Case Study
+
+-   `title`, `slug`, `summary`, `body`, `images`, `clientName` (only
+    when approved), `industry` (optional), `results` (only
+    substantiated), SEO fields, publication workflow.
+
+### Site Settings
+
+-   Approved logo and brand assets.
+-   Navigation configuration if appropriate.
+-   Footer content.
+-   Approved contact information.
+-   Default SEO metadata and social image.
+
+Avoid making every text fragment editable through the CMS. Make business
+content editable while keeping structural layout and reusable UI
+controlled in code.
+
+## 5. Phased Work Plan
+
+### Phase 0 --- Repository and environment inspection
+
+1.  Inspect the existing repository, package manager, framework,
+    branches, and current deployment.
+2.  Identify existing brand assets, fonts, images, copy, and any useful
+    components.
+3.  Inventory current website URLs and content that may need migration.
+4.  Identify the current domain/DNS owner and required access.
+5.  Confirm Node.js version and deployment constraints.
+6.  Record unknowns in a decision log.
+7.  Do not delete or replace existing files before understanding their
+    purpose.
+
+**Deliverable:** Repository assessment, content inventory, environment
+checklist, and decision log.
+
+### Phase 1 --- Requirements and design foundation
+
+1.  Validate `REQUIREMENTS.md` with MONIP.
+2.  Confirm primary audience, key messages, calls to action, product
+    categories, and contact workflow.
+3.  Establish brand tokens: colors, typography, spacing, layout widths,
+    image ratios, and interaction states.
+4.  Define sitemap, responsive navigation, footer, and reusable page
+    templates.
+5.  Create or implement a small set of representative layouts before
+    building every page.
+6.  Verify that the design direction works for real MONIP assets.
+
+**Deliverable:** Approved design direction and shared layout/component
+foundation.
+
+### Phase 2 --- Project setup and Sanity configuration
+
+1.  Configure Next.js App Router and TypeScript strict mode.
+2.  Set up formatting, linting, environment validation, and test
+    commands.
+3.  Configure Sanity project and Studio.
+4.  Implement schemas for products, categories, services, case studies,
+    and site settings.
+5.  Add required-field validation, slug rules, image guidance, and
+    editor-friendly field groups.
+6.  Implement typed client configuration and reusable GROQ queries.
+7.  Configure preview/draft mode securely.
+8.  Document required environment variables without committing actual
+    secrets.
+
+**Deliverable:** Working CMS with sample content and a documented local
+setup.
+
+### Phase 3 --- Shared site shell and core pages
+
+Build in this order:
+
+1.  Global typography, colors, spacing, buttons, cards, and form
+    components.
+2.  Header, desktop/mobile navigation, and footer.
+3.  Homepage.
+4.  About page.
+5.  Services page.
+6.  Sustainability page, using only approved and substantiated claims.
+7.  Clients/case studies page, only with approved content.
+8.  Contact page and privacy page.
+9.  Not-found page and error states.
+
+All page content should use approved content or clearly identified
+temporary development fixtures. Do not invent MONIP facts, clients,
+metrics, certifications, or testimonials.
+
+**Deliverable:** Responsive corporate site shell and content pages.
+
+### Phase 4 --- Product catalog
+
+1.  Implement catalog page and category navigation.
+2.  Add server-side product retrieval for published content.
+3.  Build product cards and responsive image handling.
+4.  Implement agreed search and filters.
+5.  Build product detail pages from a reusable template.
+6.  Add featured products to the homepage.
+7.  Add related products only where useful and data supports it.
+8.  Implement product-specific inquiry forms.
+9.  Handle invalid slugs, empty categories, no search results, and
+    unpublished products.
+10. Confirm that archived/draft items do not leak into public pages,
+    search, or sitemap.
+
+**Deliverable:** Fully CMS-driven public catalog and product detail
+pages.
+
+### Phase 5 --- Inquiry delivery
+
+1.  Confirm MONIP's approved inquiry recipient and delivery provider.
+2.  Define form fields and privacy notice.
+3.  Add client-side usability validation and server-side schema
+    validation.
+4.  Add spam mitigation and rate limiting appropriate to the deployment.
+5.  Deliver the submission through a server-side integration.
+6.  Include product name and URL in product-specific inquiries.
+7.  Add clear success, validation, and failure states.
+8.  Test provider failures and ensure the UI does not falsely report
+    success.
+9.  Avoid logging full personal form contents unnecessarily.
+
+**Deliverable:** Tested general and product-specific inquiry workflows.
+
+Do not add credentials or choose a paid provider without approval.
+
+### Phase 6 --- Migration, SEO, and analytics
+
+1.  Build a source-to-destination URL mapping.
+2.  Migrate approved company copy, images, product samples, and
+    metadata.
+3.  Review image rights, accuracy, alt text, and image quality.
+4.  Add page-specific metadata, canonical URLs, sitemap, robots rules,
+    and social metadata.
+5.  Add redirects for changed legacy URLs.
+6.  Verify draft/private content is not indexed.
+7.  Configure approved analytics and event tracking.
+8.  Validate the production domain and search-engine configuration.
+
+**Deliverable:** Approved content migrated, SEO checked, and analytics
+configured if authorized.
+
+### Phase 7 --- Quality assurance
+
+Test:
+
+-   All navigation links and calls to action.
+-   Mobile menu and responsive breakpoints.
+-   Product catalog, filters, search, product pages, and invalid slugs.
+-   CMS product create/edit/preview/publish/archive workflow.
+-   General and product-specific form validation and delivery.
+-   Keyboard navigation, focus visibility, contrast, labels, and errors.
+-   Image optimization and layout stability.
+-   Metadata, canonical URLs, sitemap, robots, and redirects.
+-   Browser console, server logs, and network failures.
+-   Production build and type checking.
+-   Access control and absence of secrets in client bundles.
+-   Representative current browsers and devices.
+
+Use automated tests for critical paths where practical, and perform
+manual visual review with real content.
+
+**Deliverable:** QA checklist, resolved launch-blocking defects, and
+recorded known limitations.
+
+### Phase 8 --- Deployment and handover
+
+1.  Connect the repository to the approved Vercel account.
+2.  Configure preview and production environment variables.
+3.  Configure the production domain and HTTPS.
+4.  Verify the Sanity dataset, CORS/preview settings, and publishing
+    behavior.
+5.  Run final smoke tests against the production site.
+6.  Confirm backups/export approach for CMS content and asset recovery
+    procedures.
+7.  Provide CMS instructions and train designated MONIP editors.
+8.  Document deployment, environment variables, forms, analytics, and
+    routine maintenance.
+9.  Confirm ownership of accounts, billing, domain, and credentials.
+
+**Deliverable:** Production website, editor guide, deployment notes, and
+handover.
+
+## 6. Environment Variables
+
+Document variable names in `.env.example` with placeholders only. Exact
+names should match the implementation.
+
+Likely configuration includes:
+
+-   Public Sanity project ID and dataset.
+-   Sanity API version.
+-   Server-only Sanity read/write or preview token if needed.
+-   Preview-mode secret.
+-   Form delivery provider API key.
+-   Approved inquiry recipient.
+-   Analytics ID, if approved.
+-   Any site base URL needed for canonical links and email links.
+
+Rules:
+
+-   Never commit real secrets.
+-   Never prefix privileged tokens with `NEXT_PUBLIC_`.
+-   Validate required environment variables at startup or at the
+    relevant server boundary.
+-   Do not use write-capable tokens for public page rendering.
+-   Keep local `.env` files out of version control.
+
+## 7. Testing Strategy
+
+### Unit/component tests
+
+-   Data formatting and URL helpers.
+-   Form validation.
+-   Product card and filter behavior.
+-   Content fallback behavior.
+-   Accessible interactive components.
+
+### Integration tests
+
+-   CMS query mapping.
+-   Product list/detail behavior.
+-   Form API validation and provider failure handling.
+-   Preview-mode access control.
+
+### End-to-end tests
+
+-   Visitor browses catalog and opens a product.
+-   Visitor submits a product-specific inquiry.
+-   Visitor submits the general contact form.
+-   CMS editor workflow is tested in an appropriate nonproduction
+    environment where practical.
+
+### Build gates
+
+Before declaring a task complete, run the repository's relevant: -
+Formatter. - Linter. - Type checker. - Unit/component tests. -
+End-to-end tests when affected. - Production build.
+
+Do not claim a check passed unless it was actually run and its result
+reviewed.
+
+## 8. Definition of Done
+
+A feature is complete when:
+
+-   It meets the relevant requirement.
+-   It follows the established design system and responsive behavior.
+-   Loading, empty, success, and error states are handled where
+    applicable.
+-   It is accessible to the extent appropriate for the feature.
+-   It has tests appropriate to risk and complexity.
+-   It passes relevant lint, type, test, and build checks.
+-   It does not expose secrets or unpublished content.
+-   Documentation is updated when setup, environment, CMS, or deployment
+    behavior changes.
+
+## 9. Risks and Mitigations
+
+  -----------------------------------------------------------------------
+  Risk                                Mitigation
+  ----------------------------------- -----------------------------------
+  Product data is incomplete          Agree on required fields and
+                                      prepare a content import template.
+
+  Brand assets are unavailable        Request approved assets early; use
+                                      clearly marked placeholders during
+                                      development.
+
+  Legacy URLs lose search value       Inventory URLs and implement
+                                      redirects and metadata checks.
+
+  CMS is confusing for staff          Test schemas with a nontechnical
+                                      editor and improve labels/help
+                                      text.
+
+  Form delivery fails                 Add server-side validation,
+                                      provider error handling,
+                                      monitoring, and an approved
+                                      fallback.
+
+  Sensitive content becomes public    Keep private fields out of public
+                                      schemas/queries and test
+                                      draft/archive behavior.
+
+  Scope expands during development    Track additions separately and get
+                                      approval before expanding launch
+                                      scope.
+
+  Production credentials are missing  Identify account owners and access
+                                      requirements during Phase 0.
+  -----------------------------------------------------------------------
+
+## 10. Decision Log
+
+Update this section as decisions are confirmed.
+
+  -----------------------------------------------------------------------
+  Decision                Current baseline        Status
+  ----------------------- ----------------------- -----------------------
+  Frontend                Next.js + TypeScript    Proposed
+
+  CMS                     Sanity                  Proposed
+
+  Hosting                 Vercel                  Proposed
+
+  Catalog visibility      Public products at      Assumption to confirm
+                          launch                  
+
+  CMS users               Nontechnical staff      Assumption to confirm
+
+  Inquiry flow            General contact +       Assumption to confirm
+                          product-specific        
+                          inquiry                 
+
+  E-commerce              Excluded from initial   Assumed out of scope
+                          release                 
+
+  Client accounts/private Future phase            Assumed out of scope
+  catalogs                                        
+
+  Existing content        Audit and migrate       Proposed
+                          approved content        
+
+  CRM/email provider      Not selected            Requires decision
+
+  Analytics provider      Not selected            Requires decision
+
+  Final brand direction   To be established from  Requires discovery
+                          approved assets         
+  -----------------------------------------------------------------------
+
+## 11. Instructions for Claude CLI Execution
+
+-   Start by inspecting the repository and reading `CLAUDE.md`,
+    `REQUIREMENTS.md`, and this plan.
+-   Do not implement every phase in a single unreviewed change.
+-   Work in small, coherent milestones.
+-   Before major architectural decisions, explain the options and ask
+    when the decision materially affects cost, security, data, or user
+    experience.
+-   Prefer completing one end-to-end vertical slice---CMS schema through
+    public page---before duplicating patterns across all content types.
+-   Keep a concise progress checklist in `PLAN.md` or an agreed project
+    tracking file.
+-   Update the plan when implementation reality changes.
+-   Never invent content to fill missing business information.
