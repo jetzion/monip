@@ -7,12 +7,16 @@ import { catalogHref, parseCatalogParams } from "@/lib/catalog-params";
 import { getCategories } from "@/lib/queries/categories";
 import { getPublishedProducts } from "@/lib/queries/products";
 
-export const metadata: Metadata = {
-  title: "Products",
-  description: "Browse MONIP Group product samples.",
-  // Filtered and search views share one canonical URL.
-  alternates: { canonical: "/products" },
-};
+export async function generateMetadata({ searchParams }: PageProps<"/products">): Promise<Metadata> {
+  const { q, category } = parseCatalogParams(await searchParams);
+  return {
+    title: "Products",
+    description: "Browse MONIP Group product samples.",
+    // Filtered and search views share one canonical URL and are not indexed.
+    alternates: { canonical: "/products" },
+    robots: q || category ? { index: false, follow: true } : undefined,
+  };
+}
 
 export default async function ProductsPage({ searchParams }: PageProps<"/products">) {
   const params = parseCatalogParams(await searchParams);

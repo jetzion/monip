@@ -13,6 +13,7 @@ const skip = (req: PayloadRequest) => Boolean(req.context.disableRevalidate);
 const revalidateProductPaths = (...slugs: (string | null | undefined)[]) => {
   revalidatePath("/");
   revalidatePath("/products");
+  revalidatePath("/sitemap.xml");
   for (const slug of new Set(slugs)) {
     if (slug) revalidatePath(`/products/${slug}`);
   }

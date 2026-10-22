@@ -97,14 +97,15 @@ export async function getProductBySlug(slug: string) {
   return docs[0] ?? null;
 }
 
-export async function getPublishedProductSlugs() {
+/** Slugs and last-modified dates of all published products. */
+export async function getPublishedProductRefs() {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
     collection: "products",
     ...publicAccess,
     depth: 0,
     limit: 1000,
-    select: { slug: true },
+    select: { slug: true, updatedAt: true },
   });
-  return docs.map((doc) => doc.slug);
+  return docs.map(({ slug, updatedAt }) => ({ slug, updatedAt }));
 }

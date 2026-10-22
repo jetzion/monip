@@ -567,6 +567,8 @@ Update this section as decisions are confirmed.
 - [x] Home (featured products) and Contact (general inquiry)
 - [ ] About, Services, Sustainability pages (need MONIP content)
 - [x] Search (name, summary, tags, materials) and category/subcategory filters via URL params
-- [ ] SEO, sitemap, robots, redirects
+- [x] SEO: metadataBase, canonicals, Open Graph, sitemap, robots (previews blocked), breadcrumb JSON-LD
+- [ ] Legacy URL redirects (needs current site URL inventory)
+- [ ] Default social share image (needs approved brand asset)
 - [ ] Rate limiting (launch blocker)
 - [ ] QA, deployment, handover

@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ProductCard } from "@/components/products/ProductCard";
 import { ButtonLink } from "@/components/ui/button-link";
 import { getFeaturedProducts } from "@/lib/queries/products";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 /** Hero and closing copy are drafts pending MONIP-approved messaging. */
 export default async function HomePage() {

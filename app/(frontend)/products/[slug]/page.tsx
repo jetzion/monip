@@ -7,14 +7,16 @@ import { InquiryForm } from "@/components/forms/InquiryForm";
 import { CmsImage } from "@/components/media/CmsImage";
 import { SpecSheet } from "@/components/products/SpecSheet";
 import { populated } from "@/lib/payload";
-import { getProductBySlug, getPublishedProductSlugs } from "@/lib/queries/products";
-import type { Category } from "@/payload-types";
+import { getProductBySlug, getPublishedProductRefs } from "@/lib/queries/products";
+import { baseOpenGraph } from "@/lib/seo";
+import { siteUrl } from "@/lib/site";
+import type { Category, Media } from "@/payload-types";
 
 const LABELS: Record<string, string> = { new: "New", sustainable: "Sustainable" };
 
 export async function generateStaticParams() {
-  const slugs = await getPublishedProductSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const products = await getPublishedProductRefs();
+  return products.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -23,11 +25,37 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return {};
+  const title = product.seo?.title || product.name;
+  const description = product.seo?.description || product.summary;
+  const image = populated<Media>(product.primaryImage);
   return {
-    title: product.seo?.title || product.name,
-    description: product.seo?.description || product.summary,
+    title,
+    description,
     alternates: { canonical: `/products/${product.slug}` },
+    openGraph: {
+      ...baseOpenGraph,
+      title,
+      description,
+      url: `/products/${product.slug}`,
+      images: image?.url
+        ? [{ url: image.url, width: image.width ?? undefined, height: image.height ?? undefined, alt: image.alt }]
+        : undefined,
+    },
   };
+}
+
+/** BreadcrumbList structured data; `<` is escaped so CMS text cannot close the script tag. */
+function breadcrumbJsonLd(name: string, slug: string) {
+  const base = siteUrl();
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Products", item: `${base}/products` },
+      { "@type": "ListItem", position: 2, name, item: `${base}/products/${slug}` },
+    ],
+  };
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
 export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
@@ -49,6 +77,10 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(product.name, product.slug) }}
+      />
       <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
         <ol className="flex flex-wrap gap-2">
           <li>

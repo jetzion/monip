@@ -3,6 +3,8 @@ import { Archivo } from "next/font/google";
 
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { baseOpenGraph } from "@/lib/seo";
+import { isIndexable, siteUrl } from "@/lib/site";
 
 import "./globals.css";
 
@@ -13,11 +15,14 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
   title: {
     default: "MONIP Group",
     template: "%s | MONIP Group",
   },
   description: "MONIP Group merchandising and product sourcing.",
+  openGraph: baseOpenGraph,
+  robots: isIndexable() ? undefined : { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

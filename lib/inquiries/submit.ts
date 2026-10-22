@@ -2,6 +2,7 @@
 
 import { getPayloadClient } from "@/lib/payload";
 import { getProductBySlug } from "@/lib/queries/products";
+import { siteUrl } from "@/lib/site";
 import { validateInquiry, type InquiryErrors, type InquiryInput } from "@/lib/validation/inquiry";
 
 import { autoReplyEmail, notificationEmail } from "./emails";
@@ -10,13 +11,6 @@ export type InquiryState =
   | { status: "idle" }
   | { status: "success" }
   | { status: "error"; message: string; errors?: InquiryErrors; values?: InquiryInput };
-
-const siteUrl = () => {
-  const url = process.env.SITE_URL;
-  if (url) return url;
-  if (process.env.NODE_ENV === "production") throw new Error("SITE_URL is not set.");
-  return "http://localhost:3000";
-};
 
 /**
  * Saves an inquiry, then emails MONIP and sends a fixed auto-reply.
