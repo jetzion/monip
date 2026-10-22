@@ -570,5 +570,7 @@ Update this section as decisions are confirmed.
 - [x] SEO: metadataBase, canonicals, Open Graph, sitemap, robots (previews blocked), breadcrumb JSON-LD
 - [ ] Legacy URL redirects (needs current site URL inventory)
 - [ ] Default social share image (needs approved brand asset)
-- [ ] Rate limiting (launch blocker)
+- [x] Deploy readiness (code): initial migration, deploy:build in vercel.json, Vercel Blob (client uploads), Resend adapter, env fail-fast checks, README
+- [ ] Create Neon DB, Vercel Blob store, Vercel project, env vars (needs account owner decision)
+- [ ] Rate limiting (launch blocker; Vercel Firewall rule once the project exists)
 - [ ] QA, deployment, handover

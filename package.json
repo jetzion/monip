@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "deploy:build": "payload migrate && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
@@ -21,8 +22,10 @@
   "dependencies": {
     "@base-ui/react": "^1.9.0",
     "@payloadcms/db-postgres": "3.91.0",
+    "@payloadcms/email-resend": "3.91.0",
     "@payloadcms/next": "3.91.0",
     "@payloadcms/richtext-lexical": "3.91.0",
+    "@payloadcms/storage-vercel-blob": "3.91.0",
     "@payloadcms/ui": "3.91.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.0",
@@ -48,5 +51,8 @@
     "typescript": "^5",
     "vitest": "^5.0.5"
   },
-  "packageManager": "pnpm@12.15.0"
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": ">=24.22.1"
+  }
 }

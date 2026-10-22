@@ -1,18 +1,32 @@
-import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import path from 'path'
-import { buildConfig } from 'payload'
-import { fileURLToPath } from 'url'
-import sharp from 'sharp'
+import { postgresAdapter } from "@payloadcms/db-postgres";
+import { resendAdapter } from "@payloadcms/email-resend";
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+import path from "path";
+import { buildConfig } from "payload";
+import sharp from "sharp";
+import { fileURLToPath } from "url";
 
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
-import { Categories } from './collections/Categories'
-import { Products } from './collections/Products'
-import { Inquiries } from './collections/Inquiries'
+import { Categories } from "./collections/Categories";
+import { Inquiries } from "./collections/Inquiries";
+import { Media } from "./collections/Media";
+import { Products } from "./collections/Products";
+import { Users } from "./collections/Users";
 
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const requireEnv = (name: string): string => {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} is not set. See .env.example.`);
+  return value;
+};
+
+// Vercel's filesystem is not persistent, so deployed media must use Blob.
+if (process.env.VERCEL && !process.env.BLOB_READ_WRITE_TOKEN) {
+  throw new Error("BLOB_READ_WRITE_TOKEN is required on Vercel.");
+}
+
+const resendKey = process.env.RESEND_API_KEY;
 
 export default buildConfig({
   admin: {
@@ -23,15 +37,32 @@ export default buildConfig({
   },
   collections: [Users, Media, Categories, Products, Inquiries],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: requireEnv("PAYLOAD_SECRET"),
   typescript: {
-    outputFile: path.resolve(dirname, 'payload-types.ts'),
+    outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: requireEnv("DATABASE_URL"),
     },
   }),
+  // Without a Resend key (local dev), Payload writes emails to the console.
+  email: resendKey
+    ? resendAdapter({
+        apiKey: resendKey,
+        defaultFromAddress: requireEnv("EMAIL_FROM"),
+        defaultFromName: "MONIP Group",
+      })
+    : undefined,
   sharp,
-  plugins: [],
-})
+  plugins: [
+    // Disabled (local disk) when no token is set. alwaysInsertFields keeps the
+    // database schema identical with and without Blob, so migrations match.
+    vercelBlobStorage({
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      collections: { media: true },
+      alwaysInsertFields: true,
+      clientUploads: true,
+    }),
+  ],
+});

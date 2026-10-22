@@ -76,6 +76,11 @@ async function sendEmails(
     payload.logger.error("INQUIRY_NOTIFY_EMAIL is not set; inquiry saved without notification.");
     return "failed";
   }
+  // Without Resend, Payload only logs emails; in production that is not delivery.
+  if (process.env.NODE_ENV === "production" && !process.env.RESEND_API_KEY) {
+    payload.logger.error("RESEND_API_KEY is not set; inquiry saved without notification.");
+    return "failed";
+  }
   // Log failures without the visitor's personal details.
   let status: "sent" | "failed" = "sent";
   try {
