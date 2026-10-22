@@ -555,7 +555,7 @@ Update this section as decisions are confirmed.
 - [x] Payload 3.91 installed, local Postgres (Docker), admin at `/admin`
 - [ ] Minimal shell: tokens, header, footer, base components
 - [x] Product and Category collections (drafts, access control, slugs)
-- [ ] Placeholder products
+- [x] Placeholder products (`pnpm seed`, dev only)
 - [ ] Catalog and product detail pages with live updates
 - [ ] Drafts and Live Preview
 - [ ] Product inquiry: Payload save, notification, auto-reply
