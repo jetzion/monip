@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
-import { Archivo } from "next/font/google";
 import { draftMode } from "next/headers";
 
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PreviewBanner } from "@/components/preview/PreviewBanner";
 import { RefreshRouteOnSave } from "@/components/preview/RefreshRouteOnSave";
+import { archivo } from "@/lib/fonts";
 import { baseOpenGraph } from "@/lib/seo";
 import { isIndexable, siteUrl } from "@/lib/site";
 
 import "./globals.css";
-
-const archivo = Archivo({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  axes: ["wdth"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),

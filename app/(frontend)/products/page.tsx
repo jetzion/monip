@@ -72,7 +72,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
             {filtered ? (
               <>
                 Try different keywords or{" "}
-                <Link href={catalogHref({})} className="text-primary hover:underline">
+                <Link href={catalogHref({})} className="text-primary underline underline-offset-4">
                   browse all products
                 </Link>
                 .

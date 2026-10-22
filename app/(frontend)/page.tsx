@@ -44,9 +44,10 @@ export default async function HomePage() {
               </Link>
             </div>
             <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featured.map((product) => (
+              {featured.map((product, index) => (
                 <li key={product.slug} className="flex">
-                  <ProductCard product={product} />
+                  {/* On phones the first card is above the fold (LCP). */}
+                  <ProductCard product={product} eager={index === 0} />
                 </li>
               ))}
             </ul>

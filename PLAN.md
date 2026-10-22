@@ -583,4 +583,18 @@ Update this section as decisions are confirmed.
 - [x] Deploy readiness (code): initial migration, deploy:build in vercel.json, Vercel Blob (client uploads), Resend adapter, env fail-fast checks, README
 - [ ] Create Neon DB, Vercel Blob store, Vercel project, env vars (needs account owner decision)
 - [ ] Rate limiting (launch blocker; Vercel Firewall rule once the project exists)
+- [x] Accessibility audit (axe, WCAG 2.2 AA) on all public pages, form errors, mobile menu: 0 violations
+- [x] Lighthouse (mobile, local prod build): performance 96-97, accessibility/best practices/SEO 100, CLS 0
 - [ ] QA, deployment, handover
+
+## 13. Known Limitations
+
+-   `notFound()` inside the site (e.g. an unpublished product) returns a
+    correct 404 status, but Next.js serves a minimal error shell and the
+    branded 404 renders in the browser. This is Next.js behavior for apps
+    with multiple root layouts (site + Payload admin). Unmatched URLs use
+    `app/global-not-found.tsx` (experimental `globalNotFound` flag) and
+    render fully on the server.
+-   Lighthouse on localhost reports a 307 "redirect" per page; the
+    response is synthesized by Chrome (no server headers), not sent by
+    the app.
