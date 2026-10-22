@@ -220,3 +220,23 @@ If credentials, content, access, or a business decision is missing:
     step.
 -   Never fabricate credentials, contact details, client claims, or
     product data.
+
+## Project-Specific Notes
+
+-   Current state, decisions, and next steps live in `PLAN.md`
+    (sections 10, 12, 13). Deployment is on hold: work locally only.
+-   Public queries use Payload's Local API with `overrideAccess: false`
+    (the Local API skips access control by default).
+-   Restart `pnpm dev` after changing `payload.config.ts` or collections;
+    the running server keeps the old config.
+-   After a collection change, run `pnpm payload migrate:create <name>`
+    and verify a fresh database built from migrations matches the dev
+    schema.
+-   Run e2e tests with `pnpm test:e2e` (production build on port 3100);
+    do not stop a developer's `pnpm dev` on port 3000.
+-   Production servers rename themselves `next-server`; stop them by port
+    (`lsof -t -iTCP:<port> -sTCP:LISTEN`), not by `pkill -f "next start"`.
+-   The shell is zsh: unquoted `$VAR` lists are not word-split (use
+    `${=VAR}`), and unmatched globs abort the command.
+-   Delete any test users, inquiries, or drafts created while verifying
+    behavior; the first real account must become the admin.

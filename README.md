@@ -1,20 +1,24 @@
 # MONIP Group website
 
-Next.js 16 + Payload CMS 3 (Postgres), deployed on Vercel. See `REQUIREMENTS.md` and `PLAN.md`.
+Next.js 16 + Payload CMS 3 (Postgres). Runs locally for now; deployment to Vercel is prepared but on hold.
+See `REQUIREMENTS.md`, `PLAN.md` (decisions, progress, next steps), and `Editor_guide_for_MONIP.md` (for content editors).
 
 ## Local setup
 
-Requires Node.js >= 24.22.1, pnpm, and Docker.
+Requires Node.js >= 24.22.1, pnpm, and Docker Desktop.
 
 ```bash
 cp .env.example .env        # then set PAYLOAD_SECRET (openssl rand -hex 32)
 pnpm install
 pnpm db:up                  # local Postgres in Docker
 pnpm dev                    # http://localhost:3000, admin at /admin
-pnpm seed                   # optional: placeholder products (dev only)
+pnpm seed                   # optional: placeholder products, services, and pages (dev only)
 ```
 
-The first account created at `/admin` becomes an admin. Without `RESEND_API_KEY`, emails are printed to the console.
+- The first account created at `/admin` becomes an admin.
+- Without `RESEND_API_KEY`, emails are printed to the `pnpm dev` console.
+- Restart `pnpm dev` after changing `payload.config.ts` or a collection; Payload reads its config at startup.
+- Live Preview (eye icon in the admin) needs `SITE_URL` to match the address the site is served from.
 
 ## Scripts
 
@@ -22,15 +26,17 @@ The first account created at `/admin` becomes an admin. Without `RESEND_API_KEY`
 |---|---|
 | `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript |
 | `pnpm test` | Unit tests (Vitest) |
-| `pnpm test:e2e` | Browser tests (Playwright, system Chrome; needs seeded local DB) |
+| `pnpm test:e2e` | Browser and accessibility tests (Playwright + axe) against a production build on port 3100; runs alongside `pnpm dev`; needs the seeded local DB |
+| `pnpm seed` | Placeholder content; skips anything that already exists |
 | `pnpm generate:types` / `generate:importmap` | Regenerate Payload types / admin import map |
 | `pnpm payload migrate:create <name>` | Create a migration after changing collections |
+| `pnpm db:up` / `pnpm db:down` | Start / stop local Postgres |
 
 ## Database changes
 
-In development Payload syncs the schema automatically. Before deploying a collection change, run `pnpm payload migrate:create <name>` and commit the file in `migrations/`. Deployments run pending migrations before building (`deploy:build`, set in `vercel.json`).
+In development Payload syncs the schema automatically. After changing a collection, run `pnpm payload migrate:create <name>` and commit the file in `migrations/`. Deployments run pending migrations before building (`deploy:build`, set in `vercel.json`).
 
-## Deploying to Vercel
+## Deploying to Vercel (when approved)
 
 1. Create a Neon Postgres database and a Vercel Blob store, and connect both to the Vercel project.
 2. Set environment variables for Production (and Preview, with a separate database):

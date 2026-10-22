@@ -350,6 +350,7 @@ decision log.
 -   Final list of pages and approved content.
 -   Existing URL inventory and redirect requirements.
 -   CMS user roles and who approves publication.
+-   Whether editors (not only admins) can read website inquiries.
 -   Domain, hosting account ownership, and deployment access (TBD).
 -   Current website URL for the URL inventory (placeholder until
     provided).
