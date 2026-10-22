@@ -116,7 +116,7 @@ Implement and validate the following Payload collections and globals.
 -   `summary` --- required for cards and previews.
 -   `description` --- rich text or structured content.
 -   `primaryImage` --- required for publication.
--   `gallery` --- ordered image list with alt text/captions as needed.
+-   `gallery` --- ordered list of uploads; alt text lives on each Media item.
 -   `category` --- required reference to a category.
 -   `subcategory` --- optional reference to a category whose parent is
     the selected category.
@@ -124,10 +124,10 @@ Implement and validate the following Payload collections and globals.
 -   `materials` --- optional list.
 -   `customizationOptions` --- optional list.
 -   `applications` --- optional list.
--   `publicSpecifications` --- optional structured fields.
+-   `specifications` --- optional label/value rows (public only).
 -   `featured` --- boolean.
 -   `labels` --- optional, controlled values.
--   `seoTitle` and `seoDescription` --- optional with sensible
+-   `seo.title` and `seo.description` --- optional with sensible
     fallbacks.
 -   Status --- use Payload drafts (`_status`: draft/published) only.
     "Archive" means unpublish; no separate status field.
@@ -141,7 +141,7 @@ lead-time information unless MONIP explicitly approves it.
 
 -   `title`, `slug`, `description`, `image` (optional), `parent`
     (optional reference; set for subcategories), `sortOrder`,
-    `seoTitle`, `seoDescription`.
+    `seo.title`, `seo.description`.
 
 ### Service
 
@@ -554,7 +554,8 @@ Update this section as decisions are confirmed.
 - [x] Next.js 16.4 + TypeScript + Tailwind v4 + shadcn/ui scaffold (pnpm)
 - [x] Payload 3.91 installed, local Postgres (Docker), admin at `/admin`
 - [ ] Minimal shell: tokens, header, footer, base components
-- [ ] Product and Category schemas; placeholder products
+- [x] Product and Category collections (drafts, access control, slugs)
+- [ ] Placeholder products
 - [ ] Catalog and product detail pages with live updates
 - [ ] Drafts and Live Preview
 - [ ] Product inquiry: Payload save, notification, auto-reply

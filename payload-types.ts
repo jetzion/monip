@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     categories: Category;
+    products: Product;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -203,6 +205,103 @@ export interface Category {
   createdAt: string;
 }
 /**
+ * Product samples shown in the public catalog. Only published products are visible on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  name: string;
+  /**
+   * Used in the page URL. Leave empty to generate from the name. Changing it later breaks existing links.
+   */
+  slug: string;
+  /**
+   * Show this product in featured sections on the homepage.
+   */
+  featured?: boolean | null;
+  /**
+   * Set automatically on first publish.
+   */
+  publishedAt?: string | null;
+  /**
+   * One or two sentences shown on product cards.
+   */
+  summary: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Main image used on cards and at the top of the page.
+   */
+  primaryImage: number | Media;
+  /**
+   * Additional images. Drag to reorder.
+   */
+  gallery?: (number | Media)[] | null;
+  category: number | Category;
+  /**
+   * Optional. Must belong to the selected category.
+   */
+  subcategory?: (number | null) | Category;
+  /**
+   * Keywords used for search.
+   */
+  tags?: string[] | null;
+  /**
+   * For example: stainless steel, recycled PET.
+   */
+  materials?: string[] | null;
+  /**
+   * For example: laser engraving, full-color print.
+   */
+  customizationOptions?: string[] | null;
+  /**
+   * Markets or uses.
+   */
+  applications?: string[] | null;
+  /**
+   * Only apply a label when it is accurate and approved.
+   */
+  labels?: ('new' | 'sustainable')[] | null;
+  /**
+   * Public specifications only, e.g. Dimensions: 10 x 8 cm.
+   */
+  specifications?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  seo?: {
+    /**
+     * Defaults to the product name.
+     */
+    title?: string | null;
+    /**
+     * Defaults to the summary.
+     */
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -237,6 +336,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -342,6 +445,43 @@ export interface CategoriesSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  featured?: T;
+  publishedAt?: T;
+  summary?: T;
+  description?: T;
+  primaryImage?: T;
+  gallery?: T;
+  category?: T;
+  subcategory?: T;
+  tags?: T;
+  materials?: T;
+  customizationOptions?: T;
+  applications?: T;
+  labels?: T;
+  specifications?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
