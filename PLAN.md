@@ -487,7 +487,7 @@ Update this section as decisions are confirmed.
 
 | Decision | Baseline | Status |
 |---|---|---|
-| Frontend | Next.js (current release) + TypeScript | Confirmed |
+| Frontend | Next.js 16.4 + TypeScript, Cache Components enabled | Confirmed |
 | CMS | Sanity, Studio embedded at `/studio` | Confirmed |
 | Hosting | Vercel | Confirmed |
 | Styling | Tailwind CSS v4 + shadcn/ui, business-professional look | Confirmed |
@@ -537,7 +537,7 @@ Update this section as decisions are confirmed.
 
 - [x] Repository connected to `jetzion/monip`; `.gitignore` added
 - [x] Requirements and plan reviewed; decisions recorded
-- [ ] Next.js + TypeScript + Tailwind + shadcn/ui scaffold (pnpm)
+- [x] Next.js 16.4 + TypeScript + Tailwind v4 + shadcn/ui scaffold (pnpm)
 - [ ] Sanity project, private `production` dataset, Studio at `/studio`
 - [ ] Minimal shell: tokens, header, footer, base components
 - [ ] Product and Category schemas; placeholder products
