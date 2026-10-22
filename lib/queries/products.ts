@@ -1,12 +1,16 @@
 import type { Where } from "payload";
 
 import { getPayloadClient } from "@/lib/payload";
+import type { contentAccess } from "@/lib/queries/access";
 
 /**
  * Public product queries. `overrideAccess: false` applies the collection's
  * access rules as an anonymous visitor, so only published products return.
  */
-const publicAccess = { overrideAccess: false, draft: false } as const;
+export const publicAccess = { overrideAccess: false, draft: false } as const;
+
+/** Local API access options; pages pass `contentAccess()` to allow previews. */
+export type ContentAccess = typeof publicAccess | Awaited<ReturnType<typeof contentAccess>>;
 
 const populate = {
   // `url` is computed from `filename` on read, so both must be selected.
@@ -68,11 +72,11 @@ export async function getFeaturedProducts(limit = 3) {
   return docs;
 }
 
-export async function getProductBySlug(slug: string) {
+export async function getProductBySlug(slug: string, access: ContentAccess = publicAccess) {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
     collection: "products",
-    ...publicAccess,
+    ...access,
     depth: 1,
     limit: 1,
     where: { slug: { equals: slug } },

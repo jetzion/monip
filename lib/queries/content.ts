@@ -2,15 +2,13 @@ import { cache } from "react";
 
 import type { PageKey } from "@/collections/Pages";
 import { getPayloadClient } from "@/lib/payload";
+import { publicAccess, type ContentAccess } from "@/lib/queries/products";
 
-/** Same rule as products: anonymous access, published content only. */
-const publicAccess = { overrideAccess: false, draft: false } as const;
-
-export async function getPublishedServices() {
+export async function getPublishedServices(access: ContentAccess = publicAccess) {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
     collection: "services",
-    ...publicAccess,
+    ...access,
     depth: 1,
     limit: 50,
     sort: ["sortOrder", "title"],
@@ -20,11 +18,11 @@ export async function getPublishedServices() {
   return docs;
 }
 
-export async function getPage(key: PageKey) {
+export async function getPage(key: PageKey, access: ContentAccess = publicAccess) {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
     collection: "pages",
-    ...publicAccess,
+    ...access,
     depth: 0,
     limit: 1,
     where: { key: { equals: key } },

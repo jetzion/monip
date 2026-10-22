@@ -5,6 +5,7 @@ import type {
   PayloadRequest,
 } from "payload";
 
+import { affectsPublicSite } from "../lib/publish-state";
 import type { Product } from "../payload-types";
 
 /** Scripts outside Next.js (e.g. the seed) set this to skip revalidation. */
@@ -24,7 +25,9 @@ export const revalidateProduct: CollectionAfterChangeHook<Product> = ({
   previousDoc,
   req,
 }) => {
-  if (!skip(req)) revalidateProductPaths(doc.slug, previousDoc?.slug);
+  if (!skip(req) && affectsPublicSite(doc, previousDoc)) {
+    revalidateProductPaths(doc.slug, previousDoc?.slug);
+  }
   return doc;
 };
 
@@ -34,8 +37,8 @@ export const revalidateDeletedProduct: CollectionAfterDeleteHook<Product> = ({ d
 };
 
 /** Content that can change site navigation (services, pages) refreshes every page. */
-export const revalidateSite: CollectionAfterChangeHook = ({ doc, req }) => {
-  if (!skip(req)) revalidatePath("/", "layout");
+export const revalidateSite: CollectionAfterChangeHook = ({ doc, previousDoc, req }) => {
+  if (!skip(req) && affectsPublicSite(doc, previousDoc)) revalidatePath("/", "layout");
   return doc;
 };
 

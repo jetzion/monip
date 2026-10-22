@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
+import { draftMode } from "next/headers";
 
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { PreviewBanner } from "@/components/preview/PreviewBanner";
+import { RefreshRouteOnSave } from "@/components/preview/RefreshRouteOnSave";
 import { baseOpenGraph } from "@/lib/seo";
 import { isIndexable, siteUrl } from "@/lib/site";
 
@@ -25,7 +28,8 @@ export const metadata: Metadata = {
   robots: isIndexable() ? undefined : { index: false, follow: false },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const { isEnabled: preview } = await draftMode();
   return (
     <html lang="en" className={`${archivo.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
@@ -35,6 +39,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        {preview && (
+          <>
+            <PreviewBanner />
+            <RefreshRouteOnSave serverURL={siteUrl()} />
+          </>
+        )}
         <SiteHeader />
         <main id="main" className="flex-1">
           {children}

@@ -517,7 +517,7 @@ Update this section as decisions are confirmed.
 | Package manager | pnpm | Confirmed |
 | Testing | Vitest + Playwright | Confirmed |
 | Content updates | Payload `afterChange` hooks call `revalidateTag`/`revalidatePath` | Confirmed |
-| Preview | Payload drafts + Live Preview (logged-in users only) | Confirmed |
+| Preview | Payload drafts + autosave + server-side Live Preview via /preview (admin session required; draft cookie alone grants nothing) | Confirmed |
 | Build order | Product vertical slice first, then core pages | Confirmed |
 | Database | Postgres: Docker locally, Neon in production | Confirmed |
 | Media storage | Local disk in dev, Vercel Blob in production | Confirmed |
@@ -570,7 +570,7 @@ Update this section as decisions are confirmed.
 - [x] Product and Category collections (drafts, access control, slugs)
 - [x] Placeholder products (`pnpm seed`, dev only)
 - [x] Catalog and product detail pages; on-publish revalidation
-- [ ] Drafts and Live Preview
+- [x] Drafts and Live Preview (products, services, pages; autosave; draft mode requires admin session)
 - [x] Product inquiry: Payload save, notification, auto-reply, honeypot (emails print to console until Resend is configured)
 - [ ] Resend email adapter (needs Resend account and verified sender)
 - [x] Home (featured products) and Contact (general inquiry)

@@ -7,6 +7,7 @@ import { InquiryForm } from "@/components/forms/InquiryForm";
 import { CmsImage } from "@/components/media/CmsImage";
 import { SpecSheet } from "@/components/products/SpecSheet";
 import { populated } from "@/lib/payload";
+import { contentAccess } from "@/lib/queries/access";
 import { getProductBySlug, getPublishedProductRefs } from "@/lib/queries/products";
 import { baseOpenGraph } from "@/lib/seo";
 import { siteUrl } from "@/lib/site";
@@ -23,7 +24,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/products/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getProductBySlug(slug, await contentAccess());
   if (!product) return {};
   const title = product.seo?.title || product.name;
   const description = product.seo?.description || product.summary;
@@ -60,7 +61,7 @@ function breadcrumbJsonLd(name: string, slug: string) {
 
 export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getProductBySlug(slug, await contentAccess());
   if (!product) notFound();
 
   const category = populated<Category>(product.category);

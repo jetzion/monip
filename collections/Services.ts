@@ -2,6 +2,7 @@ import type { CollectionConfig } from "payload";
 
 import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
 import { slugField } from "../fields/slug";
+import { autosaveDrafts, livePreview } from "../lib/live-preview";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
 
 export const Services: CollectionConfig = {
@@ -11,9 +12,10 @@ export const Services: CollectionConfig = {
     defaultColumns: ["title", "sortOrder", "_status", "updatedAt"],
     description:
       "Services shown on the Services page. The page and its menu link appear once at least one service is published.",
+    livePreview: livePreview(() => "/services"),
   },
   defaultSort: "sortOrder",
-  versions: { drafts: true },
+  versions: autosaveDrafts,
   access: {
     read: publishedOrLoggedIn,
     create: isLoggedIn,

@@ -2,6 +2,7 @@ import type { CollectionConfig } from "payload";
 
 import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
+import { autosaveDrafts, livePreview } from "../lib/live-preview";
 
 /** Fixed site pages. Each key maps to a route defined in code. */
 export const PAGE_KEYS = [
@@ -19,8 +20,9 @@ export const Pages: CollectionConfig = {
     defaultColumns: ["title", "key", "_status", "updatedAt"],
     description:
       "About, Sustainability, and Privacy pages. A page and its link appear on the site only once published.",
+    livePreview: livePreview((data) => (typeof data.key === "string" ? `/${data.key}` : null)),
   },
-  versions: { drafts: true },
+  versions: autosaveDrafts,
   access: {
     read: publishedOrLoggedIn,
     create: isLoggedIn,

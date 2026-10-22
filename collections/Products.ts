@@ -2,6 +2,7 @@ import type { CollectionBeforeChangeHook, CollectionConfig, Where } from "payloa
 
 import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
 import { slugField } from "../fields/slug";
+import { autosaveDrafts, livePreview } from "../lib/live-preview";
 import { revalidateDeletedProduct, revalidateProduct } from "../hooks/revalidate";
 
 /** Records the first publish time; later publishes keep it. */
@@ -27,10 +28,9 @@ export const Products: CollectionConfig = {
     defaultColumns: ["name", "category", "featured", "_status", "updatedAt"],
     description:
       "Product samples shown in the public catalog. Only published products are visible on the site.",
+    livePreview: livePreview((data) => (data.slug ? `/products/${data.slug}` : null)),
   },
-  versions: {
-    drafts: true,
-  },
+  versions: autosaveDrafts,
   access: {
     read: publishedOrLoggedIn,
     create: isLoggedIn,

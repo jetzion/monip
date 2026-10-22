@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { CmsImage } from "@/components/media/CmsImage";
 import { ButtonLink } from "@/components/ui/button-link";
+import { contentAccess } from "@/lib/queries/access";
 import { getPublishedServices } from "@/lib/queries/content";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ServicesPage() {
-  const services = await getPublishedServices();
+  const services = await getPublishedServices(await contentAccess());
   if (services.length === 0) notFound();
 
   return (

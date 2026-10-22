@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import type { PageKey } from "@/collections/Pages";
+import { contentAccess } from "@/lib/queries/access";
 import { getPage } from "@/lib/queries/content";
 
 const PATHS: Record<PageKey, string> = {
@@ -12,7 +13,7 @@ const PATHS: Record<PageKey, string> = {
 
 /** Metadata for a CMS text page; empty if the page is not published. */
 export async function contentPageMetadata(key: PageKey): Promise<Metadata> {
-  const page = await getPage(key);
+  const page = await getPage(key, await contentAccess());
   if (!page) return {};
   return {
     title: page.seo?.title || page.title,
@@ -23,7 +24,7 @@ export async function contentPageMetadata(key: PageKey): Promise<Metadata> {
 
 /** Loads a published CMS text page or renders the 404 page. */
 export async function requirePage(key: PageKey) {
-  const page = await getPage(key);
+  const page = await getPage(key, await contentAccess());
   if (!page) notFound();
   return page;
 }
