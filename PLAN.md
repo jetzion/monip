@@ -556,7 +556,7 @@ Update this section as decisions are confirmed.
 - [x] Minimal shell: tokens, header, footer (provisional brand tokens)
 - [x] Product and Category collections (drafts, access control, slugs)
 - [x] Placeholder products (`pnpm seed`, dev only)
-- [ ] Catalog and product detail pages with live updates
+- [x] Catalog and product detail pages; on-publish revalidation
 - [ ] Drafts and Live Preview
 - [ ] Product inquiry: Payload save, notification, auto-reply
 - [ ] Home, About, Services, Contact pages

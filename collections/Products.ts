@@ -2,6 +2,7 @@ import type { CollectionBeforeChangeHook, CollectionConfig, Where } from "payloa
 
 import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
 import { slugField } from "../fields/slug";
+import { revalidateDeletedProduct, revalidateProduct } from "../hooks/revalidate";
 
 /** Records the first publish time; later publishes keep it. */
 const setPublishedAt: CollectionBeforeChangeHook = ({ data, originalDoc }) => {
@@ -38,6 +39,8 @@ export const Products: CollectionConfig = {
   },
   hooks: {
     beforeChange: [setPublishedAt],
+    afterChange: [revalidateProduct],
+    afterDelete: [revalidateDeletedProduct],
   },
   fields: [
     {

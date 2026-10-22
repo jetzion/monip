@@ -18,6 +18,9 @@ if (process.env.NODE_ENV === "production") {
 
 const payload = await getPayload({ config });
 
+// Hooks call Next.js revalidation, which is unavailable outside the app.
+const context = { disableRevalidate: true };
+
 /** Builds a grey PNG labelled PLACEHOLDER so it cannot pass as real imagery. */
 const placeholderImage = async (label: string) => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900">
@@ -35,7 +38,7 @@ const placeholderImage = async (label: string) => {
 };
 
 const createCategory = (title: string, parent?: number) =>
-  payload.create({ collection: "categories", data: { title, slug: toSlug(title), parent } });
+  payload.create({ collection: "categories", context, data: { title, slug: toSlug(title), parent } });
 
 const existing = await payload.count({
   collection: "categories",
@@ -61,6 +64,7 @@ if (existing.totalDocs > 0) {
     const image = await placeholderImage(`Product ${n}`);
     await payload.create({
       collection: "products",
+      context,
       data: {
         name: `Placeholder Product ${n}`,
         slug: `placeholder-product-${n}`,

@@ -2,6 +2,7 @@ import type { CollectionConfig, Where } from "payload";
 
 import { isLoggedIn } from "../access/content";
 import { slugField } from "../fields/slug";
+import { revalidateCategories, revalidateDeletedCategory } from "../hooks/revalidate";
 
 export const Categories: CollectionConfig = {
   slug: "categories",
@@ -12,6 +13,10 @@ export const Categories: CollectionConfig = {
       "Product categories. Set a parent to make a subcategory (two levels max).",
   },
   defaultSort: "sortOrder",
+  hooks: {
+    afterChange: [revalidateCategories],
+    afterDelete: [revalidateDeletedCategory],
+  },
   access: {
     read: () => true,
     create: isLoggedIn,
