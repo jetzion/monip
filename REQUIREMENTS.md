@@ -4,7 +4,7 @@
 **Project:** MONIP Group website modernization\
 **Status:** Initial baseline --- validate business-specific details
 during discovery\
-**Target stack:** Next.js, TypeScript, Sanity CMS, Vercel
+**Target stack:** Next.js, TypeScript, Payload CMS, Postgres, Vercel
 
 ## 1. Project Overview
 
@@ -28,7 +28,7 @@ accessibility, performance, and lead generation.
 2.  Make products easy to browse through categories, search, filters,
     and dedicated detail pages.
 3.  Enable nontechnical staff to manage product samples and site content
-    through Sanity Studio.
+    through the Payload admin panel.
 4.  Generate useful business inquiries, including inquiries tied to
     specific products.
 5.  Provide a maintainable architecture that can support future
@@ -41,7 +41,7 @@ accessibility, performance, and lead generation.
 ### 3.1 In scope for initial release
 
 -   Custom Next.js and TypeScript frontend.
--   Sanity CMS and Sanity Studio configuration.
+-   Payload CMS and admin panel configuration.
 -   Multi-page corporate website.
 -   CMS-managed product catalog and product detail pages.
 -   Product categories, tags, search, and practical filters.
@@ -179,7 +179,7 @@ Catalog behavior:
 
 ### 6.3 CMS and editorial workflow
 
--   Provide a Sanity Studio workspace for authorized users.
+-   Provide a Payload admin panel for authorized users.
 -   Use clearly labeled fields and sensible field groups.
 -   Support product creation, editing, previewing, publishing,
     unpublishing, and archiving.
@@ -189,7 +189,7 @@ Catalog behavior:
     studies, and site settings.
 -   Support draft previews that are not publicly accessible.
 -   Configure access using the least privilege practical for the
-    selected Sanity plan.
+    selected CMS (Payload roles and collection access control).
 -   Provide validation for required fields and URL slugs.
 -   Document how to add a product and update core pages.
 -   Keep CMS secrets and privileged tokens out of browser-delivered
@@ -216,7 +216,7 @@ Catalog behavior:
 
 Confirmed delivery (may change later):
 
--   Each submission is saved as an Inquiry document in Sanity
+-   Each submission is saved in the Payload `inquiries` collection
     (server-side write only; never publicly readable).
 -   MONIP receives a notification email per submission (recipient
     address is a placeholder until confirmed).
@@ -360,9 +360,9 @@ decision log.
 Unless MONIP specifies otherwise, plan on:
 
 -   A public product catalog at launch.
--   Nontechnical staff managing content in Sanity Studio.
+-   Nontechnical staff managing content in the Payload admin panel.
 -   Product-specific inquiry forms plus a general contact form.
 -   No e-commerce checkout or customer login in the initial release.
 -   Migration of useful existing content after review.
--   Next.js + TypeScript, Sanity, and Vercel.
+-   Next.js + TypeScript, Payload CMS with Postgres, and Vercel.
 -   A multi-page website with reusable templates.

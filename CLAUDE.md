@@ -3,7 +3,7 @@
 ## Project Mission
 
 Build a modern, responsive, multi-page website for MONIP Group using a
-custom Next.js + TypeScript frontend, Sanity headless CMS, and Vercel
+custom Next.js + TypeScript frontend, Payload CMS, and Vercel
 deployment.
 
 The site must communicate MONIP's capabilities clearly, showcase product
@@ -27,7 +27,7 @@ documents when a decision changes.
 
 -   Next.js App Router.
 -   TypeScript with strict type checking.
--   Sanity CMS and Sanity Studio.
+-   Payload CMS (admin panel at `/admin`) with Postgres.
 -   Vercel deployment.
 -   Accessible, reusable UI components and a consistent design system.
 -   Automated tests for critical behavior.
@@ -92,7 +92,7 @@ useful work and explain any proposed migration.
 ### Security and privacy
 
 -   Never commit secrets or real credentials.
--   Never expose privileged Sanity tokens, email provider keys, preview
+-   Never expose `PAYLOAD_SECRET`, database URLs, email provider keys, preview
     secrets, or private environment values to browser code.
 -   Do not use `NEXT_PUBLIC_` for privileged secrets.
 -   Validate form data on the server even if client validation exists.
@@ -171,7 +171,7 @@ Follow the phase sequence in `PLAN.md`:
 
 1.  Repository/environment inspection.
 2.  Requirements and design foundation.
-3.  Project setup and Sanity configuration.
+3.  Project setup and Payload configuration.
 4.  Shared shell and core pages.
 5.  Product catalog.
 6.  Inquiry delivery.
