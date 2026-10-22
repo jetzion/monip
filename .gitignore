@@ -36,3 +36,7 @@ pnpm-debug.log*
 
 # Payload local media uploads
 /media/
+
+# Playwright
+/blob-report/
+/playwright/.cache/

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { InquiryForm } from "@/components/forms/InquiryForm";
 import { CmsImage } from "@/components/media/CmsImage";
 import { SpecSheet } from "@/components/products/SpecSheet";
 import { populated } from "@/lib/payload";
@@ -108,6 +109,21 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
           </div>
         </div>
       </div>
+
+      <section
+        aria-labelledby="inquiry-heading"
+        className="mt-16 grid gap-8 border-t border-border pt-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16"
+      >
+        <div>
+          <h2 id="inquiry-heading" className="font-display text-2xl font-semibold">
+            Ask about this product
+          </h2>
+          <p className="mt-3 text-muted-foreground">
+            Your inquiry will reference {product.name}.
+          </p>
+        </div>
+        <InquiryForm productSlug={product.slug} productName={product.name} />
+      </section>
     </div>
   );
 }

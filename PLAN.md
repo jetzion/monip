@@ -172,7 +172,7 @@ pages.
     `message`.
 -   `product` --- reference to the product, plus the product name and URL
     captured at submission time.
--   `submittedAt`.
+-   `createdAt` (submission time, set by Payload).
 -   `emailStatus` --- whether the notification email was accepted.
 
 ### Users
@@ -422,6 +422,10 @@ Rules:
 
 ### End-to-end tests
 
+Run with `pnpm test:e2e` (Playwright, system Chrome, dev server on port
+3100). Requires the local database with seeded placeholders; product
+inquiry tests leave Inquiry records behind.
+
 -   Visitor browses catalog and opens a product.
 -   Visitor submits a product-specific inquiry.
 -   Visitor submits the general contact form.
@@ -558,7 +562,8 @@ Update this section as decisions are confirmed.
 - [x] Placeholder products (`pnpm seed`, dev only)
 - [x] Catalog and product detail pages; on-publish revalidation
 - [ ] Drafts and Live Preview
-- [ ] Product inquiry: Payload save, notification, auto-reply
+- [x] Product inquiry: Payload save, notification, auto-reply, honeypot (emails print to console until Resend is configured)
+- [ ] Resend email adapter (needs Resend account and verified sender)
 - [ ] Home, About, Services, Contact pages
 - [ ] Search and filters
 - [ ] SEO, sitemap, robots, redirects
