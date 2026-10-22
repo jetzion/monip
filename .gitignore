@@ -1,0 +1,32 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Sanity
+.sanity/
+dist/
+
+# testing
+coverage/
+playwright-report/
+test-results/
+
+# env files (keep .env.example)
+.env*
+!.env.example
+
+# Vercel
+.vercel/
+
+# misc
+.DS_Store
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+
+# Claude Code local settings
+.claude/settings.local.json

@@ -20,16 +20,21 @@ requirements.
 
 ### Core stack
 
--   **Next.js** with App Router.
+-   **Next.js** (current release) with App Router.
 -   **TypeScript** with strict type checking.
--   **Sanity** for structured content and Sanity Studio.
+-   **Sanity** for structured content, with Studio embedded at
+    `/studio`.
+-   **next-sanity Live Content API** (`defineLive`) so published changes
+    appear automatically, plus Draft Mode and the Presentation tool for
+    previews.
 -   **Vercel** for preview and production deployment.
--   A project-standard styling solution selected during setup; favor
-    accessible, reusable components and design tokens.
--   A suitable email delivery service for form submissions, selected
-    only after the destination and credentials are confirmed.
--   A testing stack appropriate to the chosen framework, including
-    unit/component tests and browser-based end-to-end tests.
+-   **Tailwind CSS v4 + shadcn/ui** with design tokens; the visual
+    direction is clean and business-professional.
+-   **Resend** for notification and auto-reply email.
+-   **Vitest** for unit/component tests and **Playwright** for
+    end-to-end tests.
+-   **pnpm** as the package manager.
+-   **Vercel Observability and runtime logs** for basic monitoring.
 
 ### Architectural principles
 
@@ -63,9 +68,9 @@ existing work without inspection.
 │   │   ├── privacy/page.tsx
 │   │   └── ...
 │   ├── api/
-│   │   └── contact/route.ts
+│   │   ├── contact/route.ts
+│   │   └── draft-mode/enable/route.ts
 │   ├── studio/[[...tool]]/page.tsx
-│   ├── preview/route.ts
 │   ├── layout.tsx
 │   ├── sitemap.ts
 │   ├── robots.ts
@@ -110,7 +115,9 @@ Implement and validate the following Sanity document types.
 -   `description` --- rich text or structured content.
 -   `primaryImage` --- required for publication.
 -   `gallery` --- ordered image list with alt text/captions as needed.
--   `category` --- reference to a category.
+-   `category` --- required reference to a category.
+-   `subcategory` --- optional reference to a category whose parent is
+    the selected category.
 -   `tags` --- optional.
 -   `materials` --- optional list.
 -   `customizationOptions` --- optional list.
@@ -120,17 +127,18 @@ Implement and validate the following Sanity document types.
 -   `labels` --- optional, controlled values.
 -   `seoTitle` and `seoDescription` --- optional with sensible
     fallbacks.
--   `status` --- use Sanity's draft/published workflow; add an explicit
-    business status only if it serves a separate purpose.
+-   Status --- use Sanity's draft/published workflow only. "Archive"
+    means unpublish; no separate status field.
 -   `publishedAt` --- set or maintain consistently.
 
-Do not create public fields for supplier details, internal cost,
-internal notes, or other confidential information. Do not expose pricing
-or lead-time information unless MONIP explicitly approves it.
+Do not store supplier details, internal cost, internal notes, or other
+confidential information in Sanity at all. Do not expose pricing or
+lead-time information unless MONIP explicitly approves it.
 
 ### Product Category
 
--   `title`, `slug`, `description`, `image` (optional), `sortOrder`,
+-   `title`, `slug`, `description`, `image` (optional), `parent`
+    (optional reference; set for subcategories), `sortOrder`,
     `seoTitle`, `seoDescription`.
 
 ### Service
@@ -152,11 +160,44 @@ or lead-time information unless MONIP explicitly approves it.
 -   Approved contact information.
 -   Default SEO metadata and social image.
 
+### Inquiry
+
+Written only by the server-side form handler; never queried by public
+pages.
+
+-   `type` --- general or product.
+-   `name`, `email`, `company` (optional), `phone` (optional),
+    `message`.
+-   `product` --- reference to the product, plus the product name and URL
+    captured at submission time.
+-   `submittedAt`.
+-   `emailStatus` --- whether the notification email was accepted.
+
+Because inquiries contain personal information, the `production`
+dataset must be **private**; the site reads content with a server-only
+token.
+
 Avoid making every text fragment editable through the CMS. Make business
 content editable while keeping structural layout and reusable UI
 controlled in code.
 
 ## 5. Phased Work Plan
+
+### Approved build order (vertical slice first)
+
+The phases below group the scope. Implementation follows this order:
+
+1.  Minimal shell: design tokens, header, footer, base components.
+2.  Product and Category schemas; Studio at `/studio`.
+3.  Catalog page, product detail page, draft preview, live updates.
+4.  Product inquiry: save to Sanity, notify MONIP, auto-reply,
+    success/error states.
+5.  Home (with featured products), About, Services, Contact, reusing
+    established patterns.
+6.  Search and filters, SEO, sitemap, remaining pages.
+
+A few clearly marked placeholder products may be created in Sanity for
+development; MONIP replaces them through manual entry.
 
 ### Phase 0 --- Repository and environment inspection
 
@@ -331,12 +372,15 @@ Likely configuration includes:
 
 -   Public Sanity project ID and dataset.
 -   Sanity API version.
--   Server-only Sanity read/write or preview token if needed.
--   Preview-mode secret.
--   Form delivery provider API key.
--   Approved inquiry recipient.
+-   Server-only Sanity read (viewer) token for content and draft mode.
+-   Server-only Sanity write token, used only by the inquiry handler.
+-   Resend API key and verified sender address.
+-   Inquiry notification recipient (placeholder until confirmed).
 -   Analytics ID, if approved.
--   Any site base URL needed for canonical links and email links.
+-   Site base URL for canonical links and email links.
+
+Draft Mode is enabled through `next-sanity`'s Presentation tool flow; no
+separate shared preview secret is required.
 
 Rules:
 
@@ -374,9 +418,14 @@ Rules:
 
 ### Build gates
 
-Before declaring a task complete, run the repository's relevant: -
-Formatter. - Linter. - Type checker. - Unit/component tests. -
-End-to-end tests when affected. - Production build.
+Before declaring a task complete, run the repository's relevant:
+
+-   Formatter.
+-   Linter.
+-   Type checker.
+-   Unit/component tests.
+-   End-to-end tests when affected.
+-   Production build.
 
 Do not claim a check passed unless it was actually run and its result
 reviewed.
@@ -436,40 +485,37 @@ A feature is complete when:
 
 Update this section as decisions are confirmed.
 
-  -----------------------------------------------------------------------
-  Decision                Current baseline        Status
-  ----------------------- ----------------------- -----------------------
-  Frontend                Next.js + TypeScript    Proposed
-
-  CMS                     Sanity                  Proposed
-
-  Hosting                 Vercel                  Proposed
-
-  Catalog visibility      Public products at      Assumption to confirm
-                          launch                  
-
-  CMS users               Nontechnical staff      Assumption to confirm
-
-  Inquiry flow            General contact +       Assumption to confirm
-                          product-specific        
-                          inquiry                 
-
-  E-commerce              Excluded from initial   Assumed out of scope
-                          release                 
-
-  Client accounts/private Future phase            Assumed out of scope
-  catalogs                                        
-
-  Existing content        Audit and migrate       Proposed
-                          approved content        
-
-  CRM/email provider      Not selected            Requires decision
-
-  Analytics provider      Not selected            Requires decision
-
-  Final brand direction   To be established from  Requires discovery
-                          approved assets         
-  -----------------------------------------------------------------------
+| Decision | Baseline | Status |
+|---|---|---|
+| Frontend | Next.js (current release) + TypeScript | Confirmed |
+| CMS | Sanity, Studio embedded at `/studio` | Confirmed |
+| Hosting | Vercel | Confirmed |
+| Styling | Tailwind CSS v4 + shadcn/ui, business-professional look | Confirmed |
+| Package manager | pnpm | Confirmed |
+| Testing | Vitest + Playwright | Confirmed |
+| Content updates | next-sanity Live Content API (`defineLive`) | Confirmed |
+| Preview | Draft Mode + Presentation tool | Confirmed |
+| Build order | Product vertical slice first, then core pages | Confirmed |
+| Datasets | `production` only, private | Confirmed |
+| Archive | Means unpublish; unpublished product URL returns 404 | Confirmed |
+| Categories | Category + optional subcategory (`parent` reference) | Confirmed |
+| Confidential data | Not stored in Sanity at all | Confirmed |
+| Product entry | Manual entry in Studio; dev placeholders allowed | Confirmed |
+| Catalog visibility | Public products at launch | Assumption to confirm |
+| Inquiry flow | General contact + product-specific inquiry | Confirmed |
+| Inquiry delivery | Save to Sanity + notification email + fixed auto-reply (may change) | Confirmed |
+| Email provider | Resend | Confirmed |
+| Notification recipient | Placeholder | Requires decision |
+| Spam / rate limiting | Honeypot now; rate limiting deferred (launch blocker) | Deferred |
+| Redirects | Managed in code (`next.config`) | Confirmed |
+| Monitoring | Vercel Observability and runtime logs | Confirmed |
+| Jurisdiction | US | Confirmed |
+| Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
+| Current site URL | Placeholder | Requires input |
+| Domain and account ownership | TBD | Requires decision |
+| Final brand assets | To be established from approved assets | Requires discovery |
+| E-commerce | Excluded from initial release | Out of scope |
+| Client accounts/private catalogs | Future phase | Out of scope |
 
 ## 11. Instructions for Claude CLI Execution
 
@@ -486,3 +532,20 @@ Update this section as decisions are confirmed.
     tracking file.
 -   Update the plan when implementation reality changes.
 -   Never invent content to fill missing business information.
+
+## 12. Progress Checklist
+
+- [x] Repository connected to `jetzion/monip`; `.gitignore` added
+- [x] Requirements and plan reviewed; decisions recorded
+- [ ] Next.js + TypeScript + Tailwind + shadcn/ui scaffold (pnpm)
+- [ ] Sanity project, private `production` dataset, Studio at `/studio`
+- [ ] Minimal shell: tokens, header, footer, base components
+- [ ] Product and Category schemas; placeholder products
+- [ ] Catalog and product detail pages with live updates
+- [ ] Draft Mode / Presentation preview
+- [ ] Product inquiry: Sanity save, notification, auto-reply
+- [ ] Home, About, Services, Contact pages
+- [ ] Search and filters
+- [ ] SEO, sitemap, robots, redirects
+- [ ] Rate limiting (launch blocker)
+- [ ] QA, deployment, handover

@@ -155,10 +155,10 @@ Each product should support the following fields, as appropriate:
 -   SEO title and description.
 -   Publication status and timestamps.
 
-Commercially sensitive fields, such as supplier identity, internal
-costs, private notes, and unpublished pricing, must not be exposed on
-public pages. Minimum order quantity, lead time, and pricing should be
-optional and public only when explicitly approved.
+Commercially sensitive data, such as supplier identity, internal costs,
+private notes, and unpublished pricing, must not be stored in the CMS at
+all. Minimum order quantity, lead time, and pricing should be optional
+and public only when explicitly approved.
 
 Catalog behavior:
 
@@ -170,7 +170,8 @@ Catalog behavior:
 -   Related products may be displayed when the relationship is
     configured.
 -   Archived or unpublished products are not included in public
-    listings, search results, or sitemap.
+    listings, search results, or sitemap. "Archive" means unpublish;
+    an unpublished product URL returns 404.
 -   If an existing product URL changes, use an appropriate redirect when
     feasible.
 -   Product inquiries include a reliable reference to the product, such
@@ -213,8 +214,15 @@ Catalog behavior:
 -   Log operational errors without unnecessarily storing sensitive form
     content.
 
-The exact submission destination and email/CRM provider must be
-confirmed before launch.
+Confirmed delivery (may change later):
+
+-   Each submission is saved as an Inquiry document in Sanity
+    (server-side write only; never publicly readable).
+-   MONIP receives a notification email per submission (recipient
+    address is a placeholder until confirmed).
+-   The submitter receives a fixed-text auto-reply that never echoes
+    their message.
+-   Rate limiting is deferred but is a launch blocker.
 
 ### 6.5 SEO and migration
 
@@ -329,7 +337,8 @@ The initial release is ready for launch when:
 ## 10. Decisions to Confirm During Discovery
 
 Record final decisions in the project documentation before implementing
-dependent features.
+dependent features. Confirmed decisions are tracked in the `PLAN.md`
+decision log.
 
 -   Final brand direction, logo files, typography, and imagery.
 -   Exact product categories and filters.
@@ -337,11 +346,13 @@ dependent features.
 -   Whether a product-specific inquiry or a quote request is preferred.
 -   Inquiry delivery destination and email/CRM provider.
 -   Approved contact details and legal/privacy copy.
--   Analytics and consent requirements.
+-   Analytics and consent requirements (MONIP operates in the US).
 -   Final list of pages and approved content.
 -   Existing URL inventory and redirect requirements.
 -   CMS user roles and who approves publication.
--   Domain, hosting account ownership, and deployment access.
+-   Domain, hosting account ownership, and deployment access (TBD).
+-   Current website URL for the URL inventory (placeholder until
+    provided).
 -   Budget, timeline, and any external integrations.
 
 ## 11. Assumptions for Initial Planning
