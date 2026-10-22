@@ -552,7 +552,7 @@ Update this section as decisions are confirmed.
 - [x] Repository connected to `jetzion/monip`; `.gitignore` added
 - [x] Requirements and plan reviewed; decisions recorded
 - [x] Next.js 16.4 + TypeScript + Tailwind v4 + shadcn/ui scaffold (pnpm)
-- [ ] Payload installed, local Postgres (Docker), admin at `/admin`
+- [x] Payload 3.91 installed, local Postgres (Docker), admin at `/admin`
 - [ ] Minimal shell: tokens, header, footer, base components
 - [ ] Product and Category schemas; placeholder products
 - [ ] Catalog and product detail pages with live updates

@@ -33,3 +33,6 @@ pnpm-debug.log*
 
 # certificates
 *.pem
+
+# Payload local media uploads
+/media/
