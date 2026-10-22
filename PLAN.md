@@ -145,8 +145,15 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Service
 
--   `title`, `slug`, `summary`, `body`, `image` (optional), `sortOrder`,
-    SEO fields.
+-   `title`, `slug`, `summary`, `body`, `image` (optional), `sortOrder`;
+    drafts. Shown as sections on `/services` (no detail pages yet).
+
+### Page
+
+-   `title`, `key` (unique: about, sustainability, privacy), `intro`,
+    `body`, SEO fields; drafts. Each key maps to a route in code.
+-   A page, `/services`, and their nav links appear only when published
+    content exists; otherwise the route returns 404.
 
 ### Case Study
 
@@ -526,6 +533,8 @@ Update this section as decisions are confirmed.
 | Notification recipient | Placeholder | Requires decision |
 | Spam / rate limiting | Honeypot now; rate limiting deferred (launch blocker) | Deferred |
 | Redirects | Managed in code (`next.config`) | Confirmed |
+| Text pages | `pages` collection with fixed keys (about, sustainability, privacy) instead of globals | Confirmed |
+| Deployment | Local only until hosting accounts are decided | On hold |
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
 | Jurisdiction | US | Confirmed |
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
@@ -565,7 +574,8 @@ Update this section as decisions are confirmed.
 - [x] Product inquiry: Payload save, notification, auto-reply, honeypot (emails print to console until Resend is configured)
 - [ ] Resend email adapter (needs Resend account and verified sender)
 - [x] Home (featured products) and Contact (general inquiry)
-- [ ] About, Services, Sustainability pages (need MONIP content)
+- [x] Services, About, Sustainability, Privacy pages (CMS-managed, hidden until published; placeholders in seed)
+- [ ] Real About, Services, Sustainability, Privacy content from MONIP
 - [x] Search (name, summary, tags, materials) and category/subcategory filters via URL params
 - [x] SEO: metadataBase, canonicals, Open Graph, sitemap, robots (previews blocked), breadcrumb JSON-LD
 - [ ] Legacy URL redirects (needs current site URL inventory)

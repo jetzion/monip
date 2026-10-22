@@ -1,9 +1,20 @@
+import { getAvailableSections } from "@/lib/queries/content";
+
 type NavItem = { href: string; label: string };
 
-/** Primary navigation. Add an item only once its page exists. */
-export const mainNav: NavItem[] = [{ href: "/products", label: "Products" }];
-
-export const footerNav: NavItem[] = [
-  { href: "/products", label: "Products" },
-  { href: "/contact", label: "Contact" },
-];
+/** Navigation links; optional pages appear only once they have published content. */
+export async function getNavigation(): Promise<{ main: NavItem[]; footer: NavItem[] }> {
+  const available = await getAvailableSections();
+  const main: NavItem[] = [
+    { href: "/products", label: "Products" },
+    ...(available.services ? [{ href: "/services", label: "Services" }] : []),
+    ...(available.about ? [{ href: "/about", label: "About" }] : []),
+    ...(available.sustainability ? [{ href: "/sustainability", label: "Sustainability" }] : []),
+  ];
+  const footer: NavItem[] = [
+    ...main,
+    { href: "/contact", label: "Contact" },
+    ...(available.privacy ? [{ href: "/privacy", label: "Privacy policy" }] : []),
+  ];
+  return { main, footer };
+}

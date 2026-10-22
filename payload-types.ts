@@ -71,6 +71,8 @@ export interface Config {
     media: Media;
     categories: Category;
     products: Product;
+    services: Service;
+    pages: Page;
     inquiries: Inquiry;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -83,6 +85,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -306,6 +310,93 @@ export interface Product {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Services shown on the Services page. The page and its menu link appear once at least one service is published.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  /**
+   * Used in the page URL. Leave empty to generate from the name. Changing it later breaks existing links.
+   */
+  slug: string;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * A short description shown at the top of the service section.
+   */
+  summary: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * About, Sustainability, and Privacy pages. A page and its link appear on the site only once published.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  /**
+   * Which site page this content is for.
+   */
+  key: 'about' | 'sustainability' | 'privacy';
+  /**
+   * Short introduction shown under the page title.
+   */
+  intro?: string | null;
+  /**
+   * Sustainability: publish only claims MONIP can substantiate (materials, programs, certifications).
+   */
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  seo?: {
+    /**
+     * Defaults to the page title.
+     */
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * Website inquiries. Read-only record of what was submitted.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -371,6 +462,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'products';
         value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'inquiries';
@@ -510,6 +609,40 @@ export interface ProductsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  sortOrder?: T;
+  summary?: T;
+  body?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  key?: T;
+  intro?: T;
+  body?: T;
   seo?:
     | T
     | {

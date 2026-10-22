@@ -10,7 +10,9 @@ import { fileURLToPath } from "url";
 import { Categories } from "./collections/Categories";
 import { Inquiries } from "./collections/Inquiries";
 import { Media } from "./collections/Media";
+import { Pages } from "./collections/Pages";
 import { Products } from "./collections/Products";
+import { Services } from "./collections/Services";
 import { Users } from "./collections/Users";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -35,7 +37,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, Products, Inquiries],
+  collections: [Users, Media, Categories, Products, Services, Pages, Inquiries],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),
   typescript: {

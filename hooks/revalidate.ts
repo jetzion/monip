@@ -33,6 +33,17 @@ export const revalidateDeletedProduct: CollectionAfterDeleteHook<Product> = ({ d
   return doc;
 };
 
+/** Content that can change site navigation (services, pages) refreshes every page. */
+export const revalidateSite: CollectionAfterChangeHook = ({ doc, req }) => {
+  if (!skip(req)) revalidatePath("/", "layout");
+  return doc;
+};
+
+export const revalidateSiteOnDelete: CollectionAfterDeleteHook = ({ doc, req }) => {
+  if (!skip(req)) revalidatePath("/", "layout");
+  return doc;
+};
+
 /** Category names appear on every product page, so refresh them all. */
 export const revalidateCategories: CollectionAfterChangeHook = ({ doc, req }) => {
   if (!skip(req)) {

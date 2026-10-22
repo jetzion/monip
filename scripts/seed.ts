@@ -1,16 +1,16 @@
 /**
- * Seeds clearly marked placeholder categories and products for local
- * development. MONIP replaces these with real products via the admin.
+ * Seeds clearly marked placeholder content for local development: catalog,
+ * services, and the About / Sustainability / Privacy pages. Each part is
+ * skipped if it already exists. MONIP replaces these via the admin.
  * Run with: pnpm seed
  */
 import config from "@payload-config";
 import { getPayload } from "payload";
 import sharp from "sharp";
 
+import type { PageKey } from "../collections/Pages";
 import { toSlug } from "../lib/slug";
-
-const PLACEHOLDER_SUMMARY =
-  "Development placeholder. Replace with an approved MONIP product.";
+import type { Page } from "../payload-types";
 
 if (process.env.NODE_ENV === "production") {
   throw new Error("Refusing to seed placeholder content in production.");
@@ -21,6 +21,8 @@ const payload = await getPayload({ config });
 // Hooks call Next.js revalidation, which is unavailable outside the app.
 const context = { disableRevalidate: true };
 
+const PLACEHOLDER = "Development placeholder. Replace with approved MONIP content.";
+
 /** Builds a grey PNG labelled PLACEHOLDER so it cannot pass as real imagery. */
 const placeholderImage = async (label: string) => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900">
@@ -29,25 +31,41 @@ const placeholderImage = async (label: string) => {
     <text x="50%" y="58%" font-family="sans-serif" font-size="40" fill="#9ca3af" text-anchor="middle">${label}</text>
   </svg>`;
   const data = await sharp(Buffer.from(svg)).png().toBuffer();
-  const name = `placeholder-${label.toLowerCase().replace(/\s+/g, "-")}.png`;
   return payload.create({
     collection: "media",
     data: { alt: `Placeholder image for ${label}` },
-    file: { data, mimetype: "image/png", name, size: data.length },
+    file: { data, mimetype: "image/png", name: `placeholder-${toSlug(label)}.png`, size: data.length },
   });
 };
 
-const createCategory = (title: string, parent?: number) =>
-  payload.create({ collection: "categories", context, data: { title, slug: toSlug(title), parent } });
-
-const existing = await payload.count({
-  collection: "categories",
-  where: { slug: { equals: "placeholder-category-a" } },
+/** Minimal Lexical rich text made of plain paragraphs. */
+const richText = (...paragraphs: string[]): NonNullable<Page["body"]> => ({
+  root: {
+    type: "root",
+    format: "",
+    indent: 0,
+    version: 1,
+    direction: "ltr",
+    children: paragraphs.map((text) => ({
+      type: "paragraph",
+      format: "",
+      indent: 0,
+      version: 1,
+      direction: "ltr",
+      textFormat: 0,
+      textStyle: "",
+      children: [{ type: "text", text, format: 0, style: "", mode: "normal", detail: 0, version: 1 }],
+    })),
+  },
 });
 
-if (existing.totalDocs > 0) {
-  payload.logger.info("Placeholder content already exists; nothing to do.");
-} else {
+const exists = async (collection: "categories" | "services", slug: string) =>
+  (await payload.count({ collection, where: { slug: { equals: slug } } })).totalDocs > 0;
+
+async function seedCatalog() {
+  if (await exists("categories", "placeholder-category-a")) return "catalog exists";
+  const createCategory = (title: string, parent?: number) =>
+    payload.create({ collection: "categories", context, data: { title, slug: toSlug(title), parent } });
   const catA = await createCategory("Placeholder Category A");
   const catB = await createCategory("Placeholder Category B");
   const subA1 = await createCategory("Placeholder Subcategory A1", catA.id);
@@ -59,7 +77,6 @@ if (existing.totalDocs > 0) {
     { n: 4, category: catB.id, featured: true },
     { n: 5, category: catB.id, featured: false },
   ];
-
   for (const { n, ...rest } of products) {
     const image = await placeholderImage(`Product ${n}`);
     await payload.create({
@@ -68,14 +85,56 @@ if (existing.totalDocs > 0) {
       data: {
         name: `Placeholder Product ${n}`,
         slug: `placeholder-product-${n}`,
-        summary: PLACEHOLDER_SUMMARY,
+        summary: PLACEHOLDER,
         primaryImage: image.id,
         _status: "published",
         ...rest,
       },
     });
   }
-  payload.logger.info(`Seeded 3 categories and ${products.length} products.`);
+  return `seeded 3 categories and ${products.length} products`;
 }
 
+async function seedServices() {
+  if (await exists("services", "placeholder-service-1")) return "services exist";
+  for (const n of [1, 2, 3]) {
+    await payload.create({
+      collection: "services",
+      context,
+      data: {
+        title: `Placeholder Service ${n}`,
+        slug: `placeholder-service-${n}`,
+        sortOrder: n,
+        summary: PLACEHOLDER,
+        body: richText(PLACEHOLDER),
+        _status: "published",
+      },
+    });
+  }
+  return "seeded 3 services";
+}
+
+async function seedPages() {
+  const pages: { key: PageKey; title: string }[] = [
+    { key: "about", title: "About MONIP Group (placeholder)" },
+    { key: "sustainability", title: "Sustainability (placeholder)" },
+    { key: "privacy", title: "Privacy policy (placeholder)" },
+  ];
+  const created: string[] = [];
+  for (const { key, title } of pages) {
+    const found = await payload.count({ collection: "pages", where: { key: { equals: key } } });
+    if (found.totalDocs > 0) continue;
+    await payload.create({
+      collection: "pages",
+      context,
+      data: { key, title, intro: PLACEHOLDER, body: richText(PLACEHOLDER), _status: "published" },
+    });
+    created.push(key);
+  }
+  return created.length ? `seeded pages: ${created.join(", ")}` : "pages exist";
+}
+
+for (const step of [seedCatalog, seedServices, seedPages]) {
+  payload.logger.info(`Seed: ${await step()}`);
+}
 process.exit(0);
