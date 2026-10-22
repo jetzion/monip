@@ -553,7 +553,7 @@ Update this section as decisions are confirmed.
 - [x] Requirements and plan reviewed; decisions recorded
 - [x] Next.js 16.4 + TypeScript + Tailwind v4 + shadcn/ui scaffold (pnpm)
 - [x] Payload 3.91 installed, local Postgres (Docker), admin at `/admin`
-- [ ] Minimal shell: tokens, header, footer, base components
+- [x] Minimal shell: tokens, header, footer (provisional brand tokens)
 - [x] Product and Category collections (drafts, access control, slugs)
 - [x] Placeholder products (`pnpm seed`, dev only)
 - [ ] Catalog and product detail pages with live updates
