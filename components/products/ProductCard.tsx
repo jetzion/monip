@@ -6,9 +6,10 @@ import type { Category, Product } from "@/payload-types";
 
 type Props = {
   product: Pick<Product, "name" | "slug" | "summary" | "primaryImage" | "category">;
+  eager?: boolean;
 };
 
-export function ProductCard({ product }: Props) {
+export function ProductCard({ product, eager }: Props) {
   const category = populated<Category>(product.category);
   return (
     <article className="relative flex w-full flex-col border border-border bg-card transition-colors hover:border-foreground/40 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2">
@@ -16,6 +17,7 @@ export function ProductCard({ product }: Props) {
         <CmsImage
           image={product.primaryImage}
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          eager={eager}
           className="h-full w-full object-cover"
         />
       </div>

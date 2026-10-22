@@ -7,11 +7,12 @@ type Props = {
   image: number | Media | null | undefined;
   sizes: string;
   className?: string;
-  priority?: boolean;
+  /** Load immediately; use for above-the-fold images. */
+  eager?: boolean;
 };
 
 /** Renders a Payload media item; renders nothing if it is missing. */
-export function CmsImage({ image, sizes, className, priority }: Props) {
+export function CmsImage({ image, sizes, className, eager }: Props) {
   const media = populated(image);
   if (!media?.url) return null;
   return (
@@ -22,7 +23,7 @@ export function CmsImage({ image, sizes, className, priority }: Props) {
       height={media.height ?? 900}
       sizes={sizes}
       className={className}
-      priority={priority}
+      loading={eager ? "eager" : "lazy"}
     />
   );
 }

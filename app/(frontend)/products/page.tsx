@@ -24,9 +24,9 @@ export default async function ProductsPage() {
         </p>
       ) : (
         <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {products.map((product, index) => (
             <li key={product.slug} className="flex">
-              <ProductCard product={product} />
+              <ProductCard product={product} eager={index < 3} />
             </li>
           ))}
         </ul>

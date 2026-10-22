@@ -26,6 +26,21 @@ export async function getPublishedProducts() {
   return docs;
 }
 
+export async function getFeaturedProducts(limit = 3) {
+  const payload = await getPayloadClient();
+  const { docs } = await payload.find({
+    collection: "products",
+    ...publicAccess,
+    depth: 1,
+    limit,
+    where: { featured: { equals: true } },
+    sort: "-publishedAt",
+    select: { name: true, slug: true, summary: true, primaryImage: true, category: true },
+    populate,
+  });
+  return docs;
+}
+
 export async function getProductBySlug(slug: string) {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({

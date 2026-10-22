@@ -564,7 +564,8 @@ Update this section as decisions are confirmed.
 - [ ] Drafts and Live Preview
 - [x] Product inquiry: Payload save, notification, auto-reply, honeypot (emails print to console until Resend is configured)
 - [ ] Resend email adapter (needs Resend account and verified sender)
-- [ ] Home, About, Services, Contact pages
+- [x] Home (featured products) and Contact (general inquiry)
+- [ ] About, Services, Sustainability pages (need MONIP content)
 - [ ] Search and filters
 - [ ] SEO, sitemap, robots, redirects
 - [ ] Rate limiting (launch blocker)

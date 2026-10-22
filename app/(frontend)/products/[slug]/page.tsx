@@ -70,7 +70,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
               image={product.primaryImage}
               sizes="(min-width: 1024px) 55vw, 100vw"
               className="h-auto w-full"
-              priority
+              eager
             />
           </div>
           {product.gallery && product.gallery.length > 0 && (
