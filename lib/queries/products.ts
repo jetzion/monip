@@ -1,3 +1,5 @@
+import type { Where } from "payload";
+
 import { getPayloadClient } from "@/lib/payload";
 
 /**
@@ -12,7 +14,31 @@ const populate = {
   categories: { title: true, slug: true },
 } as const;
 
-export async function getPublishedProducts() {
+export type ProductFilters = {
+  /** Keywords matched (case-insensitive, all words) in name, summary, tags, or materials. */
+  q?: string;
+  category?: { id: number; isSubcategory: boolean };
+};
+
+const filterWhere = ({ q, category }: ProductFilters): Where => {
+  const and: Where[] = [];
+  if (q) {
+    and.push({
+      or: [
+        { name: { like: q } },
+        { summary: { like: q } },
+        { tags: { like: q } },
+        { materials: { like: q } },
+      ],
+    });
+  }
+  if (category) {
+    and.push({ [category.isSubcategory ? "subcategory" : "category"]: { equals: category.id } });
+  }
+  return { and };
+};
+
+export async function getPublishedProducts(filters: ProductFilters = {}) {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
     collection: "products",
@@ -20,6 +46,7 @@ export async function getPublishedProducts() {
     depth: 1,
     limit: 100,
     sort: "name",
+    where: filterWhere(filters),
     select: { name: true, slug: true, summary: true, primaryImage: true, category: true },
     populate,
   });

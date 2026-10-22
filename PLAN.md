@@ -566,7 +566,7 @@ Update this section as decisions are confirmed.
 - [ ] Resend email adapter (needs Resend account and verified sender)
 - [x] Home (featured products) and Contact (general inquiry)
 - [ ] About, Services, Sustainability pages (need MONIP content)
-- [ ] Search and filters
+- [x] Search (name, summary, tags, materials) and category/subcategory filters via URL params
 - [ ] SEO, sitemap, robots, redirects
 - [ ] Rate limiting (launch blocker)
 - [ ] QA, deployment, handover
