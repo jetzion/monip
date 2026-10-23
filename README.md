@@ -17,6 +17,7 @@ pnpm seed                   # optional: placeholder products, services, and page
 
 - The first account created at `/admin` becomes an admin.
 - Without `RESEND_API_KEY`, emails are printed to the `pnpm dev` console.
+- The website chat ("Chat with us") needs `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` in `.env`; without them it shows "not available".
 - Restart `pnpm dev` after changing `payload.config.ts` or a collection; Payload reads its config at startup.
 - Live Preview (eye icon in the admin) needs `SITE_URL` to match the address the site is served from.
 
@@ -26,7 +27,7 @@ pnpm seed                   # optional: placeholder products, services, and page
 |---|---|
 | `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript |
 | `pnpm test` | Unit tests (Vitest) |
-| `pnpm test:e2e` | Browser and accessibility tests (Playwright + axe) against a production build on port 3100; runs alongside `pnpm dev`; needs the seeded local DB |
+| `pnpm test:e2e` | Browser and accessibility tests (Playwright + axe) against a production build on port 3100; runs alongside `pnpm dev`; uses the local DB and expects the seeded placeholders (the chat is mocked) |
 | `pnpm seed` | Placeholder content; skips anything that already exists |
 | `pnpm generate:types` / `generate:importmap` | Regenerate Payload types / admin import map |
 | `pnpm payload migrate:create <name>` | Create a migration after changing collections |
@@ -40,7 +41,7 @@ In development Payload syncs the schema automatically. After changing a collecti
 
 1. Create a Neon Postgres database and a Vercel Blob store, and connect both to the Vercel project.
 2. Set environment variables for Production (and Preview, with a separate database):
-   `DATABASE_URL`, `PAYLOAD_SECRET`, `SITE_URL`, `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `EMAIL_FROM`, `INQUIRY_NOTIFY_EMAIL`.
+   `DATABASE_URL`, `PAYLOAD_SECRET`, `SITE_URL`, `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `EMAIL_FROM`, `INQUIRY_NOTIFY_EMAIL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`.
 3. Deploy. Preview deployments are never indexed by search engines.
 
-Before launch: add rate limiting for the inquiry form (Vercel Firewall rule on `POST` to product and contact pages).
+Before launch: add rate limiting for the inquiry form and chat (Vercel Firewall rules on `POST` to product and contact pages and to `/api/chat`), and set a spending limit on the OpenRouter key.

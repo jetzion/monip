@@ -240,3 +240,8 @@ If credentials, content, access, or a business decision is missing:
     `${=VAR}`), and unmatched globs abort the command.
 -   Delete any test users, inquiries, or drafts created while verifying
     behavior; the first real account must become the admin.
+-   E2E tests share the development database, which now holds real
+    content; delete `e2e-*@example.com` inquiries after each run, and
+    expect catalog tests to fail where editors replaced placeholders.
+-   The chat calls OpenRouter only from `app/api/chat`; tests mock it.
+    Never log or expose `OPENROUTER_API_KEY`.

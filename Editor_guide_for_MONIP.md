@@ -1,6 +1,6 @@
 # MONIP Website Editor Guide
 
-Oct 22, 2026 · @Jack
+Oct 23, 2026 · @Jack
 
 ## Getting started
 
@@ -13,7 +13,7 @@ While the site is in development, the admin is at http://localhost:3000/admin on
 | Role | Can do | Cannot do |
 | --- | --- | --- |
 | Admin | Everything editors can, plus manage users and read website inquiries | — |
-| Editor | Create, edit, preview, publish, and unpublish products, categories, services, pages, and images | See other users, change roles, or read inquiries |
+| Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, pages, the Home page text, and images | See other users, change roles, or read inquiries |
 
 You can change your own name and password from your account page. Only an admin can change someone's role.
 
@@ -82,7 +82,7 @@ Nothing reaches visitors until you click **Publish changes**. Edits save automat
 
 Services and pages use the same draft, preview, and publish steps as products. Categories have no drafts: changes go live as soon as you save.
 
-**Categories.** Each category has a title, an optional description and image, and a **Sort order** (lower numbers appear first in the catalog filters). Set a **Parent** to make it a subcategory; there are two levels at most. Before deleting a category, move its products to another one, or those products cannot be saved until a new category is chosen.
+**Categories.** Each category has a title, an optional description and image, and a **Sort order** (lower numbers appear first in the catalog filters). Set a **Parent** to make it a subcategory; there are two levels at most. A product's **Category** must be a top-level category, so giving a category a parent breaks every product that uses it as its Category: those products cannot be saved until you set their Category to the new parent and their Subcategory to the moved category. Before deleting a category, move its products to another one, or those products cannot be saved until a new category is chosen.
 
 **Services.** Each service is a section on the Services page, ordered by **Sort order**, with a required **Summary** plus optional body text and image. The Services page and its menu link appear once at least one service is published.
 
@@ -105,7 +105,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 ## Website chat
 
-The chat assistant, Mike, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, and the client list. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Conversations are not saved.
+The chat assistant, Mike, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, and the client list. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to Mike's name. Conversations are not saved.
 
 ## Content rules
 
@@ -123,6 +123,7 @@ Publish only accurate, approved information; anything on the site is a public cl
 | --- | --- |
 | Publish button shows an error | A required field is empty: Name, Summary, Primary image, or Category. The field is highlighted in red. |
 | Subcategory list is empty | Choose a category first; only its own subcategories are listed. |
+| "The following field is invalid: Category" | The product's category has been made a subcategory. Choose its parent as the Category and the old category as the Subcategory. |
 | "Value must be unique" on Slug | Another product already uses that address. Change the slug, for example add the size or color. |
 | My change is not on the site | Check the status says Published, not Changed. Then reload the page. |
 | A page or menu link is missing | Pages, Services, and their links appear only once something is published there. |
