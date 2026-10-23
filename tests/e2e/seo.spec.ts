@@ -20,5 +20,5 @@ test("product pages have a canonical URL and social metadata", async ({ page }) 
     /\/products\/placeholder-product-1$/,
   );
   await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute("content", "MONIP Group");
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /placeholder-product-1\.png/);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/api\/media\/file\/.+\.(png|jpe?g|webp)$/);
 });

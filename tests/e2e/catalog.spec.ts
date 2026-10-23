@@ -5,9 +5,12 @@ test("visitor browses the catalog and opens a product", async ({ page }) => {
   await page.goto("/products");
   await expect(page.getByRole("heading", { level: 1, name: "Products" })).toBeVisible();
 
-  await page.getByRole("link", { name: "Placeholder Product 1" }).click();
+  // Product names are editable, so follow the card by URL and compare names.
+  const card = page.locator('a[href="/products/placeholder-product-1"]');
+  const name = (await card.innerText()).trim();
+  await card.click();
   await expect(page).toHaveURL(/\/products\/placeholder-product-1$/);
-  await expect(page.getByRole("heading", { level: 1, name: "Placeholder Product 1" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
 });
 
 test("unknown product shows the not-found page", async ({ page }) => {

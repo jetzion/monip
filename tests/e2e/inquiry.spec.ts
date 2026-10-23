@@ -18,14 +18,13 @@ test("shows field errors and keeps typed values", async ({ page }) => {
 
 test("visitor submits a product inquiry", async ({ page }) => {
   await page.goto(PRODUCT);
+  const name = (await page.getByRole("heading", { level: 1 }).innerText()).trim();
   await page.getByLabel("Name").fill("E2E Visitor");
   await page.getByLabel("Email").fill("e2e-visitor@example.com");
   await page.getByLabel("Message").fill("E2E test inquiry: 500 units, please.");
   await page.getByRole("button", { name: "Send inquiry" }).click();
 
-  await expect(page.getByRole("status")).toContainText(
-    "We received your inquiry about Placeholder Product 1",
-  );
+  await expect(page.getByRole("status")).toContainText(`We received your inquiry about ${name}`);
 });
 
 test("honeypot submissions show success but are not saved", async ({ page }) => {
