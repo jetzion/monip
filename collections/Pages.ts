@@ -51,6 +51,14 @@ export const Pages: CollectionConfig = {
       admin: { description: "Short introduction shown under the page title." },
     },
     {
+      name: "image",
+      type: "upload",
+      relationTo: "media",
+      admin: {
+        description: "Optional photo shown below the introduction. Also used when the page is shared.",
+      },
+    },
+    {
       name: "body",
       type: "richText",
       admin: {

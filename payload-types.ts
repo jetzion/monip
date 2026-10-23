@@ -368,6 +368,10 @@ export interface Page {
    */
   intro?: string | null;
   /**
+   * Optional photo shown below the introduction. Also used when the page is shared.
+   */
+  image?: (number | null) | Media;
+  /**
    * Sustainability: publish only claims MONIP can substantiate (materials, programs, certifications).
    */
   body?: {
@@ -642,6 +646,7 @@ export interface PagesSelect<T extends boolean = true> {
   title?: T;
   key?: T;
   intro?: T;
+  image?: T;
   body?: T;
   seo?:
     | T

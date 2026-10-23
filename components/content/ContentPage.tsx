@@ -1,8 +1,9 @@
 import { RichText } from "@payloadcms/richtext-lexical/react";
 
+import { CmsImage } from "@/components/media/CmsImage";
 import type { Page } from "@/payload-types";
 
-type Props = { page: Pick<Page, "title" | "intro" | "body"> };
+type Props = { page: Pick<Page, "title" | "intro" | "image" | "body"> };
 
 /** Layout for CMS-managed text pages (About, Sustainability, Privacy). */
 export function ContentPage({ page }: Props) {
@@ -13,6 +14,11 @@ export function ContentPage({ page }: Props) {
       </h1>
       {page.intro && (
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">{page.intro}</p>
+      )}
+      {page.image && (
+        <div className="mt-10 overflow-hidden border border-border bg-muted">
+          <CmsImage image={page.image} sizes="(min-width: 1152px) 1104px, 100vw" className="h-auto w-full" eager />
+        </div>
       )}
       {page.body && (
         <RichText

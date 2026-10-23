@@ -140,7 +140,7 @@ lead-time information unless MONIP explicitly approves it.
 ### Page
 
 -   `title`, `key` (unique: about, sustainability, privacy), `intro`,
-    `body`, SEO fields; drafts. Each key maps to a route in code.
+    `image` (optional), `body`, SEO fields; drafts. Each key maps to a route in code.
 -   A page, `/services`, and their nav links appear only when published
     content exists; otherwise the route returns 404.
 

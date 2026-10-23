@@ -23,10 +23,11 @@ export async function getPage(key: PageKey, access: ContentAccess = publicAccess
   const { docs } = await payload.find({
     collection: "pages",
     ...access,
-    depth: 0,
+    depth: 1,
     limit: 1,
     where: { key: { equals: key } },
-    select: { title: true, intro: true, body: true, seo: true },
+    select: { title: true, intro: true, image: true, body: true, seo: true },
+    populate: { media: { url: true, filename: true, alt: true, width: true, height: true } },
   });
   return docs[0] ?? null;
 }

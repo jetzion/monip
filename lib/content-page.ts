@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import type { PageKey } from "@/collections/Pages";
 import { contentAccess } from "@/lib/queries/access";
 import { getPage } from "@/lib/queries/content";
+import { populated } from "@/lib/payload";
+import { baseOpenGraph } from "@/lib/seo";
+import type { Media } from "@/payload-types";
 
 const PATHS: Record<PageKey, string> = {
   about: "/about",
@@ -15,10 +18,20 @@ const PATHS: Record<PageKey, string> = {
 export async function contentPageMetadata(key: PageKey): Promise<Metadata> {
   const page = await getPage(key, await contentAccess());
   if (!page) return {};
+  const title = page.seo?.title || page.title;
+  const description = page.seo?.description || page.intro || undefined;
+  const image = populated<Media>(page.image);
   return {
-    title: page.seo?.title || page.title,
-    description: page.seo?.description || page.intro || undefined,
+    title,
+    description,
     alternates: { canonical: PATHS[key] },
+    openGraph: {
+      ...baseOpenGraph,
+      title,
+      description,
+      url: PATHS[key],
+      images: image?.url ? [{ url: image.url, alt: image.alt }] : undefined,
+    },
   };
 }
 
