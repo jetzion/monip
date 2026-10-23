@@ -41,7 +41,7 @@ test("privacy policy is linked from the footer", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("contentinfo").getByRole("link", { name: "Privacy policy" }).click();
   await expect(page).toHaveURL(/\/privacy$/);
-  await expect(page.getByRole("heading", { level: 1, name: "Privacy policy (placeholder)" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: /^Privacy policy/ })).toBeVisible();
 });
 
 test.describe("mobile", () => {

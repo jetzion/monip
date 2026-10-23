@@ -601,7 +601,8 @@ Update this section as decisions are confirmed.
 - [x] Clients page (case studies not built)
 - [x] Website chat (OpenRouter): floating panel on public pages, server endpoint, validation, rate limit, tests with mocked API
 - [ ] Chat: set `OPENROUTER_MODEL` and verify real replies
-- [ ] Privacy policy (MONIP to supply), including that chat messages are sent to an AI provider
+- [x] Privacy policy page from `PRIVACY-POLICY.md` (CMS page, footer link)
+- [ ] Privacy policy: add the privacy contact email and a section on the website chat (messages sent to an AI provider)
 - [ ] Site Settings global for logo, contact details, footer (needs MONIP content)
 - [ ] Analytics (needs provider decision)
 - [ ] Final QA with real content, deployment, editor training, handover
