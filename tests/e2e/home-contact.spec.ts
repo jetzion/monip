@@ -15,6 +15,13 @@ test("header call to action opens the contact page", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Discuss a project" })).toBeVisible();
 });
 
+/** Requires the published Home page global (migration or pnpm seed). */
+test("homepage shows the published CMS copy", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Merchandising and product sourcing for business");
+  await expect(page.getByRole("heading", { level: 2, name: "Have a product or program in mind?" })).toBeVisible();
+});
+
 test("hero links to the About page for more detail", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "More about MONIP Group" }).click();

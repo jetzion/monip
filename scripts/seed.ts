@@ -1,6 +1,6 @@
 /**
  * Seeds clearly marked placeholder content for local development: catalog,
- * services, and the About and Privacy pages. Each part is
+ * services, the About and Privacy pages, and the homepage copy. Each part is
  * skipped if it already exists. MONIP replaces these via the admin.
  * Run with: pnpm seed
  */
@@ -133,7 +133,15 @@ async function seedPages() {
   return created.length ? `seeded pages: ${created.join(", ")}` : "pages exist";
 }
 
-for (const step of [seedCatalog, seedServices, seedPages]) {
+/** Publishes the homepage copy defaults (migrations do this on new databases). */
+async function seedHome() {
+  const home = await payload.findGlobal({ slug: "home", overrideAccess: false, draft: false });
+  if (home._status === "published") return "home exists";
+  await payload.updateGlobal({ slug: "home", context, data: { _status: "published" } });
+  return "published home page defaults";
+}
+
+for (const step of [seedCatalog, seedServices, seedPages, seedHome]) {
   payload.logger.info(`Seed: ${await step()}`);
 }
 process.exit(0);

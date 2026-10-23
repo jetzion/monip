@@ -97,8 +97,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    home: Home;
+  };
+  globalsSelect: {
+    home: HomeSelect<false> | HomeSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -712,6 +716,66 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Text on the homepage. Link destinations are fixed; featured products are chosen on each product.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home".
+ */
+export interface Home {
+  id: number;
+  hero: {
+    headline: string;
+    intro: string;
+    /**
+     * Link to the About page.
+     */
+    aboutLinkLabel: string;
+    /**
+     * Button to the product catalog.
+     */
+    productsButtonLabel: string;
+    /**
+     * Button to the contact page.
+     */
+    contactButtonLabel: string;
+  };
+  closing: {
+    heading: string;
+    /**
+     * Button to the contact page.
+     */
+    buttonLabel: string;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home_select".
+ */
+export interface HomeSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        headline?: T;
+        intro?: T;
+        aboutLinkLabel?: T;
+        productsButtonLabel?: T;
+        contactButtonLabel?: T;
+      };
+  closing?:
+    | T
+    | {
+        heading?: T;
+        buttonLabel?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

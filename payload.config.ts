@@ -14,6 +14,7 @@ import { Pages } from "./collections/Pages";
 import { Products } from "./collections/Products";
 import { Services } from "./collections/Services";
 import { Users } from "./collections/Users";
+import { Home } from "./globals/Home";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,6 +46,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Categories, Products, Services, Pages, Inquiries],
+  globals: [Home],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),
   typescript: {

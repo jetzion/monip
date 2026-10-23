@@ -6,36 +6,41 @@ import { SectionHeading } from "@/components/content/SectionHeading";
 import { HeroVideo } from "@/components/home/HeroVideo";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ButtonLink } from "@/components/ui/button-link";
+import { contentAccess } from "@/lib/queries/access";
+import { getHomeContent } from "@/lib/queries/home";
 import { getFeaturedProducts } from "@/lib/queries/products";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-/** Hero intro is MONIP-supplied (UPDATE_CONTANT.md); headline and closing copy are drafts. */
+/** Copy is edited in the CMS (Home page global); link targets are fixed here. */
 export default async function HomePage() {
-  const featured = await getFeaturedProducts();
+  const [{ hero, closing }, featured] = await Promise.all([
+    getHomeContent(await contentAccess()),
+    getFeaturedProducts(),
+  ]);
 
   return (
     <>
       <PageHeader
         size="hero"
         background={<HeroVideo />}
-        title="Merchandising and product sourcing for business"
-        intro="MONIP Group brings together global sourcing expertise, creative product development, and strategic merchandising to help cruise lines and retail businesses stand out in competitive markets. We go beyond finding products."
+        title={hero.headline}
+        intro={hero.intro}
       >
         <Link
           href="/about"
           className="mt-4 inline-block font-semibold text-white underline underline-offset-4 hover:text-on-dark-muted"
         >
-          More about MONIP Group
+          {hero.aboutLinkLabel}
         </Link>
         <div className="mt-10 flex flex-wrap gap-3">
           <ButtonLink href="/products" variant="inverse" className="h-11 px-6">
-            Browse products
+            {hero.productsButtonLabel}
           </ButtonLink>
           <ButtonLink href="/contact" variant="outline-inverse" className="h-11 px-6">
-            Discuss a project
+            {hero.contactButtonLabel}
           </ButtonLink>
         </div>
       </PageHeader>
@@ -64,10 +69,10 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-20">
         <div className="flex flex-col gap-6 rounded-2xl bg-[linear-gradient(115deg,var(--primary)_0%,var(--azure)_100%)] px-6 py-12 text-white shadow-card sm:px-12 md:flex-row md:items-center md:justify-between">
           <h2 className="font-display max-w-xl text-3xl font-semibold leading-tight">
-            Have a product or program in mind?
+            {closing.heading}
           </h2>
           <ButtonLink href="/contact" variant="inverse" className="h-11 self-start px-6 md:self-auto">
-            Discuss a project
+            {closing.buttonLabel}
           </ButtonLink>
         </div>
       </section>

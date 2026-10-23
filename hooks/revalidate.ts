@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
+  GlobalAfterChangeHook,
   PayloadRequest,
 } from "payload";
 
@@ -61,5 +62,10 @@ export const revalidateDeletedCategory: CollectionAfterDeleteHook = ({ doc, req 
     revalidatePath("/");
     revalidatePath("/products", "layout");
   }
+  return doc;
+};
+
+export const revalidateHome: GlobalAfterChangeHook = ({ doc, previousDoc, req }) => {
+  if (!skip(req) && affectsPublicSite(doc, previousDoc)) revalidatePath("/");
   return doc;
 };

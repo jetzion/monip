@@ -137,6 +137,11 @@ lead-time information unless MONIP explicitly approves it.
 -   `title`, `slug`, `summary`, `body`, `image` (optional), `sortOrder`;
     drafts. Shown as sections on `/services` (no detail pages yet).
 
+### Home (global)
+
+-   `hero` (headline, intro, about link and button labels) and `closing`
+    (heading, button label); drafts and Live Preview. Link targets are in code.
+
 ### Page
 
 -   `title`, `key` (unique: about, privacy), `intro`,
@@ -573,6 +578,7 @@ Update this section as decisions are confirmed.
 - [x] Services, About, Privacy pages (CMS-managed, hidden until published; placeholders in seed)
 - [x] Sustainability page removed (route, nav, sitemap, CMS page key, copied content and photo; migration `20261023_143316_remove_sustainability_page`)
 - [x] About content and homepage hero intro from MONIP (`UPDATE_CONTANT.md`; hero links to About for detail)
+- [x] Homepage copy editable in the CMS (`home` global: hero and closing text, drafts and Live Preview; migration `20261023_160929_home_global` publishes the defaults)
 - [ ] Real Services and Privacy content and homepage headline from MONIP
 - [x] Search (name, summary, tags, materials) and category/subcategory filters via URL params
 - [x] SEO: metadataBase, canonicals, Open Graph, sitemap, robots (previews blocked), breadcrumb JSON-LD
