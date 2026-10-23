@@ -1,0 +1,5 @@
+// Clients list: show whole logos in the thumbnail column instead of a square crop.
+.collection-list--clients .cell-logo .thumbnail img {
+  object-fit: contain;
+  background: #fff;
+}

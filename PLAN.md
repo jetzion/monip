@@ -151,7 +151,8 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Client
 
--   `name`, `logo` (required upload), `sortOrder`; drafts. Shown as a logo grid
+-   `name`, `logo` (required upload); drafts; `orderable` (drag-and-drop
+    order stored in `_order`, fractional index; replaced `sortOrder`). Shown as a logo grid
     on `/clients` under the "Our clients" page title and intro.
 
 ### Office
@@ -632,6 +633,7 @@ Update this section as decisions are confirmed.
 - [x] Website chat (OpenRouter): floating panel on public pages, server endpoint, validation, rate limit, tests with mocked API
 - [x] Duplicate products in the CMS (copy is a draft named "(copy)", unique "-copy" slug, not featured; slug rule also applies to services and categories)
 - [x] Offices on the About page: world map with pins and list (Offices collection; 5 offices from monip-group.com)
+- [x] Clients list: logo thumbnails (whole logo, `app/(payload)/custom.scss`) and drag-and-drop ordering (Payload `orderable`; migrations add `_order` with the old order, then drop `sort_order`)
 - [ ] Chat: set `OPENROUTER_MODEL` and verify real replies
 - [x] Privacy policy page from `PRIVACY-POLICY.md` (CMS page, footer link)
 - [ ] Privacy policy: add the privacy contact email and a section on the website chat (messages sent to an AI provider)

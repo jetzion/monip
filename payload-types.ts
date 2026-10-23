@@ -359,22 +359,19 @@ export interface Service {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Client logos shown on the Our clients page. Publish only clients MONIP has approval to name.
+ * Client logos shown on the Our clients page, in this order. Drag the handle on the left to reorder. Publish only clients MONIP has approval to name.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clients".
  */
 export interface Client {
   id: number;
+  _order?: string | null;
   name: string;
   /**
    * A PNG with a transparent or white background works best.
    */
   logo: number | Media;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -709,9 +706,9 @@ export interface ServicesSelect<T extends boolean = true> {
  * via the `definition` "clients_select".
  */
 export interface ClientsSelect<T extends boolean = true> {
+  _order?: T;
   name?: T;
   logo?: T;
-  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

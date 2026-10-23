@@ -8,12 +8,14 @@ export const Clients: CollectionConfig = {
   slug: "clients",
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["name", "sortOrder", "_status", "updatedAt"],
+    defaultColumns: ["logo", "name", "_status", "updatedAt"],
     description:
-      "Client logos shown on the Our clients page. Publish only clients MONIP has approval to name.",
+      "Client logos shown on the Our clients page, in this order. Drag the handle on the left to reorder. Publish only clients MONIP has approval to name.",
     livePreview: livePreview(() => "/clients"),
   },
-  defaultSort: "sortOrder",
+  // Drag-and-drop ordering in the list; adds a hidden `_order` field.
+  orderable: true,
+  defaultSort: "_order",
   versions: autosaveDrafts,
   access: {
     read: publishedOrLoggedIn,
@@ -33,12 +35,6 @@ export const Clients: CollectionConfig = {
       relationTo: "media",
       required: true,
       admin: { description: "A PNG with a transparent or white background works best." },
-    },
-    {
-      name: "sortOrder",
-      type: "number",
-      defaultValue: 0,
-      admin: { position: "sidebar", description: "Lower numbers appear first." },
     },
   ],
 };

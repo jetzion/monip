@@ -90,7 +90,7 @@ Services and pages use the same draft, preview, and publish steps as products. C
 
 **About, Our clients, and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
 
-**Client logos.** Open **Clients** to add, remove, or reorder the logos on the Our clients page. Each needs the client name and a logo (give the logo image alt text such as "MSC Cruises logo"); **Sort order** sets the position. Show only clients MONIP has approval to name.
+**Client logos.** Open **Clients** to add, remove, or reorder the logos on the Our clients page. Each needs the client name and a logo (give the logo image alt text such as "MSC Cruises logo"). The list shows each logo and is in page order: drag the ⠿ handle on the left of a row to move it, and the page updates straight away. You can also reorder with the keyboard: focus the handle, press Space, use the arrow keys, then press Space again. Show only clients MONIP has approval to name.
 
 **Offices.** Open **Offices** to add, remove, or reorder the offices on the About page map and list. Each needs a name and its map position: in Google Maps, right-click the place and click the two numbers to copy them, then paste the first into **Latitude** and the second into **Longitude**. The street address is optional.
 
@@ -132,3 +132,4 @@ Publish only accurate, approved information; anything on the site is a public cl
 | Live Preview shows "Log in to the admin" | Your session expired. Log in again, then reopen the preview. |
 | A product page shows "Page not found" | The product is unpublished, or its slug changed. |
 | Cannot see Inquiries or Users | Those are admin-only. Ask an admin. |
+| A "<No Name>" item appears in a list | Opening **Create New** saves an empty draft straight away. If you left without filling it in, open it and delete it. Empty drafts never appear on the site. |

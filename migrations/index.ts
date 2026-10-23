@@ -7,6 +7,8 @@ import * as migration_20261023_160929_home_global from './20261023_160929_home_g
 import * as migration_20261023_161444_remove_hero_buttons from './20261023_161444_remove_hero_buttons';
 import * as migration_20261023_163326_clients from './20261023_163326_clients';
 import * as migration_20261023_210736_offices from './20261023_210736_offices';
+import * as migration_20261023_211829_add_client_order from './20261023_211829_add_client_order';
+import * as migration_20261023_211844_drop_client_sort_order from './20261023_211844_drop_client_sort_order';
 
 export const migrations = [
   {
@@ -52,6 +54,16 @@ export const migrations = [
   {
     up: migration_20261023_210736_offices.up,
     down: migration_20261023_210736_offices.down,
-    name: '20261023_210736_offices'
+    name: '20261023_210736_offices',
+  },
+  {
+    up: migration_20261023_211829_add_client_order.up,
+    down: migration_20261023_211829_add_client_order.down,
+    name: '20261023_211829_add_client_order',
+  },
+  {
+    up: migration_20261023_211844_drop_client_sort_order.up,
+    down: migration_20261023_211844_drop_client_sort_order.down,
+    name: '20261023_211844_drop_client_sort_order'
   },
 ];

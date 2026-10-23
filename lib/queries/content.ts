@@ -55,7 +55,7 @@ export async function getPublishedClients(access: ContentAccess = publicAccess) 
     ...access,
     depth: 1,
     limit: 100,
-    sort: ["sortOrder", "name"],
+    sort: "_order",
     select: { name: true, logo: true },
     populate: { media: { url: true, filename: true, alt: true, width: true, height: true } },
   });
