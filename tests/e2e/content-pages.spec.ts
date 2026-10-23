@@ -15,6 +15,16 @@ test("About page is linked from the header", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: /^About/ })).toBeVisible();
 });
 
+test("Our clients page is linked from the header and logos have alt text", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("banner").getByRole("link", { name: "Clients", exact: true }).click();
+  await expect(page).toHaveURL(/\/clients$/);
+  await expect(page.getByRole("heading", { level: 1, name: /^Our clients/ })).toBeVisible();
+  for (const logo of await page.getByRole("list", { name: "Client logos" }).getByRole("img").all()) {
+    await expect(logo).toHaveAttribute("alt", /\S/);
+  }
+});
+
 test("sustainability page is removed", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("link", { name: "Sustainability" })).toHaveCount(0);

@@ -23,6 +23,7 @@ const PAGES = [
   "/products/placeholder-product-1",
   "/services",
   "/about",
+  "/clients",
   "/privacy",
   "/contact",
   "/does-not-exist",

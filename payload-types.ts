@@ -72,6 +72,7 @@ export interface Config {
     categories: Category;
     products: Product;
     services: Service;
+    clients: Client;
     pages: Page;
     inquiries: Inquiry;
     'payload-kv': PayloadKv;
@@ -86,6 +87,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -355,7 +357,28 @@ export interface Service {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * About and Privacy pages. A page and its link appear on the site only once published.
+ * Client logos shown on the Our clients page. Publish only clients MONIP has approval to name.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: number;
+  name: string;
+  /**
+   * A PNG with a transparent or white background works best.
+   */
+  logo: number | Media;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * About, Our clients, and Privacy pages. A page and its link appear on the site only once published.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
@@ -366,7 +389,7 @@ export interface Page {
   /**
    * Which site page this content is for.
    */
-  key: 'about' | 'privacy';
+  key: 'about' | 'clients' | 'privacy';
   /**
    * Short introduction shown under the page title.
    */
@@ -471,6 +494,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'services';
         value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'clients';
+        value: number | Client;
       } | null)
     | ({
         relationTo: 'pages';
@@ -635,6 +662,18 @@ export interface ServicesSelect<T extends boolean = true> {
   summary?: T;
   body?: T;
   image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
+  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

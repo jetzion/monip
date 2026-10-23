@@ -5,6 +5,7 @@ import * as migration_20261023_113531_page_image from './20261023_113531_page_im
 import * as migration_20261023_143316_remove_sustainability_page from './20261023_143316_remove_sustainability_page';
 import * as migration_20261023_160929_home_global from './20261023_160929_home_global';
 import * as migration_20261023_161444_remove_hero_buttons from './20261023_161444_remove_hero_buttons';
+import * as migration_20261023_163326_clients from './20261023_163326_clients';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261023_161444_remove_hero_buttons.up,
     down: migration_20261023_161444_remove_hero_buttons.down,
-    name: '20261023_161444_remove_hero_buttons'
+    name: '20261023_161444_remove_hero_buttons',
+  },
+  {
+    up: migration_20261023_163326_clients.up,
+    down: migration_20261023_163326_clients.down,
+    name: '20261023_163326_clients'
   },
 ];

@@ -86,7 +86,9 @@ Services and pages use the same draft, preview, and publish steps as products. C
 
 **Home page.** Open **Home page** (under Globals) to change the homepage text: the headline, intro, About link label, and the closing call to action. Where the links go is fixed. Edits save as a draft with Live Preview; click **Publish changes** to update the site. Featured products are chosen with the **Featured** checkbox on each product.
 
-**About and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
+**About, Our clients, and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
+
+**Client logos.** Open **Clients** to add, remove, or reorder the logos on the Our clients page. Each needs the client name and a logo (give the logo image alt text such as "MSC Cruises logo"); **Sort order** sets the position. Show only clients MONIP has approval to name.
 
 ## Reading website inquiries
 

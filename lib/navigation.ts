@@ -10,6 +10,7 @@ export async function getNavigation(): Promise<{ main: NavItem[]; footer: NavIte
     { href: "/products", label: "Products" },
     ...(available.services ? [{ href: "/services", label: "Services" }] : []),
     ...(available.about ? [{ href: "/about", label: "About" }] : []),
+    ...(available.clients ? [{ href: "/clients", label: "Clients" }] : []),
   ];
   const footer: NavItem[] = [
     ...main,

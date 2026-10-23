@@ -1,6 +1,6 @@
 /**
  * Seeds clearly marked placeholder content for local development: catalog,
- * services, the About and Privacy pages, and the homepage copy. Each part is
+ * services, the About, Our clients, and Privacy pages, and the homepage copy. Each part is
  * skipped if it already exists. MONIP replaces these via the admin.
  * Run with: pnpm seed
  */
@@ -117,6 +117,7 @@ async function seedServices() {
 async function seedPages() {
   const pages: { key: PageKey; title: string }[] = [
     { key: "about", title: "About MONIP Group (placeholder)" },
+    { key: "clients", title: "Our clients (placeholder)" },
     { key: "privacy", title: "Privacy policy (placeholder)" },
   ];
   const created: string[] = [];

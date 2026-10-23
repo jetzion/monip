@@ -43,6 +43,21 @@ export const getAvailableSections = cache(async () => {
   return {
     services: services.totalDocs > 0,
     about: keys.has("about"),
+    clients: keys.has("clients"),
     privacy: keys.has("privacy"),
   };
 });
+
+export async function getPublishedClients(access: ContentAccess = publicAccess) {
+  const payload = await getPayloadClient();
+  const { docs } = await payload.find({
+    collection: "clients",
+    ...access,
+    depth: 1,
+    limit: 100,
+    sort: ["sortOrder", "name"],
+    select: { name: true, logo: true },
+    populate: { media: { url: true, filename: true, alt: true, width: true, height: true } },
+  });
+  return docs;
+}

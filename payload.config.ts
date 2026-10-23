@@ -8,6 +8,7 @@ import sharp from "sharp";
 import { fileURLToPath } from "url";
 
 import { Categories } from "./collections/Categories";
+import { Clients } from "./collections/Clients";
 import { Inquiries } from "./collections/Inquiries";
 import { Media } from "./collections/Media";
 import { Pages } from "./collections/Pages";
@@ -45,7 +46,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Categories, Products, Services, Pages, Inquiries],
+  collections: [Users, Media, Categories, Products, Services, Clients, Pages, Inquiries],
   globals: [Home],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),

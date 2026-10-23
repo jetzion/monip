@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPublishedProductRefs(),
     getAvailableSections(),
   ]);
-  const optional = (["services", "about", "privacy"] as const)
+  const optional = (["services", "about", "clients", "privacy"] as const)
     .filter((key) => available[key])
     .map((key) => ({ url: `${base}/${key}` }));
   return [
