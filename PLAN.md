@@ -572,7 +572,8 @@ Update this section as decisions are confirmed.
 - [x] Home (featured products) and Contact (general inquiry)
 - [x] Services, About, Privacy pages (CMS-managed, hidden until published; placeholders in seed)
 - [x] Sustainability page removed (route, nav, sitemap, CMS page key, copied content and photo; migration `20261023_143316_remove_sustainability_page`)
-- [ ] Real About, Services, Privacy content from MONIP
+- [x] About content and homepage hero intro from MONIP (`UPDATE_CONTANT.md`; hero links to About for detail)
+- [ ] Real Services and Privacy content and homepage headline from MONIP
 - [x] Search (name, summary, tags, materials) and category/subcategory filters via URL params
 - [x] SEO: metadataBase, canonicals, Open Graph, sitemap, robots (previews blocked), breadcrumb JSON-LD
 - [ ] Legacy URL redirects (needs current site URL inventory)
@@ -599,7 +600,7 @@ Update this section as decisions are confirmed.
 
 **Needs input from MONIP**
 
--   Approved homepage message, brand assets (logo, colors, fonts), and a
+-   Approved homepage headline, brand assets (logo, colors, fonts), and a
     default social share image.
 -   Real products, categories, services, and About and
     Privacy text to replace every placeholder.

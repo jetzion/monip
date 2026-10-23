@@ -15,6 +15,13 @@ test("header call to action opens the contact page", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Discuss a project" })).toBeVisible();
 });
 
+test("hero links to the About page for more detail", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "More about MONIP Group" }).click();
+  await expect(page).toHaveURL(/\/about$/);
+  await expect(page.getByRole("heading", { level: 1, name: /^About/ })).toBeVisible();
+});
+
 test("visitor submits the general contact form", async ({ page }) => {
   await page.goto("/contact");
   await page.getByLabel("Name").fill("E2E Visitor");

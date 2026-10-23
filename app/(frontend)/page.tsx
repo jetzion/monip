@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-/** Hero and closing copy are drafts pending MONIP-approved messaging. */
+/** Hero intro is MONIP-supplied (UPDATE_CONTANT.md); headline and closing copy are drafts. */
 export default async function HomePage() {
   const featured = await getFeaturedProducts();
 
@@ -22,8 +22,14 @@ export default async function HomePage() {
         size="hero"
         background={<HeroVideo />}
         title="Merchandising and product sourcing for business"
-        intro="Draft positioning copy. MONIP will supply the approved message."
+        intro="MONIP Group brings together global sourcing expertise, creative product development, and strategic merchandising to help cruise lines and retail businesses stand out in competitive markets. We go beyond finding products."
       >
+        <Link
+          href="/about"
+          className="mt-4 inline-block font-semibold text-white underline underline-offset-4 hover:text-on-dark-muted"
+        >
+          More about MONIP Group
+        </Link>
         <div className="mt-10 flex flex-wrap gap-3">
           <ButtonLink href="/products" variant="inverse" className="h-11 px-6">
             Browse products
