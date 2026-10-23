@@ -24,8 +24,8 @@ test("visitor chats and the conversation keeps context", async ({ page }) => {
   await input.press("Enter");
   await expect(panel(page).getByText("What does MONIP do?")).toBeVisible();
   await expect(panel(page).getByText("Reply 1")).toBeVisible();
-  // The welcome and the reply are both labelled with the assistant name.
-  await expect(panel(page).getByText("Mike", { exact: true })).toHaveCount(2);
+  // The welcome and the reply are both labelled with the assistant name and an AI tag.
+  await expect(panel(page).getByText(/^Mike\s*AI$/)).toHaveCount(2);
 
   await input.fill("Tell me more");
   await input.press("Enter");
