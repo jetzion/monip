@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { ButtonLink } from "@/components/ui/button-link";
+import { pillClassName } from "@/components/ui/pill";
 import { contentAccess } from "@/lib/queries/access";
 import { getPublishedServices } from "@/lib/queries/content";
 
@@ -27,7 +28,7 @@ export default async function ServicesPage() {
               <li key={service.slug}>
                 <a
                   href={`#${service.slug}`}
-                  className="inline-flex h-9 items-center rounded-full border border-border bg-white px-4 text-sm font-medium text-navy transition-colors hover:border-primary/50 hover:text-primary"
+                  className={pillClassName({ dark: true })}
                 >
                   {service.title}
                 </a>
@@ -44,7 +45,7 @@ export default async function ServicesPage() {
               key={service.slug}
               id={service.slug}
               aria-labelledby={`${service.slug}-heading`}
-              className="grid scroll-mt-8 gap-6 rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12"
+              className="grid scroll-mt-8 gap-6 rounded-xl border border-border bg-card p-6 shadow-card sm:p-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12"
             >
               <div className="border-l-4 border-primary pl-5">
                 <h2 id={`${service.slug}-heading`} className="font-display text-2xl font-semibold text-navy">

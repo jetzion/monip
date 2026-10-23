@@ -11,6 +11,7 @@
   --color-navy: var(--navy);
   --color-azure: var(--azure);
   --color-tint: var(--tint);
+  --color-on-dark-muted: var(--on-dark-muted);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -52,7 +53,7 @@
 
 :root {
   /* MONIP "Indigo Signature" palette, derived from the logo (indigo #405098, azure #1870b8). */
-  --background: #ffffff;
+  --background: #e6ebf4;
   --foreground: #141b3a;
   --card: #ffffff;
   --card-foreground: #141b3a;
@@ -64,16 +65,17 @@
   --secondary: #f3f5fb;
   --secondary-foreground: #141b3a;
   --muted: #f3f5fb;
-  --muted-foreground: #5a6378;
+  --muted-foreground: #4f5870;
   --accent: #e6eaf7;
   --accent-foreground: #141b3a;
   --destructive: #b42318;
-  --border: #e3e6f0;
-  --input: #cfd5e6;
+  --border: #d3dae9;
+  --input: #c3cbe0;
   --ring: #1767ad;
   --navy: #141b3a;
   --azure: #1767ad;
   --tint: #f3f5fb;
+  --on-dark-muted: #c7d2f2;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -142,9 +144,18 @@
   letter-spacing: -0.015em;
 }
 
-/* Soft azure/indigo light in the top-right corner of tinted bands. */
-@utility brand-glow {
+/* Card depth: clearly visible against the tinted page background. */
+@theme {
+  --shadow-card: 0 1px 2px rgb(20 27 58 / 0.06), 0 8px 24px -8px rgb(20 27 58 / 0.18);
+  --shadow-card-hover: 0 2px 4px rgb(20 27 58 / 0.08), 0 16px 36px -10px rgb(20 27 58 / 0.28);
+}
+
+/* Navy-to-indigo band for page headers, with an azure glow and a faint dot texture. */
+@utility header-band {
+  background-color: var(--navy);
   background-image:
-    radial-gradient(65% 90% at 90% 0%, rgb(23 103 173 / 0.26), transparent 70%),
-    radial-gradient(50% 70% at 100% 100%, rgb(61 78 160 / 0.2), transparent 70%);
+    radial-gradient(45% 80% at 92% 10%, rgb(23 103 173 / 0.45), transparent 70%),
+    radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(120deg, #141b3a 0%, #1f2a63 50%, #2c3a85 100%);
+  background-size: auto, 22px 22px, auto;
 }

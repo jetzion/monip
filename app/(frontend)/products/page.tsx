@@ -59,7 +59,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
         </div>
 
         {products.length === 0 ? (
-          <div className="mt-6 rounded-xl border border-border bg-tint p-8">
+          <div className="mt-6 rounded-xl border border-border bg-card p-8 shadow-card">
             <p className="font-semibold text-navy">
               {unknownCategory
                 ? "That category does not exist."

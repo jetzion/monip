@@ -34,7 +34,7 @@ export function MobileNav({ items }: Props) {
         <nav
           id="mobile-nav"
           aria-label="Main"
-          className="absolute inset-x-0 top-20 z-40 border-b border-border bg-background"
+          className="absolute inset-x-0 top-20 z-40 border-b border-border bg-white shadow-card"
         >
           <div className="mx-auto max-w-6xl px-4 py-2 sm:px-6">
             <NavLinks

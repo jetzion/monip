@@ -506,7 +506,7 @@ Update this section as decisions are confirmed.
 | Frontend | Next.js 16.4 + TypeScript; `cacheComponents` disabled for Payload; experimental `globalNotFound` for unmatched URLs | Confirmed |
 | CMS | Payload CMS 3.91 inside the Next.js app, admin at `/admin` (replaced Sanity). Pinned below the newest release when it is inside pnpm's minimum release age | Confirmed |
 | Hosting | Vercel | Confirmed |
-| Styling | Tailwind CSS v4 + shadcn/ui; "Indigo Signature" palette from the logo (indigo #3d4ea0, navy #141b3a, azure #1767ad, tint #f3f5fb), tinted page headers, rounded cards with soft shadows | Confirmed |
+| Styling | Tailwind CSS v4 + shadcn/ui; "Indigo Signature" palette from the logo (indigo #3d4ea0, navy #141b3a, azure #1767ad). Tinted page background #e6ebf4 with white cards (visible shadow-card), navy header-band page headers, white header and footer panels | Confirmed |
 | Package manager | pnpm | Confirmed |
 | Testing | Vitest unit tests; Playwright e2e + axe against a production build | Confirmed |
 | Content updates | Hooks call `revalidatePath` on publish/unpublish only (not draft autosaves) | Confirmed |

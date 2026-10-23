@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { pillClassName } from "@/components/ui/pill";
 import { catalogHref, type CatalogParams } from "@/lib/catalog-params";
-import { cn } from "cn";
 
 type CategoryOption = { id: number; title: string; slug: string; parent?: unknown };
 type LinkItem = { id?: number; title: string; slug: string };
@@ -39,7 +39,7 @@ export function CatalogFilters({ params, categories, activeParentId }: Props) {
           className="h-11 bg-white"
         />
         {params.category && <input type="hidden" name="category" value={params.category} />}
-        <Button type="submit" className="h-11 px-5">
+        <Button type="submit" variant="inverse" className="h-11 px-5">
           Search
         </Button>
       </form>
@@ -51,7 +51,7 @@ export function CatalogFilters({ params, categories, activeParentId }: Props) {
           isActive={(item) => (item.id === undefined ? !params.category : item.id === activeParentId)}
         />
         {subcategories.length > 0 && (
-          <div className="border-l-2 border-primary pl-3">
+          <div className="border-l-2 border-white/50 pl-3">
             <span className="sr-only">Subcategories</span>
             <CategoryLinks
               items={subcategories}
@@ -86,13 +86,7 @@ function CategoryLinks({
             <Link
               href={catalogHref({ q: params.q, category: item.slug })}
               aria-current={active ? "page" : undefined}
-              className={cn(
-                "inline-flex items-center rounded-full border px-4 transition-colors",
-                small ? "h-8 text-sm" : "h-9 text-sm font-medium",
-                active
-                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                  : "border-border bg-white text-navy hover:border-primary/50 hover:text-primary",
-              )}
+              className={pillClassName({ active, dark: true, small })}
             >
               {item.title}
             </Link>

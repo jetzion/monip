@@ -18,7 +18,7 @@ export default function GlobalNotFound() {
   return (
     <html lang="en" className={`${archivo.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <header className="border-b border-border">
+        <header className="border-b border-border bg-white shadow-sm">
           <div className="mx-auto flex h-20 max-w-6xl items-center px-4 sm:px-6">
             <SiteLogo />
           </div>

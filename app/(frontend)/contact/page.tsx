@@ -18,7 +18,7 @@ export default function ContactPage() {
         intro="Tell us what you need, including quantities and timeline, and we will reply by email."
       />
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8">
+        <div className="rounded-xl border border-t-4 border-border border-t-primary bg-card p-6 shadow-card sm:p-8">
           <InquiryForm />
         </div>
       </div>
