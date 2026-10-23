@@ -6,6 +6,7 @@ type NavItem = { href: string; label: string };
 export async function getNavigation(): Promise<{ main: NavItem[]; footer: NavItem[] }> {
   const available = await getAvailableSections();
   const main: NavItem[] = [
+    { href: "/", label: "Home" },
     { href: "/products", label: "Products" },
     ...(available.services ? [{ href: "/services", label: "Services" }] : []),
     ...(available.about ? [{ href: "/about", label: "About" }] : []),

@@ -49,3 +49,13 @@ test.describe("mobile", () => {
     await expect(page.locator("#mobile-nav")).toHaveCount(0);
   });
 });
+
+test("main navigation marks the current section", async ({ page }) => {
+  const nav = page.getByRole("banner").getByRole("navigation", { name: "Main" });
+  await page.goto("/");
+  await expect(nav.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
+
+  await page.goto("/products/placeholder-product-1");
+  await expect(nav.getByRole("link", { name: "Products" })).toHaveAttribute("aria-current", "page");
+  await expect(nav.getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current", "page");
+});
