@@ -1,11 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-/** Requires seeded placeholders (pnpm seed): 3 services and the About and Privacy pages. */
+/** Requires published services and the About and Privacy pages (pnpm seed creates placeholders). */
 test("services page lists published services", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("banner").getByRole("link", { name: "Services" }).click();
   await expect(page).toHaveURL(/\/services$/);
-  await expect(page.getByRole("heading", { level: 2, name: /Placeholder Service/ })).toHaveCount(3);
+  // Each service in the jump links has a matching section heading.
+  const links = page.getByRole("navigation", { name: "Services on this page" }).getByRole("link");
+  const titles = await links.allInnerTexts();
+  expect(titles.length).toBeGreaterThan(0);
+  for (const title of titles) {
+    await expect(page.getByRole("heading", { level: 2, name: title, exact: true })).toBeVisible();
+  }
 });
 
 test("About page is linked from the header", async ({ page }) => {
