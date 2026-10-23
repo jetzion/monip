@@ -28,7 +28,7 @@ export function PageHeader({ title, intro, eyebrow, children, size = "page", bac
         <h1
           className={cn(
             "font-display max-w-4xl font-semibold leading-[1.05]",
-            hero ? "text-4xl sm:text-6xl lg:text-7xl" : "text-4xl sm:text-5xl",
+            hero ? "text-4xl sm:text-5xl lg:text-6xl" : "text-4xl sm:text-5xl",
           )}
         >
           {title}

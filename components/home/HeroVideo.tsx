@@ -46,7 +46,7 @@ export function HeroVideo() {
       <button
         type="button"
         onClick={toggle}
-        className="absolute bottom-4 right-4 z-20 inline-flex size-10 items-center justify-center rounded-full border border-white/30 bg-navy/60 text-white backdrop-blur transition-colors hover:bg-navy/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        className="absolute bottom-4 right-4 z-20 inline-flex select-none size-10 items-center justify-center rounded-full border border-white/30 bg-navy/60 text-white backdrop-blur transition-colors hover:bg-navy/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
       >
         {playing ? <Pause aria-hidden="true" className="size-4" /> : <Play aria-hidden="true" className="size-4" />}
         <span className="sr-only">{playing ? "Pause background video" : "Play background video"}</span>
