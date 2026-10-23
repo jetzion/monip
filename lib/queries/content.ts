@@ -43,7 +43,6 @@ export const getAvailableSections = cache(async () => {
   return {
     services: services.totalDocs > 0,
     about: keys.has("about"),
-    sustainability: keys.has("sustainability"),
     privacy: keys.has("privacy"),
   };
 });

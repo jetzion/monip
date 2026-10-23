@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-/** Requires seeded placeholders (pnpm seed): 3 services and all three pages. */
+/** Requires seeded placeholders (pnpm seed): 3 services and the About and Privacy pages. */
 test("services page lists published services", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("banner").getByRole("link", { name: "Services" }).click();
@@ -8,17 +8,18 @@ test("services page lists published services", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 2, name: /Placeholder Service/ })).toHaveCount(3);
 });
 
-for (const { path, link, heading } of [
-  { path: "/about", link: "About", heading: /^About/ },
-  { path: "/sustainability", link: "Sustainability", heading: /^Sustainability/ },
-]) {
-  test(`${link} page is linked from the header`, async ({ page }) => {
-    await page.goto("/");
-    await page.getByRole("banner").getByRole("link", { name: link, exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`${path}$`));
-    await expect(page.getByRole("heading", { level: 1, name: heading })).toBeVisible();
-  });
-}
+test("About page is linked from the header", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("banner").getByRole("link", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL(/\/about$/);
+  await expect(page.getByRole("heading", { level: 1, name: /^About/ })).toBeVisible();
+});
+
+test("sustainability page is removed", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("link", { name: "Sustainability" })).toHaveCount(0);
+  expect((await page.request.get("/sustainability")).status()).toBe(404);
+});
 
 test("privacy policy is linked from the footer", async ({ page }) => {
   await page.goto("/");

@@ -84,7 +84,7 @@ Services and pages use the same draft, preview, and publish steps as products. C
 
 **Services.** Each service is a section on the Services page, ordered by **Sort order**, with a required **Summary** plus optional body text and image. The Services page and its menu link appear once at least one service is published.
 
-**About, Sustainability, and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
+**About and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
 
 ## Reading website inquiries
 
@@ -102,7 +102,7 @@ Until the email service is set up, notification emails are not delivered: check 
 Publish only accurate, approved information; anything on the site is a public claim by MONIP.
 
 - **Claims.** Do not publish client names, logos, testimonials, statistics, or certifications without approval.
-- **Sustainability.** State only what MONIP can back up, such as specific materials, programs, or named certifications. Avoid general terms like "eco-friendly" on their own, and use the "Sustainable" label only when it is substantiated.
+- **Sustainability claims.** State only what MONIP can back up, such as specific materials, programs, or named certifications. Avoid general terms like "eco-friendly" on their own, and use the "Sustainable" label only when it is substantiated.
 - **Confidential information.** Never enter supplier names, internal costs, private notes, or unapproved pricing or lead times. The admin is not a private store: every product field can appear on the site.
 - **Images.** Use authentic, approved photos of the actual sample. Do not edit them in ways that change how the product looks.
 - **Placeholders.** The development site contains items marked "Placeholder" (products, categories, services, and pages). Replace or delete every one before launch.

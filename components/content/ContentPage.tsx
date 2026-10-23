@@ -7,7 +7,7 @@ import { PageHeader } from "./PageHeader";
 
 type Props = { page: Pick<Page, "title" | "intro" | "image" | "body"> };
 
-/** Layout for CMS-managed text pages (About, Sustainability, Privacy). */
+/** Layout for CMS-managed text pages (About, Privacy). */
 export function ContentPage({ page }: Props) {
   return (
     <article>

@@ -35,7 +35,7 @@ test("hero background video can be paused and resumed", async ({ page }) => {
 });
 
 test("header stays visible after scrolling", async ({ page }) => {
-  await page.goto("/sustainability");
+  await page.goto("/");
   await page.mouse.wheel(0, 2000);
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
   const box = await page.getByRole("banner").boundingBox();

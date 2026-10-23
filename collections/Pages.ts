@@ -7,7 +7,6 @@ import { autosaveDrafts, livePreview } from "../lib/live-preview";
 /** Fixed site pages. Each key maps to a route defined in code. */
 export const PAGE_KEYS = [
   { label: "About (/about)", value: "about" },
-  { label: "Sustainability (/sustainability)", value: "sustainability" },
   { label: "Privacy policy (/privacy)", value: "privacy" },
 ] as const;
 
@@ -19,7 +18,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "key", "_status", "updatedAt"],
     description:
-      "About, Sustainability, and Privacy pages. A page and its link appear on the site only once published.",
+      "About and Privacy pages. A page and its link appear on the site only once published.",
     livePreview: livePreview((data) => (typeof data.key === "string" ? `/${data.key}` : null)),
   },
   versions: autosaveDrafts,
@@ -58,14 +57,7 @@ export const Pages: CollectionConfig = {
         description: "Optional photo shown below the introduction. Also used when the page is shared.",
       },
     },
-    {
-      name: "body",
-      type: "richText",
-      admin: {
-        description:
-          "Sustainability: publish only claims MONIP can substantiate (materials, programs, certifications).",
-      },
-    },
+    { name: "body", type: "richText" },
     {
       name: "seo",
       type: "group",

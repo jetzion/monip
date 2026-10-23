@@ -216,7 +216,7 @@ third-party brands and licensed for commercial use.
 | 2 | Decoration techniques close-up | Laser engraving on a steel bottle, debossing leather, pad printing, embroidery | The craft and range of customization MONIP offers | Slightly abstract; best as a 3-4 shot sequence |
 | 3 | Premium materials in slow motion | Fabric falling, threads, cork, bamboo, recycled cotton | Quality and a premium feel; calm behind text | Less literal about the business |
 | 4 | Branded merchandise in use | Conference attendees with tote bags, a team in matching apparel, an event welcome kit | The outcome clients pay for | Stock often shows real logos; people must be released |
-| 5 | Sustainability story | Recycled bottles turning into yarn, coastline clean-up, reusable products | Ties to the Sustainability page and TonToTon partnership | Implies claims MONIP must be able to back up |
+| 5 | Sustainability story | Recycled bottles turning into yarn, coastline clean-up, reusable products | Tied to the Sustainability page (removed 2026-10-23) and TonToTon partnership | Implies claims MONIP must be able to back up |
 | 6 | Global sourcing scale | Aerial container port or cargo ship, warehouse timelapse | Reach, reliability, scale | Generic; common among logistics companies |
 | 7 | Design to product | Designer placing a logo on a mockup, then the finished product reveal | Creative partnership, not just ordering | Hard to find brand-free footage of the reveal |
 | 8 | Moving product showcase (no stock video) | MONIP's own product photos from the CMS, slowly panning in a grid | Real products; updates automatically when editors publish | Needs real product photos first |

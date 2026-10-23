@@ -46,7 +46,7 @@ accessibility, performance, and lead generation.
 -   CMS-managed product catalog and product detail pages.
 -   Product categories, tags, search, and practical filters.
 -   Homepage featuring selected products and key company content.
--   About, Services, Sustainability, Clients/Case Studies, and Contact
+-   About, Services, Clients/Case Studies, and Contact
     content areas, subject to content availability.
 -   Product-specific inquiry form and general contact form.
 -   Form validation, spam protection, and secure handling of
@@ -87,8 +87,8 @@ These may be added later after requirements and budget are confirmed.
     detail sections/pages.
 4.  **Products** --- searchable and filterable product catalog.
 5.  **Product Detail** --- unique page for each published product.
-6.  **Sustainability** --- substantiated sustainability practices,
-    materials, programs, and certifications.
+6.  **Sustainability** --- removed from scope 2026-10-23 at MONIP's
+    request.
 7.  **Clients / Case Studies** --- approved client logos, projects, and
     case studies where available.
 8.  **Contact** --- general inquiry form and approved contact

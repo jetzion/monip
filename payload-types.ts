@@ -351,7 +351,7 @@ export interface Service {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * About, Sustainability, and Privacy pages. A page and its link appear on the site only once published.
+ * About and Privacy pages. A page and its link appear on the site only once published.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
@@ -362,7 +362,7 @@ export interface Page {
   /**
    * Which site page this content is for.
    */
-  key: 'about' | 'sustainability' | 'privacy';
+  key: 'about' | 'privacy';
   /**
    * Short introduction shown under the page title.
    */
@@ -371,9 +371,6 @@ export interface Page {
    * Optional photo shown below the introduction. Also used when the page is shared.
    */
   image?: (number | null) | Media;
-  /**
-   * Sustainability: publish only claims MONIP can substantiate (materials, programs, certifications).
-   */
   body?: {
     root: {
       type: string;
