@@ -732,14 +732,6 @@ export interface Home {
      * Link to the About page.
      */
     aboutLinkLabel: string;
-    /**
-     * Button to the product catalog.
-     */
-    productsButtonLabel: string;
-    /**
-     * Button to the contact page.
-     */
-    contactButtonLabel: string;
   };
   closing: {
     heading: string;
@@ -763,8 +755,6 @@ export interface HomeSelect<T extends boolean = true> {
         headline?: T;
         intro?: T;
         aboutLinkLabel?: T;
-        productsButtonLabel?: T;
-        contactButtonLabel?: T;
       };
   closing?:
     | T

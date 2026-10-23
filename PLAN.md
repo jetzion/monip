@@ -139,7 +139,7 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Home (global)
 
--   `hero` (headline, intro, about link and button labels) and `closing`
+-   `hero` (headline, intro, about link label) and `closing`
     (heading, button label); drafts and Live Preview. Link targets are in code.
 
 ### Page

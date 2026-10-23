@@ -52,8 +52,6 @@ export const Home: GlobalConfig = {
             "MONIP Group brings together global sourcing expertise, creative product development, and strategic merchandising to help cruise lines and retail businesses stand out in competitive markets. We go beyond finding products.",
         },
         label("aboutLinkLabel", "More about MONIP Group", "Link to the About page."),
-        label("productsButtonLabel", "Browse products", "Button to the product catalog."),
-        label("contactButtonLabel", "Discuss a project", "Button to the contact page."),
       ],
     },
     {

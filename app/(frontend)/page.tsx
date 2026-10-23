@@ -35,14 +35,6 @@ export default async function HomePage() {
         >
           {hero.aboutLinkLabel}
         </Link>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <ButtonLink href="/products" variant="inverse" className="h-11 px-6">
-            {hero.productsButtonLabel}
-          </ButtonLink>
-          <ButtonLink href="/contact" variant="outline-inverse" className="h-11 px-6">
-            {hero.contactButtonLabel}
-          </ButtonLink>
-        </div>
       </PageHeader>
 
       {featured.length > 0 && (
