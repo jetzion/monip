@@ -1,6 +1,20 @@
-import type { TextField } from "payload";
+import type { FieldHook, TextField } from "payload";
 
 import { toSlug } from "../lib/slug";
+
+/** On duplicate, picks the first free slug: `x-copy`, `x-copy-2`, ... */
+const nextCopySlug: FieldHook = async ({ value, req, collection }) => {
+  if (typeof value !== "string" || !collection) return value;
+  for (let n = 1; ; n++) {
+    const candidate = n === 1 ? `${value}-copy` : `${value}-copy-${n}`;
+    const { totalDocs } = await req.payload.count({
+      collection: collection.slug,
+      where: { slug: { equals: candidate } },
+      req,
+    });
+    if (totalDocs === 0) return candidate;
+  }
+};
 
 /**
  * Unique URL slug. Filled from `sourceField` when left empty; never
@@ -24,5 +38,6 @@ export const slugField = (sourceField = "title"): TextField => ({
         return typeof source === "string" ? toSlug(source) : value;
       },
     ],
+    beforeDuplicate: [nextCopySlug],
   },
 });

@@ -600,6 +600,7 @@ Update this section as decisions are confirmed.
 - [x] Editor guide (`Editor_guide_for_MONIP.md`)
 - [x] Clients page (case studies not built)
 - [x] Website chat (OpenRouter): floating panel on public pages, server endpoint, validation, rate limit, tests with mocked API
+- [x] Duplicate products in the CMS (copy is a draft named "(copy)", unique "-copy" slug, not featured; slug rule also applies to services and categories)
 - [ ] Chat: set `OPENROUTER_MODEL` and verify real replies
 - [x] Privacy policy page from `PRIVACY-POLICY.md` (CMS page, footer link)
 - [ ] Privacy policy: add the privacy contact email and a section on the website chat (messages sent to an AI provider)

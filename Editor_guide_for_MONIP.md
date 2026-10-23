@@ -26,6 +26,8 @@ A product needs a name, a summary, a main image, and a category before it can be
 3. Fill in the three tabs described below. Your work saves automatically as a draft.
 4. Preview and publish (next section).
 
+**Copying a product.** To start from a similar product, open it, click the **⋯** menu next to **Publish changes**, and choose **Duplicate**. The copy opens as a draft named "... (copy)" with the slug "...-copy", so it is not on the site until you publish it. It keeps all content and images, but is not featured. Change the name and slug before publishing; clear the slug to regenerate it from the new name.
+
 **Content tab**
 
 - **Summary** (required, up to 200 characters): one or two sentences shown on product cards and at the top of the product page.

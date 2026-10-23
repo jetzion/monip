@@ -47,12 +47,14 @@ export const Products: CollectionConfig = {
       name: "name",
       type: "text",
       required: true,
+      hooks: { beforeDuplicate: [({ value }) => (typeof value === "string" ? `${value} (copy)` : value)] },
     },
     slugField("name"),
     {
       name: "featured",
       type: "checkbox",
       defaultValue: false,
+      hooks: { beforeDuplicate: [() => false] },
       admin: {
         position: "sidebar",
         description: "Show this product in featured sections on the homepage.",
@@ -61,6 +63,7 @@ export const Products: CollectionConfig = {
     {
       name: "publishedAt",
       type: "date",
+      hooks: { beforeDuplicate: [() => null] },
       admin: {
         position: "sidebar",
         description: "Set automatically on first publish.",
