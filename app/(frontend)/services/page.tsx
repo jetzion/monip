@@ -2,6 +2,7 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { ButtonLink } from "@/components/ui/button-link";
 import { contentAccess } from "@/lib/queries/access";
@@ -18,55 +19,57 @@ export default async function ServicesPage() {
   if (services.length === 0) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <h1 className="font-display text-4xl font-semibold sm:text-5xl">Services</h1>
+    <>
+      <PageHeader title="Services">
+        <nav aria-label="Services on this page" className="mt-8">
+          <ul className="flex flex-wrap gap-2">
+            {services.map((service) => (
+              <li key={service.slug}>
+                <a
+                  href={`#${service.slug}`}
+                  className="inline-flex h-9 items-center rounded-full border border-border bg-white px-4 text-sm font-medium text-navy transition-colors hover:border-primary/50 hover:text-primary"
+                >
+                  {service.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </PageHeader>
 
-      <nav aria-label="Services on this page" className="mt-8">
-        <ul className="flex flex-wrap gap-2">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <div className="flex flex-col gap-6">
           {services.map((service) => (
-            <li key={service.slug}>
-              <a
-                href={`#${service.slug}`}
-                className="inline-flex h-9 items-center border border-border px-3 text-sm font-medium hover:border-foreground/40"
-              >
-                {service.title}
-              </a>
-            </li>
+            <section
+              key={service.slug}
+              id={service.slug}
+              aria-labelledby={`${service.slug}-heading`}
+              className="grid scroll-mt-8 gap-6 rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12"
+            >
+              <div className="border-l-4 border-primary pl-5">
+                <h2 id={`${service.slug}-heading`} className="font-display text-2xl font-semibold text-navy">
+                  {service.title}
+                </h2>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{service.summary}</p>
+              </div>
+              <div className="flex flex-col gap-6">
+                {service.image && (
+                  <div className="overflow-hidden rounded-lg border border-border bg-tint">
+                    <CmsImage image={service.image} sizes="(min-width: 1024px) 50vw, 100vw" className="h-auto w-full" />
+                  </div>
+                )}
+                {service.body && <RichText data={service.body} className="space-y-4 leading-relaxed" />}
+              </div>
+            </section>
           ))}
-        </ul>
-      </nav>
+        </div>
 
-      <div className="mt-12 divide-y divide-border border-y border-border">
-        {services.map((service) => (
-          <section
-            key={service.slug}
-            id={service.slug}
-            aria-labelledby={`${service.slug}-heading`}
-            className="grid scroll-mt-8 gap-6 py-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16"
-          >
-            <div>
-              <h2 id={`${service.slug}-heading`} className="font-display text-2xl font-semibold">
-                {service.title}
-              </h2>
-              <p className="mt-3 leading-relaxed text-muted-foreground">{service.summary}</p>
-            </div>
-            <div className="flex flex-col gap-6">
-              {service.image && (
-                <div className="overflow-hidden border border-border bg-muted">
-                  <CmsImage image={service.image} sizes="(min-width: 1024px) 50vw, 100vw" className="h-auto w-full" />
-                </div>
-              )}
-              {service.body && <RichText data={service.body} className="space-y-4 leading-relaxed" />}
-            </div>
-          </section>
-        ))}
+        <div className="mt-12">
+          <ButtonLink href="/contact" className="h-11 px-6">
+            Discuss a project
+          </ButtonLink>
+        </div>
       </div>
-
-      <div className="mt-12">
-        <ButtonLink href="/contact" className="h-11 px-6">
-          Discuss a project
-        </ButtonLink>
-      </div>
-    </div>
+    </>
   );
 }

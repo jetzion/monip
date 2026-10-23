@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { PageHeader } from "@/components/content/PageHeader";
 import { CatalogFilters } from "@/components/products/CatalogFilters";
 import { ProductCard } from "@/components/products/ProductCard";
 import { catalogHref, parseCatalogParams } from "@/lib/catalog-params";
@@ -34,64 +35,63 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   const filtered = params.q !== "" || params.category !== "";
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <h1 className="font-display text-4xl font-semibold sm:text-5xl">Products</h1>
-      <p className="mt-4 max-w-xl text-muted-foreground">
-        Product samples MONIP can source and customize.
-      </p>
+    <>
+      <PageHeader title="Products" intro="Product samples MONIP can source and customize.">
+        <div className="mt-8">
+          <CatalogFilters
+            params={params}
+            categories={categories}
+            activeParentId={categoryParent ?? category?.id}
+          />
+        </div>
+      </PageHeader>
 
-      <div className="mt-10">
-        <CatalogFilters
-          params={params}
-          categories={categories}
-          activeParentId={categoryParent ?? category?.id}
-        />
-      </div>
+      <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24">
+        <div className="flex flex-wrap items-baseline justify-between gap-4">
+          <p role="status" className="text-sm text-muted-foreground">
+            {resultSummary(products.length, params.q, category?.title)}
+          </p>
+          {filtered && (
+            <Link href="/products" className="text-sm font-semibold text-azure hover:underline">
+              Clear filters
+            </Link>
+          )}
+        </div>
 
-      <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4 border-t border-border pt-6">
-        <p role="status" className="text-sm text-muted-foreground">
-          {resultSummary(products.length, params.q, category?.title)}
-        </p>
-        {filtered && (
-          <Link href="/products" className="text-sm font-medium text-primary hover:underline">
-            Clear filters
-          </Link>
+        {products.length === 0 ? (
+          <div className="mt-6 rounded-xl border border-border bg-tint p-8">
+            <p className="font-semibold text-navy">
+              {unknownCategory
+                ? "That category does not exist."
+                : filtered
+                  ? "No products match your search."
+                  : "No products are published yet."}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {filtered ? (
+                <>
+                  Try different keywords or{" "}
+                  <Link href={catalogHref({})} className="text-azure underline underline-offset-4">
+                    browse all products
+                  </Link>
+                  .
+                </>
+              ) : (
+                "Check back soon."
+              )}
+            </p>
+          </div>
+        ) : (
+          <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map((product, index) => (
+              <li key={product.slug} className="flex">
+                <ProductCard product={product} eager={index < 3} />
+              </li>
+            ))}
+          </ul>
         )}
       </div>
-
-      {products.length === 0 ? (
-        <div className="mt-8 border border-border bg-muted p-8">
-          <p className="font-medium">
-            {unknownCategory
-              ? "That category does not exist."
-              : filtered
-                ? "No products match your search."
-                : "No products are published yet."}
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {filtered ? (
-              <>
-                Try different keywords or{" "}
-                <Link href={catalogHref({})} className="text-primary underline underline-offset-4">
-                  browse all products
-                </Link>
-                .
-              </>
-            ) : (
-              "Check back soon."
-            )}
-          </p>
-        </div>
-      ) : (
-        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product, index) => (
-            <li key={product.slug} className="flex">
-              <ProductCard product={product} eager={index < 3} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    </>
   );
 }
 

@@ -7,7 +7,7 @@ import { SiteLogo } from "./SiteLogo";
 export async function SiteFooter() {
   const { footer } = await getNavigation();
   return (
-    <footer className="mt-auto border-t border-border bg-muted">
+    <footer className="mt-auto border-t border-border bg-tint">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <SiteLogo className="h-14" />
         <nav aria-label="Footer">

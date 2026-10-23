@@ -7,6 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-navy: var(--navy);
+  --color-azure: var(--azure);
+  --color-tint: var(--tint);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -47,31 +51,35 @@
 }
 
 :root {
-  /* MONIP provisional brand tokens; replace when approved assets arrive. */
+  /* MONIP "Indigo Signature" palette, derived from the logo (indigo #405098, azure #1870b8). */
   --background: #ffffff;
-  --foreground: #16212e;
+  --foreground: #141b3a;
   --card: #ffffff;
-  --card-foreground: #16212e;
+  --card-foreground: #141b3a;
   --popover: #ffffff;
-  --popover-foreground: #16212e;
-  --primary: #1f5e4a;
+  --popover-foreground: #141b3a;
+  --primary: #3d4ea0;
+  --primary-hover: #2f3d82;
   --primary-foreground: #ffffff;
-  --secondary: #f3f4f1;
-  --secondary-foreground: #16212e;
-  --muted: #f3f4f1;
-  --muted-foreground: #5b6470;
-  --accent: #e6eee9;
-  --accent-foreground: #16212e;
+  --secondary: #f3f5fb;
+  --secondary-foreground: #141b3a;
+  --muted: #f3f5fb;
+  --muted-foreground: #5a6378;
+  --accent: #e6eaf7;
+  --accent-foreground: #141b3a;
   --destructive: #b42318;
-  --border: #d9dcd6;
-  --input: #d9dcd6;
-  --ring: #1f5e4a;
+  --border: #e3e6f0;
+  --input: #cfd5e6;
+  --ring: #1767ad;
+  --navy: #141b3a;
+  --azure: #1767ad;
+  --tint: #f3f5fb;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.25rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -122,6 +130,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    line-height: 1.6;
   }
   html {
     @apply font-sans;
@@ -131,4 +140,11 @@
 @utility font-display {
   font-variation-settings: "wdth" 118;
   letter-spacing: -0.015em;
+}
+
+/* Soft azure/indigo light in the top-right corner of tinted bands. */
+@utility brand-glow {
+  background-image:
+    radial-gradient(65% 90% at 90% 0%, rgb(23 103 173 / 0.26), transparent 70%),
+    radial-gradient(50% 70% at 100% 100%, rgb(61 78 160 / 0.2), transparent 70%);
 }

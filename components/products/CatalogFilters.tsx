@@ -36,7 +36,7 @@ export function CatalogFilters({ params, categories, activeParentId }: Props) {
           type="search"
           defaultValue={params.q}
           placeholder="Name, material, or keyword"
-          className="h-11"
+          className="h-11 bg-white"
         />
         {params.category && <input type="hidden" name="category" value={params.category} />}
         <Button type="submit" className="h-11 px-5">
@@ -51,7 +51,7 @@ export function CatalogFilters({ params, categories, activeParentId }: Props) {
           isActive={(item) => (item.id === undefined ? !params.category : item.id === activeParentId)}
         />
         {subcategories.length > 0 && (
-          <div className="border-l-2 border-foreground pl-3">
+          <div className="border-l-2 border-primary pl-3">
             <span className="sr-only">Subcategories</span>
             <CategoryLinks
               items={subcategories}
@@ -87,11 +87,11 @@ function CategoryLinks({
               href={catalogHref({ q: params.q, category: item.slug })}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex items-center border px-3 transition-colors",
+                "inline-flex items-center rounded-full border px-4 transition-colors",
                 small ? "h-8 text-sm" : "h-9 text-sm font-medium",
                 active
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border bg-background text-foreground hover:border-foreground/40",
+                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                  : "border-border bg-white text-navy hover:border-primary/50 hover:text-primary",
               )}
             >
               {item.title}

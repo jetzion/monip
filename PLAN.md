@@ -506,7 +506,7 @@ Update this section as decisions are confirmed.
 | Frontend | Next.js 16.4 + TypeScript; `cacheComponents` disabled for Payload; experimental `globalNotFound` for unmatched URLs | Confirmed |
 | CMS | Payload CMS 3.91 inside the Next.js app, admin at `/admin` (replaced Sanity). Pinned below the newest release when it is inside pnpm's minimum release age | Confirmed |
 | Hosting | Vercel | Confirmed |
-| Styling | Tailwind CSS v4 + shadcn/ui, business-professional look | Confirmed |
+| Styling | Tailwind CSS v4 + shadcn/ui; "Indigo Signature" palette from the logo (indigo #3d4ea0, navy #141b3a, azure #1767ad, tint #f3f5fb), tinted page headers, rounded cards with soft shadows | Confirmed |
 | Package manager | pnpm | Confirmed |
 | Testing | Vitest unit tests; Playwright e2e + axe against a production build | Confirmed |
 | Content updates | Hooks call `revalidatePath` on publish/unpublish only (not draft autosaves) | Confirmed |
@@ -534,7 +534,7 @@ Update this section as decisions are confirmed.
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
 | Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
 | Domain and account ownership | TBD | Requires decision |
-| Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Colors, fonts, and favicon still provisional | Partly confirmed |
+| Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Palette now derived from the logo; fonts (Archivo) and favicon still provisional | Partly confirmed |
 | E-commerce | Excluded from initial release | Out of scope |
 | Client accounts/private catalogs | Future phase | Out of scope |
 
