@@ -2,14 +2,14 @@ import Link from "next/link";
 
 import { getNavigation } from "@/lib/navigation";
 
-import { Wordmark } from "./Wordmark";
+import { SiteLogo } from "./SiteLogo";
 
 export async function SiteFooter() {
   const { footer } = await getNavigation();
   return (
     <footer className="mt-auto border-t border-border bg-muted">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <Wordmark />
+        <SiteLogo className="h-14" />
         <nav aria-label="Footer">
           <ul className="flex flex-wrap gap-6 text-sm">
             {footer.map((item) => (

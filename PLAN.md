@@ -152,9 +152,8 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Site Settings (Payload global, not built)
 
-Logo, footer, and contact details are currently in code (text
-wordmark, no contact details shown) until MONIP supplies approved
-content.
+The logo is a static file in code (`public/monip-logo.png`). Footer
+content and contact details wait for approved content.
 
 
 -   Approved logo and brand assets.
@@ -535,7 +534,7 @@ Update this section as decisions are confirmed.
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
 | Current site URL | Placeholder | Requires input |
 | Domain and account ownership | TBD | Requires decision |
-| Final brand assets | To be established from approved assets | Requires discovery |
+| Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Colors, fonts, and favicon still provisional | Partly confirmed |
 | E-commerce | Excluded from initial release | Out of scope |
 | Client accounts/private catalogs | Future phase | Out of scope |
 

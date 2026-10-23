@@ -33,7 +33,7 @@ export function MobileNav({ items }: Props) {
         <nav
           id="mobile-nav"
           aria-label="Main"
-          className="absolute inset-x-0 top-16 z-40 border-b border-border bg-background"
+          className="absolute inset-x-0 top-20 z-40 border-b border-border bg-background"
         >
           <ul className="mx-auto flex max-w-6xl flex-col px-4 py-2">
             {[...items, { href: "/contact", label: "Discuss a project" }].map((item) => (

@@ -4,14 +4,14 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { getNavigation } from "@/lib/navigation";
 
 import { MobileNav } from "./MobileNav";
-import { Wordmark } from "./Wordmark";
+import { SiteLogo } from "./SiteLogo";
 
 export async function SiteHeader() {
   const { main } = await getNavigation();
   return (
     <header className="relative border-b border-border bg-background">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-8 px-4 sm:px-6">
-        <Wordmark />
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-8 px-4 sm:px-6">
+        <SiteLogo />
         <div className="hidden items-center gap-8 md:flex">
           <nav aria-label="Main">
             <ul className="flex items-center gap-6 text-sm font-medium">
