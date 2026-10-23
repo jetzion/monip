@@ -103,7 +103,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 ## Website chat
 
-The chat button at the bottom right of every page answers visitor questions using only published content: products, services, the About page, and the client list. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Conversations are not saved.
+The chat assistant, Mike, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, and the client list. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Conversations are not saved.
 
 ## Content rules
 

@@ -8,8 +8,11 @@ import { useEffect, useRef, useState } from "react";
 import type { ChatMessage } from "@/lib/chat/validate";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
 
+/** Display name of the assistant; also set in the system prompt (lib/chat/knowledge.ts). */
+const ASSISTANT_NAME = "Mike";
+
 const WELCOME =
-  "Hello! Ask me about MONIP Group's services, product samples, or how we work. For quotes and pricing, use the contact form.";
+  "Hi, I'm Mike, MONIP Group's virtual assistant. Ask me about our services, product samples, or how we work. For quotes and pricing, use the contact form.";
 
 /**
  * Floating chat button and panel. The conversation lives in memory: it
@@ -101,9 +104,11 @@ export function ChatWidget() {
               </Bubble>
             ))}
             {pending && (
-              <p className="self-start rounded-2xl bg-white px-4 py-2 text-sm text-muted-foreground shadow-sm">
-                Typing<span className="animate-pulse">...</span>
-              </p>
+              <Bubble role="assistant">
+                <span className="text-muted-foreground">
+                  Typing<span className="animate-pulse">...</span>
+                </span>
+              </Bubble>
             )}
             {error && (
               <p role="alert" className="rounded-lg border border-destructive/30 bg-white px-3 py-2 text-sm text-destructive">
@@ -189,16 +194,35 @@ export function ChatWidget() {
 const iconButton =
   "inline-flex size-9 items-center justify-center rounded-lg text-white/90 hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white";
 
-function Bubble({ role, children }: { role: ChatMessage["role"]; children: string }) {
+const bubble = "whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed";
+
+/** A message. Assistant replies carry Mike's avatar and name. */
+function Bubble({ role, children }: { role: ChatMessage["role"]; children: React.ReactNode }) {
+  if (role === "user") {
+    return (
+      <p className={cn(bubble, "max-w-[85%] self-end bg-primary text-primary-foreground")}>
+        <span className="sr-only">You: </span>
+        {children}
+      </p>
+    );
+  }
   return (
-    <p
-      className={cn(
-        "max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed",
-        role === "user" ? "self-end bg-primary text-primary-foreground" : "self-start bg-white text-foreground shadow-sm",
-      )}
-    >
-      <span className="sr-only">{role === "user" ? "You: " : "MONIP: "}</span>
-      {children}
-    </p>
+    <div className="flex max-w-[90%] items-start gap-2 self-start">
+      <span
+        aria-hidden="true"
+        className="mt-5 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-navy text-sm font-semibold text-white"
+      >
+        {ASSISTANT_NAME[0]}
+      </span>
+      <div className="flex min-w-0 flex-col gap-1">
+        <span aria-hidden="true" className="text-xs font-semibold text-navy">
+          {ASSISTANT_NAME}
+        </span>
+        <p className={cn(bubble, "bg-white text-foreground shadow-sm")}>
+          <span className="sr-only">{ASSISTANT_NAME}: </span>
+          {children}
+        </p>
+      </div>
+    </div>
   );
 }
