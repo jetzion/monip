@@ -12,7 +12,7 @@ import { CHAT_LIMITS } from "@/lib/chat/validate";
 const ASSISTANT_NAME = "Mike";
 
 const WELCOME =
-  "Hi, I'm Mike, MONIP Group's virtual assistant. Ask me about our services, product samples, or how we work. For quotes and pricing, use the contact form.";
+  "Hi, I'm Mike from MONIP Group. Welcome! How can I help you today? I'm happy to tell you about our services, product samples, or how we work.";
 
 /**
  * Floating chat button and panel. The conversation lives in memory: it
