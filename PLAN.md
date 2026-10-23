@@ -534,7 +534,7 @@ Update this section as decisions are confirmed.
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
 | Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
 | Domain and account ownership | TBD | Requires decision |
-| Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Palette now derived from the logo; fonts (Archivo) and favicon still provisional | Partly confirmed |
+| Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Palette and favicon derived from the logo (favicon: indigo tile with bold white M at 16-48px; original mark at 180/512px); font (Archivo) provisional | Partly confirmed |
 | E-commerce | Excluded from initial release | Out of scope |
 | Client accounts/private catalogs | Future phase | Out of scope |
 
