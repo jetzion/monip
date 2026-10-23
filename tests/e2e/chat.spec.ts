@@ -33,6 +33,21 @@ test("visitor chats and the conversation keeps context", async ({ page }) => {
   expect(requests[1].messages.map((m) => m.role)).toEqual(["user", "assistant", "user"]);
 });
 
+test("contact form URLs in replies show as a Contact us link", async ({ page }) => {
+  await mockChat(page, () => ({ reply: "For pricing, please use the contact form: http://localhost:3000/contact." }));
+  await page.goto("/");
+  await page.getByRole("button", { name: "Chat with us" }).click();
+  await page.getByLabel("Your message").fill("How much is a cap?");
+  await page.getByLabel("Your message").press("Enter");
+
+  const link = panel(page).getByRole("link", { name: "Contact us" });
+  await expect(link).toBeVisible();
+  await expect(panel(page).getByText("http://localhost:3000/contact")).toHaveCount(0);
+  await link.click();
+  await expect(page).toHaveURL(/\/contact$/);
+  await expect(panel(page)).toHaveCount(0);
+});
+
 test("Shift+Enter adds a new line instead of sending", async ({ page }) => {
   const requests = await mockChat(page, () => ({ reply: "ok" }));
   await page.goto("/");

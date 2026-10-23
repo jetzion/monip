@@ -5,6 +5,7 @@ import { MessageCircle, RotateCcw, Send, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { splitContactLinks } from "@/lib/chat/contact-links";
 import type { ChatMessage } from "@/lib/chat/validate";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
 
@@ -100,7 +101,7 @@ export function ChatWidget() {
             <Bubble role="assistant">{WELCOME}</Bubble>
             {messages.map((message, index) => (
               <Bubble key={index} role={message.role}>
-                {message.content}
+                {message.role === "assistant" ? <ReplyText text={message.content} onNavigate={close} /> : message.content}
               </Bubble>
             ))}
             {pending && (
@@ -193,6 +194,19 @@ export function ChatWidget() {
 
 const iconButton =
   "inline-flex size-9 items-center justify-center rounded-lg text-white/90 hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white";
+
+/** Assistant text with contact-page URLs shown as a "Contact us" link. */
+function ReplyText({ text, onNavigate }: { text: string; onNavigate: () => void }) {
+  return splitContactLinks(text).map((part, index) =>
+    part.type === "text" ? (
+      part.text
+    ) : (
+      <Link key={index} href="/contact" onClick={onNavigate} className="font-medium text-primary underline underline-offset-4">
+        Contact us
+      </Link>
+    ),
+  );
+}
 
 const bubble = "whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed";
 
