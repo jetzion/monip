@@ -52,15 +52,13 @@ export default async function ServicesPage() {
                   {service.title}
                 </h2>
                 <p className="mt-3 leading-relaxed text-muted-foreground">{service.summary}</p>
-              </div>
-              <div className="flex flex-col gap-6">
                 {service.image && (
-                  <div className="overflow-hidden rounded-lg border border-border bg-tint">
-                    <CmsImage image={service.image} sizes="(min-width: 1024px) 50vw, 100vw" className="h-auto w-full" />
+                  <div className="mt-6 overflow-hidden rounded-lg border border-border bg-tint">
+                    <CmsImage image={service.image} sizes="(min-width: 1024px) 40vw, 100vw" className="h-auto w-full" />
                   </div>
                 )}
-                {service.body && <RichText data={service.body} className="space-y-4 leading-relaxed" />}
               </div>
+              {service.body && <RichText data={service.body} className="space-y-4 leading-relaxed" />}
             </section>
           ))}
         </div>
