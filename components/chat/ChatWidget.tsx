@@ -166,12 +166,21 @@ export function ChatWidget() {
         aria-controls="chat-panel"
         onClick={() => (open ? close() : setOpen(true))}
         className={cn(
-          "fixed bottom-4 right-4 z-50 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-card-hover transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 size-14",
-          open ? "hidden sm:inline-flex" : "inline-flex",
+          "fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2 rounded-full bg-primary font-semibold text-primary-foreground shadow-card-hover transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50",
+          open ? "hidden w-14 sm:inline-flex" : "inline-flex px-5",
         )}
       >
-        {open ? <X aria-hidden="true" className="size-6" /> : <MessageCircle aria-hidden="true" className="size-6" />}
-        <span className="sr-only">{open ? "Close chat" : "Chat with us"}</span>
+        {open ? (
+          <>
+            <X aria-hidden="true" className="size-6" />
+            <span className="sr-only">Close chat</span>
+          </>
+        ) : (
+          <>
+            <MessageCircle aria-hidden="true" className="size-5" />
+            Chat with us
+          </>
+        )}
       </button>
     </>
   );
