@@ -61,3 +61,16 @@ export async function getPublishedClients(access: ContentAccess = publicAccess) 
   });
   return docs;
 }
+
+export async function getPublishedOffices(access: ContentAccess = publicAccess) {
+  const payload = await getPayloadClient();
+  const { docs } = await payload.find({
+    collection: "offices",
+    ...access,
+    depth: 0,
+    limit: 50,
+    sort: ["sortOrder", "name"],
+    select: { name: true, address: true, latitude: true, longitude: true },
+  });
+  return docs;
+}

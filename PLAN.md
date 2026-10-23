@@ -83,7 +83,7 @@ Current structure (no `src/` directory):
 │   ├── global-not-found.tsx    # 404 for unmatched URLs
 │   ├── sitemap.ts
 │   └── robots.ts
-├── collections/                # Users, Media, Categories, Products, Services, Clients, Pages, Inquiries
+├── collections/                # Users, Media, Categories, Products, Services, Clients, Offices, Pages, Inquiries
 ├── globals/                    # Home (homepage copy)
 ├── access/  fields/  hooks/    # access rules, slug field, revalidation hooks
 ├── components/                 # layout, home, products, forms, content, media, preview, chat, ui
@@ -98,7 +98,7 @@ Current structure (no `src/` directory):
 
 ## 4. Data Model
 
-Built: Product, Product Category, Service, Client, Page, Home (global),
+Built: Product, Product Category, Service, Client, Office, Page, Home (global),
 Inquiry, Users, Media. Not built yet: Case Study and Site Settings
 (waiting for approved content).
 
@@ -153,6 +153,14 @@ lead-time information unless MONIP explicitly approves it.
 
 -   `name`, `logo` (required upload), `sortOrder`; drafts. Shown as a logo grid
     on `/clients` under the "Our clients" page title and intro.
+
+### Office
+
+-   `name`, `address` (optional), `latitude`, `longitude`, `sortOrder`;
+    drafts. Shown on About as pins on `public/world-map.svg` (Natural
+    Earth 1:110m land, public domain; equirectangular, lat 84 to -58,
+    projection in `lib/offices-map.ts`) and as a list. Also in the chat
+    knowledge.
 
 ### Page
 
@@ -568,6 +576,7 @@ Update this section as decisions are confirmed.
 | Navigation | Home, Products, Services, Clients, About (Clients before About since 2026-10-23); footer adds Contact and Privacy policy | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio) | Confirmed (MONIP to re-approve each client) |
+| Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
 | Privacy policy | Text supplied in `PRIVACY-POLICY.md`, published as the Privacy policy page | Confirmed (privacy email and chat section missing) |
 | Domain and account ownership | TBD | Requires decision |
 | Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Palette and favicon derived from the logo (favicon: indigo tile with bold white M at 16-48px; original mark at 180/512px); font (Archivo) provisional | Partly confirmed |
@@ -622,6 +631,7 @@ Update this section as decisions are confirmed.
 - [x] Editor guide (`Editor_guide_for_MONIP.md`)
 - [x] Website chat (OpenRouter): floating panel on public pages, server endpoint, validation, rate limit, tests with mocked API
 - [x] Duplicate products in the CMS (copy is a draft named "(copy)", unique "-copy" slug, not featured; slug rule also applies to services and categories)
+- [x] Offices on the About page: world map with pins and list (Offices collection; 5 offices from monip-group.com)
 - [ ] Chat: set `OPENROUTER_MODEL` and verify real replies
 - [x] Privacy policy page from `PRIVACY-POLICY.md` (CMS page, footer link)
 - [ ] Privacy policy: add the privacy contact email and a section on the website chat (messages sent to an AI provider)

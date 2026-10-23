@@ -13,7 +13,7 @@ While the site is in development, the admin is at http://localhost:3000/admin on
 | Role | Can do | Cannot do |
 | --- | --- | --- |
 | Admin | Everything editors can, plus manage users and read website inquiries | — |
-| Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, pages, the Home page text, and images | See other users, change roles, or read inquiries |
+| Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, offices, pages, the Home page text, and images | See other users, change roles, or read inquiries |
 
 You can change your own name and password from your account page. Only an admin can change someone's role.
 
@@ -91,6 +91,8 @@ Services and pages use the same draft, preview, and publish steps as products. C
 **About, Our clients, and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
 
 **Client logos.** Open **Clients** to add, remove, or reorder the logos on the Our clients page. Each needs the client name and a logo (give the logo image alt text such as "MSC Cruises logo"); **Sort order** sets the position. Show only clients MONIP has approval to name.
+
+**Offices.** Open **Offices** to add, remove, or reorder the offices on the About page map and list. Each needs a name and its map position: in Google Maps, right-click the place and click the two numbers to copy them, then paste the first into **Latitude** and the second into **Longitude**. The street address is optional.
 
 ## Reading website inquiries
 

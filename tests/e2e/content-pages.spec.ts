@@ -21,6 +21,15 @@ test("About page is linked from the header", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: /^About/ })).toBeVisible();
 });
 
+test("About shows each published office on the map and in the list", async ({ page }) => {
+  await page.goto("/about");
+  const offices = page.getByRole("region", { name: "Our offices" });
+  const names = await offices.getByRole("listitem").locator("p.font-semibold").allInnerTexts();
+  expect(names.length).toBeGreaterThan(0);
+  const map = offices.getByRole("img", { name: /^World map showing MONIP Group offices in / });
+  await expect(map).toHaveAttribute("aria-label", `World map showing MONIP Group offices in ${names.join(", ")}`);
+});
+
 test("Our clients page is linked from the header and logos have alt text", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("banner").getByRole("link", { name: "Clients", exact: true }).click();

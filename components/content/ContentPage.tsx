@@ -5,10 +5,14 @@ import type { Page } from "@/payload-types";
 
 import { PageHeader } from "./PageHeader";
 
-type Props = { page: Pick<Page, "title" | "intro" | "image" | "body"> };
+type Props = {
+  page: Pick<Page, "title" | "intro" | "image" | "body">;
+  /** Extra sections after the body, e.g. the offices map on About. */
+  children?: React.ReactNode;
+};
 
 /** Layout for CMS-managed text pages (About, Our clients, Privacy). */
-export function ContentPage({ page }: Props) {
+export function ContentPage({ page, children }: Props) {
   return (
     <article>
       <PageHeader title={page.title} intro={page.intro} />
@@ -31,6 +35,7 @@ export function ContentPage({ page }: Props) {
             />
           </div>
         )}
+        {children}
       </div>
     </article>
   );

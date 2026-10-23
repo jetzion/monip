@@ -1,7 +1,7 @@
 import { convertLexicalToPlaintext } from "@payloadcms/richtext-lexical/plaintext";
 
 import { getPayloadClient, populated } from "@/lib/payload";
-import { getPage, getPublishedClients, getPublishedServices } from "@/lib/queries/content";
+import { getPage, getPublishedClients, getPublishedOffices, getPublishedServices } from "@/lib/queries/content";
 import { publicAccess } from "@/lib/queries/products";
 import type { Category } from "@/payload-types";
 
@@ -31,11 +31,12 @@ async function getPublishedProducts() {
 
 /** Builds the system prompt from published CMS content only. */
 export async function buildSystemPrompt(siteUrl: string): Promise<string> {
-  const [about, services, products, clients] = await Promise.all([
+  const [about, services, products, clients, offices] = await Promise.all([
     getPage("about"),
     getPublishedServices(),
     getPublishedProducts(),
     getPublishedClients(),
+    getPublishedOffices(),
   ]);
 
   const sections = [RULES(`${siteUrl}/contact`)];
@@ -51,5 +52,9 @@ export async function buildSystemPrompt(siteUrl: string): Promise<string> {
     sections.push(`Product samples in the online catalog (${siteUrl}/products):\n${lines.join("\n")}`);
   }
   if (clients.length) sections.push(`Clients MONIP has served: ${clients.map((c) => c.name).join(", ")}`);
+  if (offices.length) {
+    const lines = offices.map((o) => `- ${o.name}${o.address ? `: ${o.address.replace(/\n/g, ", ")}` : ""}`);
+    sections.push(`MONIP offices:\n${lines.join("\n")}`);
+  }
   return sections.join("\n\n");
 }

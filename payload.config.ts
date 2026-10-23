@@ -11,6 +11,7 @@ import { Categories } from "./collections/Categories";
 import { Clients } from "./collections/Clients";
 import { Inquiries } from "./collections/Inquiries";
 import { Media } from "./collections/Media";
+import { Offices } from "./collections/Offices";
 import { Pages } from "./collections/Pages";
 import { Products } from "./collections/Products";
 import { Services } from "./collections/Services";
@@ -46,7 +47,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Categories, Products, Services, Clients, Pages, Inquiries],
+  collections: [Users, Media, Categories, Products, Services, Clients, Offices, Pages, Inquiries],
   globals: [Home],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),

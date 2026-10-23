@@ -73,6 +73,7 @@ export interface Config {
     products: Product;
     services: Service;
     clients: Client;
+    offices: Office;
     pages: Page;
     inquiries: Inquiry;
     'payload-kv': PayloadKv;
@@ -88,6 +89,7 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
+    offices: OfficesSelect<false> | OfficesSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -378,6 +380,38 @@ export interface Client {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Offices shown on the About page map and list.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offices".
+ */
+export interface Office {
+  id: number;
+  /**
+   * Shown on the map and in the list, for example "Hong Kong".
+   */
+  name: string;
+  /**
+   * Optional street address shown in the list.
+   */
+  address?: string | null;
+  /**
+   * Map position. In Google Maps, right-click the place and click the numbers to copy them; the first is latitude.
+   */
+  latitude: number;
+  /**
+   * The second number.
+   */
+  longitude: number;
+  /**
+   * Lower numbers appear first in the list.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * About, Our clients, and Privacy pages. A page and its link appear on the site only once published.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -498,6 +532,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'clients';
         value: number | Client;
+      } | null)
+    | ({
+        relationTo: 'offices';
+        value: number | Office;
       } | null)
     | ({
         relationTo: 'pages';
@@ -673,6 +711,20 @@ export interface ServicesSelect<T extends boolean = true> {
 export interface ClientsSelect<T extends boolean = true> {
   name?: T;
   logo?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offices_select".
+ */
+export interface OfficesSelect<T extends boolean = true> {
+  name?: T;
+  address?: T;
+  latitude?: T;
+  longitude?: T;
   sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
