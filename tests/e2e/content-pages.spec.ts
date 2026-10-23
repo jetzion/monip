@@ -9,8 +9,8 @@ test("services page lists published services", async ({ page }) => {
 });
 
 for (const { path, link, heading } of [
-  { path: "/about", link: "About", heading: "About MONIP Group (placeholder)" },
-  { path: "/sustainability", link: "Sustainability", heading: "Sustainability (placeholder)" },
+  { path: "/about", link: "About", heading: /^About/ },
+  { path: "/sustainability", link: "Sustainability", heading: /^Sustainability/ },
 ]) {
   test(`${link} page is linked from the header`, async ({ page }) => {
     await page.goto("/");

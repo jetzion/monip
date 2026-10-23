@@ -532,7 +532,7 @@ Update this section as decisions are confirmed.
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
 | Jurisdiction | US | Confirmed |
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
-| Current site URL | Placeholder | Requires input |
+| Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
 | Domain and account ownership | TBD | Requires decision |
 | Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Colors, fonts, and favicon still provisional | Partly confirmed |
 | E-commerce | Excluded from initial release | Out of scope |
@@ -569,7 +569,8 @@ Update this section as decisions are confirmed.
 - [ ] Resend email adapter (needs Resend account and verified sender)
 - [x] Home (featured products) and Contact (general inquiry)
 - [x] Services, About, Sustainability, Privacy pages (CMS-managed, hidden until published; placeholders in seed)
-- [ ] Real About, Services, Sustainability, Privacy content from MONIP
+- [x] Sustainability content copied from monip-group.com (local CMS; client name and 2019 statistics need re-approval before launch)
+- [ ] Real About, Services, Privacy content from MONIP
 - [x] Search (name, summary, tags, materials) and category/subcategory filters via URL params
 - [x] SEO: metadataBase, canonicals, Open Graph, sitemap, robots (previews blocked), breadcrumb JSON-LD
 - [ ] Legacy URL redirects (needs current site URL inventory)
