@@ -28,7 +28,7 @@ export function HeroVideo() {
       <video
         ref={video}
         className="absolute inset-0 h-full w-full object-cover"
-        poster="/hero/embroidery-poster.jpg"
+        poster="/hero/decoration-poster.jpg"
         muted
         loop
         playsInline
@@ -37,7 +37,7 @@ export function HeroVideo() {
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       >
-        <source src="/hero/embroidery.mp4" type="video/mp4" />
+        <source src="/hero/decoration.mp4" type="video/mp4" />
       </video>
       <div
         aria-hidden="true"

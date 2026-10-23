@@ -529,7 +529,7 @@ Update this section as decisions are confirmed.
 | Text pages | `pages` collection with fixed keys (about, sustainability, privacy) instead of globals | Confirmed |
 | Deployment | Local only until hosting accounts are decided | On hold |
 | Editor guide | `Editor_guide_for_MONIP.md` (exported from the shared editor guide doc) | Confirmed |
-| Homepage hero video | `public/hero/embroidery.mp4` (2.8 MB, 27 s, muted loop, poster for reduced motion, pause button). Source: Pexels video 28050441 "Close Up Shot of an Embroidery Machine", Pexels License (free commercial use, no attribution required). Old site videos are Wix library stock and not reusable | Confirmed (replace with MONIP footage if available) |
+| Homepage hero video | `public/hero/decoration.mp4`: 14 s montage of decoration techniques (2.0 MB, muted loop, poster for reduced motion, pause button). Pexels License clips (free commercial use, no attribution required): 28050441 embroidery machine, 34888657 screen printing (first seconds), 34240702 laser engraving (cropped to exclude a maker URL and engraved name), 5963499 leather hot-stamping. Old site videos are Wix library stock and not reusable | Confirmed (replace with MONIP footage if available) |
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
 | Jurisdiction | US | Confirmed |
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |

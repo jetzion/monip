@@ -28,7 +28,7 @@ test("visitor submits the general contact form", async ({ page }) => {
 test("hero background video can be paused and resumed", async ({ page }) => {
   await page.goto("/");
   const video = page.locator("video");
-  await expect(video).toHaveAttribute("poster", "/hero/embroidery-poster.jpg");
+  await expect(video).toHaveAttribute("poster", "/hero/decoration-poster.jpg");
   await page.getByRole("button", { name: "Pause background video" }).click();
   await expect(page.getByRole("button", { name: "Play background video" })).toBeVisible();
   expect(await video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
