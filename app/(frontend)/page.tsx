@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { PageHeader } from "@/components/content/PageHeader";
 import { SectionHeading } from "@/components/content/SectionHeading";
+import { HeroVideo } from "@/components/home/HeroVideo";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ButtonLink } from "@/components/ui/button-link";
 import { getFeaturedProducts } from "@/lib/queries/products";
@@ -19,6 +20,7 @@ export default async function HomePage() {
     <>
       <PageHeader
         size="hero"
+        background={<HeroVideo />}
         title="Merchandising and product sourcing for business"
         intro="Draft positioning copy. MONIP will supply the approved message."
       >

@@ -8,16 +8,19 @@ type Props = {
   /** Extra content inside the band, e.g. catalog filters or hero actions. */
   children?: React.ReactNode;
   size?: "page" | "hero";
+  /** Full-bleed layer behind the content, e.g. a background video. */
+  background?: React.ReactNode;
 };
 
 /** Navy page header band shared by every page, including the homepage hero. */
-export function PageHeader({ title, intro, eyebrow, children, size = "page" }: Props) {
+export function PageHeader({ title, intro, eyebrow, children, size = "page", background }: Props) {
   const hero = size === "hero";
   return (
-    <section className="header-band text-white">
+    <section className="header-band relative overflow-hidden text-white">
+      {background}
       <div
         className={cn(
-          "mx-auto max-w-6xl px-4 sm:px-6",
+          "relative z-10 mx-auto max-w-6xl px-4 sm:px-6",
           hero ? "py-20 sm:py-28" : "py-12 sm:py-16",
         )}
       >

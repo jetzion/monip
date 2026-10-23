@@ -24,3 +24,20 @@ test("visitor submits the general contact form", async ({ page }) => {
 
   await expect(page.getByRole("status")).toHaveText(/We received your inquiry and will reply/);
 });
+
+test("hero background video can be paused and resumed", async ({ page }) => {
+  await page.goto("/");
+  const video = page.locator("video");
+  await expect(video).toHaveAttribute("poster", "/hero/embroidery-poster.jpg");
+  await page.getByRole("button", { name: "Pause background video" }).click();
+  await expect(page.getByRole("button", { name: "Play background video" })).toBeVisible();
+  expect(await video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+});
+
+test("header stays visible after scrolling", async ({ page }) => {
+  await page.goto("/sustainability");
+  await page.mouse.wheel(0, 2000);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
+  const box = await page.getByRole("banner").boundingBox();
+  expect(box?.y).toBe(0);
+});
