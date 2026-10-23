@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PreviewBanner } from "@/components/preview/PreviewBanner";
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
+        {!preview && <ChatWidget />}
       </body>
     </html>
   );

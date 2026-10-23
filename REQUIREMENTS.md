@@ -72,7 +72,9 @@ accessibility, performance, and lead generation.
 -   Translation and multilingual content.
 -   Custom ERP, PIM, or inventory integrations.
 -   Paid advertising management or ongoing content production.
--   Advanced personalization or AI-powered recommendations.
+-   Advanced personalization or AI-powered recommendations. (A website
+    chat assistant that answers from published content was approved on
+    2026-10-23; see PLAN.md.)
 
 These may be added later after requirements and budget are confirmed.
 

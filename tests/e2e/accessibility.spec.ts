@@ -37,6 +37,12 @@ for (const path of PAGES) {
   });
 }
 
+test("no WCAG violations with the chat panel open on desktop", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Chat with us" }).click();
+  await expectNoViolations(page);
+});
+
 test("no WCAG violations in the inquiry form error state", async ({ page }) => {
   await page.goto("/contact");
   await page.getByRole("button", { name: "Send inquiry" }).click();
@@ -50,6 +56,12 @@ test.describe("mobile", () => {
   test("no WCAG violations with the menu open", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Open menu" }).click();
+    await expectNoViolations(page);
+  });
+
+  test("no WCAG violations with the chat panel open", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Chat with us" }).click();
     await expectNoViolations(page);
   });
 });

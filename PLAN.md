@@ -401,6 +401,7 @@ Names and placeholders are in `.env.example`. All are server-only.
 | `INQUIRY_NOTIFY_EMAIL` | Receives inquiry notifications (placeholder) | For notifications |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob media storage | On Vercel (startup fails without it) |
 | `RESEND_API_KEY`, `EMAIL_FROM` | Email delivery; without a key, emails print to the console and production inquiries record `emailStatus: failed` | For email delivery |
+| `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` | Website chat (server-only). Without both, the chat shows "not available" | For chat |
 
 Analytics ID will be added if a provider is approved. Live Preview needs
 no shared secret: it requires a Payload admin session.
@@ -541,6 +542,7 @@ Update this section as decisions are confirmed.
 | Editor guide | `Editor_guide_for_MONIP.md` (exported from the shared editor guide doc) | Confirmed |
 | Homepage hero video | `public/hero/decoration.mp4`: 14 s montage of decoration techniques (2.0 MB, muted loop, poster for reduced motion, pause button). Pexels License clips (free commercial use, no attribution required): 28050441 embroidery machine, 34888657 screen printing (first seconds), 34240702 laser engraving (cropped to exclude a maker URL and engraved name), 5963499 leather hot-stamping. Old site videos are Wix library stock and not reusable | Confirmed (replace with MONIP footage if available) |
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
+| Website chat | OpenRouter via `POST /api/chat` (non-streaming JSON). Answers only from published CMS content; never prices, lead times, MOQs, certifications; points to the contact form. `provider.data_collection: "deny"`; in-memory rate limit (10/min/IP); nothing stored. Approved 2026-10-23 | Confirmed |
 | Jurisdiction | US | Confirmed |
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
 | Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
@@ -596,7 +598,10 @@ Update this section as decisions are confirmed.
 - [x] Accessibility audit (axe, WCAG 2.2 AA) on all public pages, form errors, mobile menu: 0 violations
 - [x] Lighthouse (mobile, local prod build): performance 96-97, accessibility/best practices/SEO 100, CLS 0
 - [x] Editor guide (`Editor_guide_for_MONIP.md`)
-- [ ] Clients / Case studies page (hidden until approved content)
+- [x] Clients page (case studies not built)
+- [x] Website chat (OpenRouter): floating panel on public pages, server endpoint, validation, rate limit, tests with mocked API
+- [ ] Chat: set `OPENROUTER_MODEL` and verify real replies
+- [ ] Privacy policy (MONIP to supply), including that chat messages are sent to an AI provider
 - [ ] Site Settings global for logo, contact details, footer (needs MONIP content)
 - [ ] Analytics (needs provider decision)
 - [ ] Final QA with real content, deployment, editor training, handover
@@ -628,7 +633,7 @@ Update this section as decisions are confirmed.
 -   Create the Vercel project, Neon database, and Blob store; set
     environment variables; first preview deployment.
 -   Resend account with a verified sending domain.
--   Rate limiting for inquiry forms (Vercel Firewall rule; launch
+-   Rate limiting for inquiry forms and `/api/chat` (Vercel Firewall rule; launch
     blocker).
 -   Production domain and DNS.
 
@@ -645,5 +650,8 @@ Update this section as decisions are confirmed.
     the app.
 -   Multi-word catalog searches match only when all words are in the
     same field (name, summary, tags, or materials).
+-   Chat rate limiting is in server memory: per instance and reset on restart. Production needs the shared Firewall rule; also set a spending limit on the OpenRouter key.
 -   The developer machine runs Node 24.21.0, slightly below Payload's
     stated minimum (24.22.1); everything works, but upgrading is advised.
+
+

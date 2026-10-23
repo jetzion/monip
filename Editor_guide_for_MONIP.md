@@ -101,6 +101,10 @@ Every form submission is saved under **Inquiries**, newest first, and only admin
 
 Until the email service is set up, notification emails are not delivered: check **Inquiries** in the admin regularly.
 
+## Website chat
+
+The chat button at the bottom right of every page answers visitor questions using only published content: products, services, the About page, and the client list. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Conversations are not saved.
+
 ## Content rules
 
 Publish only accurate, approved information; anything on the site is a public claim by MONIP.
