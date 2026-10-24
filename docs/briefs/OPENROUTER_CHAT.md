@@ -1,5 +1,7 @@
 # Add AI Chat Using OpenRouter
 
+> Historical brief: the task as originally requested. What was built and decided is recorded in `PLAN.md`.
+
 Implement a fully functional AI-powered chat feature in the existing website. Use OpenRouter as the LLM provider. Integrate it into the current architecture and design system rather than creating a separate application.
 
 ## 1. Review the Existing Project

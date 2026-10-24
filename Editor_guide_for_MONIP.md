@@ -1,6 +1,6 @@
 # MONIP Website Editor Guide
 
-Oct 23, 2026 · @Jack
+Oct 24, 2026 · @Jack
 
 ## Getting started
 
@@ -13,7 +13,7 @@ While the site is in development, the admin is at http://localhost:3000/admin on
 | Role | Can do | Cannot do |
 | --- | --- | --- |
 | Admin | Everything editors can, plus manage users and read website inquiries | — |
-| Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, offices, pages, the Home page text, and images | See other users, change roles, or read inquiries |
+| Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, success stories, offices, pages, the Home page text, and images | See other users, change roles, or read inquiries |
 
 You can change your own name and password from your account page. Only an admin can change someone's role.
 
@@ -111,7 +111,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 ## Website chat
 
-The chat assistant, Mike, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, and the client list. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to Mike's name. Conversations are not saved.
+The chat assistant, Mike, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, the client list, and the offices. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to Mike's name. Conversations are not saved.
 
 ## Content rules
 

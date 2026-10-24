@@ -1,4 +1,9 @@
-## Hero copy'Hero copy
+# Update content
+
+> Historical brief: the task as originally requested. What was built and decided is recorded in `PLAN.md`.
+
+## Hero copy
+
 MONIP Group brings together global sourcing expertise, creative product development, and strategic merchandising to help cruise lines and retail businesses stand out in competitive markets. We go beyond finding products.
 
 ## Details

@@ -107,8 +107,8 @@ useful work and explain any proposed migration.
 
 ### CMS practices
 
--   Use explicit schemas for products, categories, services, case
-    studies, and site settings.
+-   Use explicit schemas for products, categories, services, success
+    stories, and site settings.
 -   Validate required fields and slug uniqueness.
 -   Provide helpful field descriptions and sensible editor grouping.
 -   Support ordered image galleries and meaningful alt text.

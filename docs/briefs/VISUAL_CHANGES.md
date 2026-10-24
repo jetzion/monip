@@ -1,3 +1,7 @@
+# Visual changes
+
+> Historical brief: the task as originally requested. What was built and decided is recorded in `PLAN.md`.
+
 The site looks good overall, and I like the existing layout and functionality.
 However, the visual design feels a bit dull and overly dependent on white and
 gray. I’d like you to review the current design and suggest ways to make it more

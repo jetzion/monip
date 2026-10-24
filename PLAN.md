@@ -2,7 +2,7 @@
 
 **Document:** `PLAN.md`\
 **Status:** In progress --- core site built and tested locally;
-deployment on hold (last updated 2026-10-23)\
+deployment on hold (last updated 2026-10-24)\
 **Companion documents:** `REQUIREMENTS.md`, `CLAUDE.md`, `README.md`,
 `Editor_guide_for_MONIP.md`
 
@@ -92,6 +92,7 @@ Current structure (no `src/` directory):
 ├── lib/                        # queries/, validation/, inquiries/, chat/, site, seo, preview helpers
 ├── migrations/                 # Payload migrations (generated)
 ├── scripts/seed.ts             # dev-only placeholder content
+├── docs/briefs/                # original feature requests (history only)
 ├── tests/e2e/                  # Playwright; unit tests sit next to lib/ files
 ├── payload.config.ts
 ├── docker-compose.yml          # local Postgres 18
@@ -100,9 +101,10 @@ Current structure (no `src/` directory):
 
 ## 4. Data Model
 
-Built: Product, Product Category, Service, Client, Office, Page, Home (global),
-Inquiry, Users, Media. Not built yet: Case Study and Site Settings
-(waiting for approved content).
+Built: Product, Product Category, Service, Client, Office, Success Story,
+Page, Home (global), Inquiry, Users, Media. Not built yet: Site Settings
+(waiting for approved content). Success Stories replaced the planned
+Case Study model (2026-10-24).
 
 ### Product
 
@@ -167,16 +169,22 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Page
 
--   `title`, `key` (unique: about, clients, privacy), `intro`,
-    `image` (optional), `body`, SEO fields; drafts. Each key maps to a route in code.
+-   `title`, `key` (unique: about, products, clients, success-stories,
+    privacy), `intro`, `image` (optional), `body`, SEO fields; drafts.
+    Each key maps to a route in code. The products and success-stories
+    entries only supply the page header.
 -   A page, `/services`, and their nav links appear only when published
-    content exists; otherwise the route returns 404.
+    content exists; otherwise the route returns 404. `/products` always
+    renders, with or without its Pages entry.
 
-### Case Study (not built)
+### Success Story
 
--   `title`, `slug`, `summary`, `body`, `images`, `clientName` (only
-    when approved), `industry` (optional), `results` (only
-    substantiated), SEO fields, publication workflow.
+-   `title`, `slug`, `publicationDate` (optional), `summary`,
+    `featuredImage` (required), `body`, `gallery`, `industry`
+    (optional), `customerName` (shown only when `customerApproved` is
+    ticked), SEO fields; drafts and `orderable`. Shown on
+    `/success-stories` and at `/success-stories/<slug>`; details in
+    section 15.
 
 ### Site Settings (Payload global, not built)
 
@@ -211,8 +219,8 @@ roles.
 
 ### Access control
 
--   Public reads return published Products, Services, Clients, Pages, and
-    the published Home global only;
+-   Public reads return published Products, Services, Clients, Offices,
+    Success Stories, Pages, and the published Home global only;
     Categories (no drafts) are always public.
 -   Drafts are visible only to logged-in users, including in Live Preview.
 -   Inquiries contain personal information: no public read or create,
@@ -282,8 +290,8 @@ foundation.
 2.  Set up formatting, linting, environment validation, and test
     commands.
 3.  Install Payload, configure Postgres, and set up the admin panel.
-4.  Implement schemas for products, categories, services, case studies,
-    and site settings.
+4.  Implement schemas for products, categories, services, success
+    stories, and site settings.
 5.  Add required-field validation, slug rules, image guidance, and
     editor-friendly field groups.
 6.  Implement reusable Local API queries with generated Payload types.
@@ -305,7 +313,7 @@ Build in this order:
 4.  About page.
 5.  Services page.
 6.  Sustainability page: removed 2026-10-23 at MONIP's request.
-7.  Clients page (`/clients`: Pages "Our clients" for title and intro, `clients` collection for logos). Case studies not built.
+7.  Clients page (`/clients`: Pages "Our clients" for title and intro, `clients` collection for logos). Projects are shown as Success Stories.
 8.  Contact page and privacy page.
 9.  Not-found page and error states.
 
@@ -447,15 +455,15 @@ pin positions (cropped view) and label placement, and success story
 customer-name approval and date formatting, and grouping categories
 under their parent for the admin Categories list.
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 60 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 61 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
-Inquiry tests leave Inquiry records behind (delete `e2e-*.com`
-inquiries afterwards). Because the tests share the database editors use,
+Inquiry tests leave Inquiry records behind (delete
+`e2e-*@example.com` inquiries afterwards). Because the tests share the database editors use,
 some catalog tests depend on placeholder content and fail once it is
 replaced; a separate seeded test database is planned (section 13).
-Last run (2026-10-23): 51 passed, 4 catalog filter tests failed on real
+Last run (2026-10-24): 57 passed, 4 catalog filter tests failed on real
 content.
 
 -   Catalog browsing, search, category/subcategory filters, empty states.
@@ -468,7 +476,8 @@ content.
 -   Website chat with a mocked `/api/chat`: context, Shift+Enter, state
     across pages, errors, Escape and focus, "Contact us" links, Mike's
     AI label; endpoint rejects system messages and malformed bodies.
--   robots.txt, sitemap, canonical and social metadata.
+-   robots.txt, sitemap, canonical and social metadata, legacy
+    `/project-5` redirect.
 -   Preview route refusals (no session, unsafe paths).
 -   axe accessibility scan (WCAG 2.2 AA) of all public pages, plus the
     chat panel open on desktop and mobile.
@@ -573,8 +582,10 @@ Update this section as decisions are confirmed.
 | Email provider | Resend | Confirmed |
 | Notification recipient | Placeholder | Requires decision |
 | Spam / rate limiting | Honeypot now; rate limiting deferred (launch blocker) | Deferred |
-| Redirects | Managed in code (`next.config`) | Confirmed |
-| Text pages | `pages` collection with fixed keys (about, clients, privacy) instead of globals | Confirmed |
+| Redirects | Managed in code (`next.config`). Legacy map: `/project-5` (sustainability mission) to `/about`, permanent (2026-10-24); the old home stays `/` | Confirmed |
+| Text pages | `pages` collection with fixed keys (about, products, clients, success-stories, privacy) instead of globals | Confirmed |
+| Case studies | Replaced by Success Stories (2026-10-24) | Confirmed |
+| Task briefs | Original feature requests kept as history in `docs/briefs/`; this plan records what was decided | Confirmed |
 | Deployment | Local only until hosting accounts are decided | On hold |
 | Editor guide | `Editor_guide_for_MONIP.md` (exported from the shared editor guide doc) | Confirmed |
 | Homepage hero video | `public/hero/decoration.mp4`: 14 s montage of decoration techniques (2.0 MB, muted loop, poster for reduced motion, pause button). Pexels License clips (free commercial use, no attribution required): 28050441 embroidery machine, 34888657 screen printing (first seconds), 34240702 laser engraving (cropped to exclude a maker URL and engraved name), 5963499 leather hot-stamping. Old site videos are Wix library stock and not reusable | Confirmed (replace with MONIP footage if available) |
@@ -591,7 +602,7 @@ Update this section as decisions are confirmed.
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
-| Privacy policy | Text supplied in `PRIVACY-POLICY.md`, published as the Privacy policy page | Confirmed (privacy email and chat section missing) |
+| Privacy policy | Text supplied in `PRIVACY-POLICY.md`, published as the Privacy policy page. The CMS page is the master copy once published; the file is the original supplied text | Confirmed (privacy email and chat section missing) |
 | Domain and account ownership | TBD | Requires decision |
 | Brand assets | Logo received (`public/monip-logo.png`, used in header, footer, 404). Palette and favicon derived from the logo (favicon: indigo tile with bold white M at 16-48px; original mark at 180/512px); font (Archivo) provisional | Partly confirmed |
 | E-commerce | Excluded from initial release | Out of scope |
@@ -629,13 +640,13 @@ Update this section as decisions are confirmed.
 - [x] Home (featured products) and Contact (general inquiry)
 - [x] Services, About, Privacy pages (CMS-managed, hidden until published; placeholders in seed)
 - [x] Sustainability page removed (route, nav, sitemap, CMS page key, copied content and photo; migration `20261023_143316_remove_sustainability_page`)
-- [x] About content and homepage hero intro from MONIP (`UPDATE_CONTANT.md`; hero links to About for detail)
+- [x] About content and homepage hero intro from MONIP (`docs/briefs/UPDATE_CONTENT.md`; hero links to About for detail)
 - [x] Homepage copy editable in the CMS (`home` global: hero and closing text, drafts and Live Preview; migration `20261023_160929_home_global` publishes the defaults)
 - [x] Our clients page with the 8 logos and intro copied from monip-group.com (local CMS; MONIP to confirm each client is still approved to show)
 - [ ] Real Services content and homepage headline from MONIP
 - [x] Search (name, summary, tags, materials) and category/subcategory filters via URL params
 - [x] SEO: metadataBase, canonicals, Open Graph, sitemap, robots (previews blocked), breadcrumb JSON-LD
-- [ ] Legacy URL redirects (needs current site URL inventory)
+- [x] Legacy URL redirects: `/project-5` to `/about` (the old site has no other pages)
 - [ ] Default social share image (needs approved brand asset)
 - [x] Deploy readiness (code): initial migration, deploy:build in vercel.json, Vercel Blob (client uploads), Resend adapter, env fail-fast checks, README
 - [ ] Create Neon DB, Vercel Blob store, Vercel project, env vars (needs account owner decision)
@@ -675,8 +686,7 @@ Update this section as decisions are confirmed.
 3.  Code review of the whole codebase before content work begins.
 4.  Optional: drag-and-drop ordering for Offices and Services (they
     still use a Sort order number); clickable product links in chat
-    replies; related products on product pages; case studies on the
-    Clients page.
+    replies; related products on product pages.
 
 **Needs input from MONIP**
 
@@ -691,7 +701,6 @@ Update this section as decisions are confirmed.
     approved to be shown.
 -   Inquiry notification recipient, and whether editors should see
     inquiries.
--   Current website URL, to build the redirect map.
 -   Analytics: approve a provider (Vercel Web Analytics suggested) or none.
 
 **On hold until hosting accounts are decided**
@@ -721,8 +730,10 @@ Update this section as decisions are confirmed.
 -   The developer machine runs Node 24.21.0, slightly below Payload's
     stated minimum (24.22.1); everything works, but upgrading is advised.
 
+## 15. Success Stories page
 
-## Success Stories page
+The original Success Stories requirement and its implementation
+decisions. The model is summarized in section 4.
 
 ### Overview
 Create a dedicated Success Stories page for the MONIP Group website that showcases selected projects, customer engagements, product solutions, and successful outcomes.

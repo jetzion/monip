@@ -46,7 +46,7 @@ accessibility, performance, and lead generation.
 -   CMS-managed product catalog and product detail pages.
 -   Product categories, tags, search, and practical filters.
 -   Homepage featuring selected products and key company content.
--   About, Services, Clients/Case Studies, and Contact
+-   About, Services, Clients, Success Stories, and Contact
     content areas, subject to content availability.
 -   Product-specific inquiry form and general contact form.
 -   Form validation, spam protection, and secure handling of
@@ -91,12 +91,13 @@ These may be added later after requirements and budget are confirmed.
 5.  **Product Detail** --- unique page for each published product.
 6.  **Sustainability** --- removed from scope 2026-10-23 at MONIP's
     request.
-7.  **Clients / Case Studies** --- approved client logos, projects, and
-    case studies where available.
-8.  **Contact** --- general inquiry form and approved contact
+7.  **Clients** --- approved client logos.
+8.  **Success Stories** --- approved projects and outcomes, each with its
+    own detail page (replaces the planned case studies, 2026-10-24).
+9.  **Contact** --- general inquiry form and approved contact
     information.
-9.  **Privacy Policy** --- content supplied or approved by MONIP.
-10. **404 page** --- helpful recovery links and navigation.
+10. **Privacy Policy** --- content supplied or approved by MONIP.
+11. **404 page** --- helpful recovery links and navigation.
 
 The final sitemap may be simplified if there is insufficient approved
 content for a dedicated page. Do not publish empty pages or invent
@@ -187,8 +188,8 @@ Catalog behavior:
     unpublishing, and archiving.
 -   Support image upload, alternative text, captions where useful, and
     image ordering.
--   Provide reusable schemas for products, categories, services, case
-    studies, and site settings.
+-   Provide reusable schemas for products, categories, services, success
+    stories, and site settings.
 -   Support draft previews that are not publicly accessible.
 -   Configure access using the least privilege practical for the
     selected CMS (Payload roles and collection access control).
@@ -354,8 +355,8 @@ decision log.
 -   CMS user roles and who approves publication.
 -   Whether editors (not only admins) can read website inquiries.
 -   Domain, hosting account ownership, and deployment access (TBD).
--   Current website URL for the URL inventory (placeholder until
-    provided).
+-   Current website URL for the URL inventory: www.monip-group.com
+    (confirmed; see PLAN.md).
 -   Budget, timeline, and any external integrations.
 
 ## 11. Assumptions for Initial Planning
