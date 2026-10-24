@@ -190,7 +190,7 @@ export interface Media {
   focalY?: number | null;
 }
 /**
- * Product categories. Set a parent to make a subcategory (two levels max).
+ * Product categories. Set a parent to make a subcategory (two levels max). Click a category's arrow to show or hide its subcategories.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".

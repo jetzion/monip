@@ -10,7 +10,10 @@ export const Categories: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "parent", "sortOrder"],
     description:
-      "Product categories. Set a parent to make a subcategory (two levels max).",
+      "Product categories. Set a parent to make a subcategory (two levels max). Click a category's arrow to show or hide its subcategories.",
+    components: {
+      views: { list: { Component: "/components/admin/CategoryListView#CategoryListView" } },
+    },
   },
   defaultSort: "sortOrder",
   hooks: {

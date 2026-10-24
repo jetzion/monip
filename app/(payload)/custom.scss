@@ -115,3 +115,80 @@ html {
   object-fit: contain;
   background: #fff;
 }
+
+// Categories list: top-level categories with collapsible subcategories.
+// The tree shows every category, so the table's page controls are hidden.
+.collection-list:has(.category-tree) .page-controls {
+  display: none;
+}
+
+.category-tree,
+.category-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.category-tree > li {
+  border-bottom: 1px solid var(--theme-elevation-100);
+}
+
+.category-tree__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 12px 40px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.category-tree__group summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+}
+
+.category-tree__group summary::-webkit-details-marker {
+  display: none;
+}
+
+// Chevron: points right when collapsed, down when expanded.
+.category-tree__group summary::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--theme-elevation-600);
+  border-bottom: 2px solid var(--theme-elevation-600);
+  transform: translateY(-50%) rotate(-45deg);
+  transition: transform 0.15s;
+}
+
+.category-tree__group[open] summary::before {
+  transform: translateY(-70%) rotate(45deg);
+}
+
+.category-tree__meta {
+  color: var(--theme-elevation-500);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.category-tree__group ul {
+  padding-bottom: 8px;
+}
+
+.category-tree__group ul li {
+  padding: 6px 14px 6px 64px;
+}
+
+.category-tree a {
+  color: var(--theme-text);
+  text-decoration: none;
+}
+
+.category-tree a:hover {
+  text-decoration: underline;
+}
