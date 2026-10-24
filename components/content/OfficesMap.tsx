@@ -1,12 +1,12 @@
 import { cn } from "cn";
 import Image from "next/image";
 
-import { labelOnLeft, MAP, mapPosition } from "@/lib/offices-map";
+import { labelOnLeft, MAP, mapImageBox, mapPosition, viewHeight } from "@/lib/offices-map";
 import type { Office } from "@/payload-types";
 
 type Props = { offices: Pick<Office, "id" | "name" | "address" | "latitude" | "longitude">[] };
 
-/** World map with a pin per office, followed by the office list. */
+/** World map (Arctic cropped) with a pin per office, followed by the office list in equal columns. */
 export function OfficesMap({ offices }: Props) {
   const names = offices.map((office) => office.name).join(", ");
   return (
@@ -18,10 +18,12 @@ export function OfficesMap({ offices }: Props) {
       <div
         role="img"
         aria-label={`World map showing MONIP Group offices in ${names}`}
-        className="relative mt-8 overflow-hidden rounded-lg bg-tint"
-        style={{ aspectRatio: `${MAP.width} / ${MAP.height}` }}
+        className="relative mt-6 overflow-hidden rounded-lg bg-tint"
+        style={{ aspectRatio: `${MAP.width} / ${viewHeight}` }}
       >
-        <Image src="/world-map.svg" alt="" fill unoptimized className="object-fill" />
+        <div className="absolute inset-x-0" style={{ top: `${mapImageBox.top}%`, height: `${mapImageBox.height}%` }}>
+          <Image src="/world-map.svg" alt="" fill unoptimized className="object-fill" />
+        </div>
         {offices.map((office) => {
           const { left, top } = mapPosition(office);
           const labelLeft = labelOnLeft(office, offices);
@@ -41,7 +43,11 @@ export function OfficesMap({ offices }: Props) {
         })}
       </div>
 
-      <ul className="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Equal-width columns, one per office on large screens. */}
+      <ul
+        className="mt-6 grid grid-cols-2 gap-x-8 gap-y-4 lg:grid-cols-[repeat(var(--office-count),minmax(0,1fr))]"
+        style={{ "--office-count": offices.length } as React.CSSProperties}
+      >
         {offices.map((office) => (
           <li key={office.id} className="flex gap-3">
             <span aria-hidden="true" className="mt-1.5 size-2.5 shrink-0 rounded-full bg-primary" />

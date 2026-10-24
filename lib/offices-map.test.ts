@@ -1,12 +1,23 @@
 import { describe, expect, it } from "vitest";
 
-import { labelOnLeft, mapPosition } from "./offices-map";
+import { labelOnLeft, MAP, mapImageBox, mapPosition, VIEW, viewHeight } from "./offices-map";
 
 describe("mapPosition", () => {
-  it("maps the map corners and the equator", () => {
-    expect(mapPosition({ latitude: 84, longitude: -180 })).toEqual({ left: 0, top: 0 });
+  it("maps the cropped view's corners and the equator", () => {
+    expect(mapPosition({ latitude: VIEW.north, longitude: -180 })).toEqual({ left: 0, top: 0 });
+    expect(mapPosition({ latitude: VIEW.south, longitude: 180 })).toEqual({ left: 100, top: 100 });
     expect(mapPosition({ latitude: 0, longitude: 0 }).left).toBe(50);
-    expect(mapPosition({ latitude: 0, longitude: 0 }).top).toBeCloseTo((84 / 142) * 100, 0);
+    expect(mapPosition({ latitude: 0, longitude: 0 }).top).toBeCloseTo((72 / 130) * 100, 5);
+  });
+});
+
+describe("mapImageBox", () => {
+  it("places the full map so a latitude lands at the same spot as its pin", () => {
+    // Pixel position of the equator inside the full SVG, converted to view percentages.
+    const equatorInSvg = (MAP.north / 360) * MAP.width;
+    const viaImage = mapImageBox.top + (equatorInSvg / MAP.height) * mapImageBox.height;
+    expect(viaImage).toBeCloseTo(mapPosition({ latitude: 0, longitude: 0 }).top, 5);
+    expect(viewHeight).toBeLessThan(MAP.height);
   });
 });
 
