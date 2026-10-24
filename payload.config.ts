@@ -15,6 +15,7 @@ import { Offices } from "./collections/Offices";
 import { Pages } from "./collections/Pages";
 import { Products } from "./collections/Products";
 import { Services } from "./collections/Services";
+import { SuccessStories } from "./collections/SuccessStories";
 import { Users } from "./collections/Users";
 import { Home } from "./globals/Home";
 
@@ -47,7 +48,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Categories, Products, Services, Clients, Offices, Pages, Inquiries],
+  collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries],
   globals: [Home],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),

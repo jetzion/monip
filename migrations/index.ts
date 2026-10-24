@@ -9,6 +9,7 @@ import * as migration_20261023_163326_clients from './20261023_163326_clients';
 import * as migration_20261023_210736_offices from './20261023_210736_offices';
 import * as migration_20261023_211829_add_client_order from './20261023_211829_add_client_order';
 import * as migration_20261023_211844_drop_client_sort_order from './20261023_211844_drop_client_sort_order';
+import * as migration_20261024_123343_success_stories from './20261024_123343_success_stories';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20261023_211844_drop_client_sort_order.up,
     down: migration_20261023_211844_drop_client_sort_order.down,
-    name: '20261023_211844_drop_client_sort_order'
+    name: '20261023_211844_drop_client_sort_order',
+  },
+  {
+    up: migration_20261024_123343_success_stories.up,
+    down: migration_20261024_123343_success_stories.down,
+    name: '20261024_123343_success_stories'
   },
 ];

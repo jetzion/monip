@@ -26,7 +26,7 @@ export async function getPage(key: PageKey, access: ContentAccess = publicAccess
     depth: 1,
     limit: 1,
     where: { key: { equals: key } },
-    select: { title: true, intro: true, image: true, body: true, seo: true },
+    select: { title: true, headline: true, intro: true, image: true, body: true, seo: true },
     populate: { media: { url: true, filename: true, alt: true, width: true, height: true } },
   });
   return docs[0] ?? null;
@@ -35,8 +35,9 @@ export async function getPage(key: PageKey, access: ContentAccess = publicAccess
 /** Which optional sections have published content (deduplicated per render). */
 export const getAvailableSections = cache(async () => {
   const payload = await getPayloadClient();
-  const [services, pages] = await Promise.all([
+  const [services, stories, pages] = await Promise.all([
     payload.count({ collection: "services", ...publicAccess }),
+    payload.count({ collection: "success-stories", ...publicAccess }),
     payload.find({ collection: "pages", ...publicAccess, depth: 0, limit: 10, select: { key: true } }),
   ]);
   const keys = new Set(pages.docs.map((page) => page.key));
@@ -44,6 +45,8 @@ export const getAvailableSections = cache(async () => {
     services: services.totalDocs > 0,
     about: keys.has("about"),
     clients: keys.has("clients"),
+    // The page needs both its header (Pages) and at least one published story.
+    "success-stories": keys.has("success-stories") && stories.totalDocs > 0,
     privacy: keys.has("privacy"),
   };
 });

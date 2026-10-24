@@ -22,6 +22,8 @@ const PAGES = [
   "/products?q=zzzz-no-match",
   "/products/placeholder-product-1",
   "/services",
+  "/success-stories",
+  "/success-stories/placeholder-story-1",
   "/about",
   "/clients",
   "/privacy",

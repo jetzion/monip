@@ -8,6 +8,7 @@ import { autosaveDrafts, livePreview } from "../lib/live-preview";
 export const PAGE_KEYS = [
   { label: "About (/about)", value: "about" },
   { label: "Our clients (/clients)", value: "clients" },
+  { label: "Success Stories (/success-stories)", value: "success-stories" },
   { label: "Privacy policy (/privacy)", value: "privacy" },
 ] as const;
 
@@ -19,7 +20,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "key", "_status", "updatedAt"],
     description:
-      "About, Our clients, and Privacy pages. A page and its link appear on the site only once published.",
+      "About, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published.",
     livePreview: livePreview((data) => (typeof data.key === "string" ? `/${data.key}` : null)),
   },
   versions: autosaveDrafts,
@@ -35,6 +36,14 @@ export const Pages: CollectionConfig = {
   },
   fields: [
     { name: "title", type: "text", required: true },
+    {
+      name: "headline",
+      type: "text",
+      admin: {
+        description: "Large heading under the page title, e.g. Turning Ideas Into Results.",
+        condition: (data) => data?.key === "success-stories",
+      },
+    },
     {
       name: "key",
       label: "Page",

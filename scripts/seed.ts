@@ -1,6 +1,7 @@
 /**
  * Seeds clearly marked placeholder content for local development: catalog,
- * services, the About, Our clients, and Privacy pages, and the homepage copy. Each part is
+ * services, success stories, the About, Our clients, Success Stories, and Privacy pages, and
+ * the homepage copy. Each part is
  * skipped if it already exists. MONIP replaces these via the admin.
  * Run with: pnpm seed
  */
@@ -59,7 +60,7 @@ const richText = (...paragraphs: string[]): NonNullable<Page["body"]> => ({
   },
 });
 
-const exists = async (collection: "categories" | "services", slug: string) =>
+const exists = async (collection: "categories" | "services" | "success-stories", slug: string) =>
   (await payload.count({ collection, where: { slug: { equals: slug } } })).totalDocs > 0;
 
 async function seedCatalog() {
@@ -114,10 +115,32 @@ async function seedServices() {
   return "seeded 3 services";
 }
 
+async function seedStories() {
+  if (await exists("success-stories", "placeholder-story-1")) return "success stories exist";
+  for (const n of [1, 2, 3]) {
+    const image = await placeholderImage(`Success story ${n}`);
+    await payload.create({
+      collection: "success-stories",
+      context,
+      data: {
+        title: `Placeholder Success Story ${n}`,
+        slug: `placeholder-story-${n}`,
+        summary: PLACEHOLDER,
+        featuredImage: image.id,
+        body: richText(PLACEHOLDER),
+        industry: "Placeholder industry",
+        _status: "published",
+      },
+    });
+  }
+  return "seeded 3 success stories";
+}
+
 async function seedPages() {
   const pages: { key: PageKey; title: string }[] = [
     { key: "about", title: "About MONIP Group (placeholder)" },
     { key: "clients", title: "Our clients (placeholder)" },
+    { key: "success-stories", title: "Success Stories (placeholder)" },
     { key: "privacy", title: "Privacy policy (placeholder)" },
   ];
   const created: string[] = [];
@@ -142,7 +165,7 @@ async function seedHome() {
   return "published home page defaults";
 }
 
-for (const step of [seedCatalog, seedServices, seedPages, seedHome]) {
+for (const step of [seedCatalog, seedServices, seedStories, seedPages, seedHome]) {
   payload.logger.info(`Seed: ${await step()}`);
 }
 process.exit(0);

@@ -646,6 +646,8 @@ Update this section as decisions are confirmed.
 - [ ] Site Settings global for logo, contact details, footer (needs MONIP content)
 - [ ] Analytics (needs provider decision)
 - [ ] Final QA with real content, deployment, editor training, handover
+- [x] Success Stories: collection and migration (`20261024_123343_success_stories`, verified against a fresh database), list page, detail page, navigation, sitemap, unit and e2e tests, editor guide
+- [ ] Success Stories: real stories, headline, and intro from MONIP
 
 ## 13. Next Steps
 
@@ -706,3 +708,53 @@ Update this section as decisions are confirmed.
     stated minimum (24.22.1); everything works, but upgrading is advised.
 
 
+## Success Stories page
+
+### Overview
+Create a dedicated Success Stories page for the MONIP Group website that showcases selected projects, customer engagements, product solutions, and successful outcomes.
+
+The page should demonstrate MONIP Group's capabilities, quality of execution, versatility, and ability to translate customer requirements into practical solutions.
+
+The page must align with MONIP Group's overall brand identity and website design while providing an engaging, modern, and professional user experience.
+
+### Page header
+Include:
+- Page title: Success Stories
+- Headline: Turning Ideas Into Results
+- Supporting text: A concise introduction explaining how MONIP Group works with customers to address challenges, develop solutions, and deliver results.
+
+### Story Cards
+
+Each story card must support:
+
+- Featured image or project thumbnail.
+- Story title.
+- Short summary.
+- Industry or project category, when applicable.
+- Optional customer name, subject to authorization.
+- Optional publication date.
+
+### Story detail page
+Each story has its own page at `/success-stories/<slug>` with the title,
+summary, featured image, the full story (rich text: for example challenge,
+solution, result), an optional photo gallery, and its own SEO title and
+description. Story cards link to it. Unpublished stories return 404.
+
+### CMS
+Implement complete content management functionality for the Success Stories section in Payload CMS (the project CMS; decided 2026-10-24 instead of Sanity).
+
+Authorized staff must be able to create, edit, preview, publish, unpublish, organize, and delete success stories through the Payload admin (`/admin`).
+
+### Implementation decisions
+
+| Topic | Decision | Status |
+| --- | --- | --- |
+| CMS | Payload `success-stories` collection: drafts, autosave, Live Preview, unique slug | Confirmed |
+| Detail page | One page per story at `/success-stories/<slug>` | Confirmed |
+| Page header | Pages entry "Success Stories (/success-stories)": title, optional headline, intro | Assumption to confirm |
+| Customer name | Shown only when "Customer approved for public display" is ticked | Assumption to confirm |
+| Industry / category | Optional free text (no filters) | Assumption to confirm |
+| Order | Drag and drop in the admin list, like Clients | Assumption to confirm |
+| Navigation | "Success Stories" after Services; shown only when the page and at least one story are published | Assumption to confirm |
+| Content | Supplied by MONIP; no invented stories, customers, quotes, or figures | Requires MONIP content |
+| Not included yet | Homepage feature, links to products/services/clients, chat answers from stories | Future option |

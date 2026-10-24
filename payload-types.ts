@@ -72,6 +72,7 @@ export interface Config {
     categories: Category;
     products: Product;
     services: Service;
+    'success-stories': SuccessStory;
     clients: Client;
     offices: Office;
     pages: Page;
@@ -88,6 +89,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
+    'success-stories': SuccessStoriesSelect<false> | SuccessStoriesSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
     offices: OfficesSelect<false> | OfficesSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
@@ -359,6 +361,80 @@ export interface Service {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Stories shown on the Success Stories page, in this order. Drag the handle on the left to reorder. Only published stories are visible on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "success-stories".
+ */
+export interface SuccessStory {
+  id: number;
+  _order?: string | null;
+  title: string;
+  /**
+   * Used in the page URL. Leave empty to generate from the name. Changing it later breaks existing links.
+   */
+  slug: string;
+  /**
+   * Optional. Shown on the story card and page.
+   */
+  publicationDate?: string | null;
+  /**
+   * Two or three sentences shown on the story card and under the title.
+   */
+  summary: string;
+  /**
+   * Approved project photo used on the card and at the top of the page.
+   */
+  featuredImage: number | Media;
+  /**
+   * The full story, for example: the challenge, the solution, and the result.
+   */
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Additional approved project photos. Drag to reorder.
+   */
+  gallery?: (number | Media)[] | null;
+  /**
+   * Optional, for example: Hospitality, Retail, Corporate events.
+   */
+  industry?: string | null;
+  /**
+   * Optional. Shown only when the approval box below is ticked.
+   */
+  customerName?: string | null;
+  /**
+   * Tick only when MONIP has written approval to name this customer.
+   */
+  customerApproved?: boolean | null;
+  seo?: {
+    /**
+     * Defaults to the story title.
+     */
+    title?: string | null;
+    /**
+     * Defaults to the summary.
+     */
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * Client logos shown on the Our clients page, in this order. Drag the handle on the left to reorder. Publish only clients MONIP has approval to name.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -409,7 +485,7 @@ export interface Office {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * About, Our clients, and Privacy pages. A page and its link appear on the site only once published.
+ * About, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
@@ -418,9 +494,13 @@ export interface Page {
   id: number;
   title: string;
   /**
+   * Large heading under the page title, e.g. Turning Ideas Into Results.
+   */
+  headline?: string | null;
+  /**
    * Which site page this content is for.
    */
-  key: 'about' | 'clients' | 'privacy';
+  key: 'about' | 'clients' | 'success-stories' | 'privacy';
   /**
    * Short introduction shown under the page title.
    */
@@ -525,6 +605,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'services';
         value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'success-stories';
+        value: number | SuccessStory;
       } | null)
     | ({
         relationTo: 'clients';
@@ -703,6 +787,32 @@ export interface ServicesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "success-stories_select".
+ */
+export interface SuccessStoriesSelect<T extends boolean = true> {
+  _order?: T;
+  title?: T;
+  slug?: T;
+  publicationDate?: T;
+  summary?: T;
+  featuredImage?: T;
+  body?: T;
+  gallery?: T;
+  industry?: T;
+  customerName?: T;
+  customerApproved?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clients_select".
  */
 export interface ClientsSelect<T extends boolean = true> {
@@ -733,6 +843,7 @@ export interface OfficesSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  headline?: T;
   key?: T;
   intro?: T;
   image?: T;
