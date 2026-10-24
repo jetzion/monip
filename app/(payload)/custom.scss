@@ -1,3 +1,115 @@
+// Admin text: 14px instead of Payload's 13px (12px on small screens).
+// Payload derives spacing as (--base-px / --base-body-size) rem, so raising
+// both together enlarges text while keeping spacing the same.
+:root {
+  --base-body-size: 14;
+}
+
+html {
+  font-size: 14px;
+}
+
+// List tables: more room between columns; dates stay on one line.
+.table th,
+.table td {
+  padding-inline: 14px;
+}
+
+// Payload gives every column at least 150px, which squeezes the name column;
+// use a smaller minimum and give the main text column more room. Header cells
+// have no column class, so the minimum goes on body cells only.
+.table th {
+  min-width: 0;
+}
+
+.table td {
+  min-width: 110px;
+}
+
+.table td.cell-_select,
+.table td.cell-_dragHandle {
+  min-width: 0;
+  padding-inline: 8px;
+}
+
+.table td.cell-name,
+.table td.cell-title,
+.table td.cell-filename {
+  min-width: 220px;
+}
+
+.table td.cell-updatedAt,
+.table td.cell-createdAt,
+.table td.cell-publishedAt,
+.table td.cell-publicationDate {
+  white-space: nowrap;
+}
+
+// Edit pages: wrap long titles instead of cutting them off with "...",
+// and let the Status / Last Modified / Created row wrap instead of truncating.
+.doc-header__header {
+  align-items: flex-start;
+}
+
+.doc-header__title {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+
+.doc-controls__wrapper {
+  height: auto;
+  min-height: var(--doc-controls-height);
+}
+
+.doc-controls__meta {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
+.doc-controls__value-wrap,
+.doc-controls__value {
+  overflow: visible;
+  text-overflow: clip;
+}
+
+// Select fields: keep the clear and dropdown buttons on the same line as a
+// long selected value (the value is cut off with "..." instead).
+// react-select's own styles set the control to wrap, overriding Payload.
+.react-select .rs__control {
+  flex-wrap: nowrap;
+}
+
+.react-select .rs__control > .value-container {
+  flex: 1;
+  min-width: 0;
+}
+
+// Left navigation: the collapse button sits in the top band of the sidebar.
+// Start the scroll area below that band so links cannot scroll underneath it.
+.nav .nav__scroll {
+  margin-top: var(--app-header-height);
+  height: calc(100% - var(--app-header-height));
+  padding-top: calc(var(--base) * 0.5);
+}
+
+// Indent links under their group heading and use larger text (Payload's
+// default is 13px with no indent). Selectors are more specific than Payload's
+// `.nav__link.active` and `.nav__link:has(...)`, which reset the padding.
+.nav .nav-group__toggle {
+  font-size: 14px;
+}
+
+.nav .nav__link,
+.nav .nav__link.active,
+.nav .nav__link:has(.nav__link-indicator) {
+  padding-inline-start: 14px;
+  padding-block: 4px;
+  font-size: 15px;
+  line-height: 22px;
+}
+
 // Clients list: show whole logos in the thumbnail column instead of a square crop.
 .collection-list--clients .cell-logo .thumbnail img {
   object-fit: contain;

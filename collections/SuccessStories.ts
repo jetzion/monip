@@ -10,7 +10,7 @@ export const SuccessStories: CollectionConfig = {
   labels: { singular: "Success story", plural: "Success stories" },
   admin: {
     useAsTitle: "title",
-    defaultColumns: ["featuredImage", "title", "industry", "_status", "updatedAt"],
+    defaultColumns: ["featuredImage", "title", "industry", "_status"],
     description:
       "Stories shown on the Success Stories page, in this order. Drag the handle on the left to reorder. Only published stories are visible on the site.",
     livePreview: livePreview((data) => (data.slug ? `/success-stories/${data.slug}` : null)),
