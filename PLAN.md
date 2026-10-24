@@ -578,7 +578,7 @@ Update this section as decisions are confirmed.
 | Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
 | Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
 | Sustainability page | Removed 2026-10-23 at the owner's request; /sustainability now returns 404. The product "Sustainable" label is kept | Confirmed |
-| Navigation | Home, Products, Services, Clients, About (Clients before About since 2026-10-23); footer adds Contact and Privacy policy | Confirmed |
+| Navigation | Home, Products, Services, Clients, Success Stories, About (Success Stories once published, 2026-10-24); footer adds Contact and Privacy policy | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
@@ -647,7 +647,8 @@ Update this section as decisions are confirmed.
 - [ ] Analytics (needs provider decision)
 - [ ] Final QA with real content, deployment, editor training, handover
 - [x] Success Stories: collection and migration (`20261024_123343_success_stories`, verified against a fresh database), list page, detail page, navigation, sitemap, unit and e2e tests, editor guide
-- [ ] Success Stories: real stories, headline, and intro from MONIP
+- [x] Success Stories: headline and intro from `PLAN.md` set on the page (2026-10-24)
+- [ ] Success Stories: real stories from MONIP (one labelled placeholder story is published locally)
 
 ## 13. Next Steps
 
@@ -721,7 +722,8 @@ The page must align with MONIP Group's overall brand identity and website design
 Include:
 - Page title: Success Stories
 - Headline: Turning Ideas Into Results
-- Supporting text: A concise introduction explaining how MONIP Group works with customers to address challenges, develop solutions, and deliver results.
+- Supporting text: 
+'Discover how MONIP Group turns ideas into impactful solutions through innovation, collaboration, and expertise. Our success stories showcase real-world projects, highlighting the challenges we help address, the tailored solutions we deliver, and the results we achieve. From product development to customized solutions, each story reflects our commitment to quality, creativity, and customer success.'
 
 ### Story Cards
 
@@ -755,6 +757,6 @@ Authorized staff must be able to create, edit, preview, publish, unpublish, orga
 | Customer name | Shown only when "Customer approved for public display" is ticked | Assumption to confirm |
 | Industry / category | Optional free text (no filters) | Assumption to confirm |
 | Order | Drag and drop in the admin list, like Clients | Assumption to confirm |
-| Navigation | "Success Stories" after Services; shown only when the page and at least one story are published | Assumption to confirm |
+| Navigation | "Success Stories" between Clients and About; shown only when the page and at least one story are published | Confirmed |
 | Content | Supplied by MONIP; no invented stories, customers, quotes, or figures | Requires MONIP content |
 | Not included yet | Homepage feature, links to products/services/clients, chat answers from stories | Future option |
