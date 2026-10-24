@@ -92,7 +92,7 @@ Services and pages use the same draft, preview, and publish steps as products. C
 
 **Client logos.** Open **Clients** to add, remove, or reorder the logos on the Our clients page. Each needs the client name and a logo (give the logo image alt text such as "MSC Cruises logo"). The list shows each logo and is in page order: drag the ⠿ handle on the left of a row to move it, and the page updates straight away. You can also reorder with the keyboard: focus the handle, press Space, use the arrow keys, then press Space again. Show only clients MONIP has approval to name.
 
-**Offices.** Open **Offices** to add, remove, or reorder the offices on the About page map and list. Each needs a name and its map position: in Google Maps, right-click the place and click the two numbers to copy them, then paste the first into **Latitude** and the second into **Longitude**. The street address is optional.
+**Offices.** Open **Offices** to add, remove, or reorder the offices on the About page map and list. Each needs a name and its map position: in Google Maps, right-click the place and click the two numbers to copy them, then paste the first into **Latitude** and the second into **Longitude**. The street address is optional. To change the order, set **Sort order** in the sidebar: lower numbers appear first.
 
 ## Reading website inquiries
 

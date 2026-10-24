@@ -434,15 +434,16 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 54 tests)
+### Unit tests (`pnpm test`, Vitest, 56 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
 safety, the publish-state rule for revalidation, and chat request
 validation, rate limiting, OpenRouter error mapping (mocked fetch; the
-API key is never logged), and "Contact us" link rendering.
+API key is never logged), "Contact us" link rendering, and office map
+pin positions and label placement.
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 54 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 55 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -450,11 +451,14 @@ Inquiry tests leave Inquiry records behind (delete `e2e-*.com`
 inquiries afterwards). Because the tests share the database editors use,
 some catalog tests depend on placeholder content and fail once it is
 replaced; a separate seeded test database is planned (section 13).
+Last run (2026-10-23): 51 passed, 4 catalog filter tests failed on real
+content.
 
 -   Catalog browsing, search, category/subcategory filters, empty states.
 -   Product and general inquiries, validation errors, honeypot.
 -   Home featured products and CMS copy, hero video pause, sticky header,
-    header CTA, content and Our clients pages, mobile menu.
+    header CTA, content and Our clients pages, About offices map and
+    list, removed Sustainability page, Privacy policy link, mobile menu.
 -   Website chat with a mocked `/api/chat`: context, Shift+Enter, state
     across pages, errors, Escape and focus, "Contact us" links, Mike's
     AI label; endpoint rejects system messages and malformed bodies.
@@ -576,7 +580,7 @@ Update this section as decisions are confirmed.
 | Sustainability page | Removed 2026-10-23 at the owner's request; /sustainability now returns 404. The product "Sustainable" label is kept | Confirmed |
 | Navigation | Home, Products, Services, Clients, About (Clients before About since 2026-10-23); footer adds Contact and Privacy policy | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
-| Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio) | Confirmed (MONIP to re-approve each client) |
+| Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
 | Privacy policy | Text supplied in `PRIVACY-POLICY.md`, published as the Privacy policy page | Confirmed (privacy email and chat section missing) |
 | Domain and account ownership | TBD | Requires decision |
@@ -653,8 +657,10 @@ Update this section as decisions are confirmed.
 2.  Set `OPENROUTER_MODEL` (suggested: `anthropic/claude-haiku-5.5`) and
     check real chat replies stay within the rules.
 3.  Code review of the whole codebase before content work begins.
-4.  Optional: clickable product links in chat replies; related products
-    on product pages; case studies on the Clients page.
+4.  Optional: drag-and-drop ordering for Offices and Services (they
+    still use a Sort order number); clickable product links in chat
+    replies; related products on product pages; case studies on the
+    Clients page.
 
 **Needs input from MONIP**
 
