@@ -22,3 +22,9 @@ test("product pages have a canonical URL and social metadata", async ({ page }) 
   await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute("content", "MONIP Group");
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/api\/media\/file\/.+\.(png|jpe?g|webp)$/);
 });
+
+test("the old sustainability page redirects to About", async ({ request }) => {
+  const response = await request.get("/project-5", { maxRedirects: 0 });
+  expect(response.status()).toBe(308);
+  expect(response.headers().location).toBe("/about");
+});
