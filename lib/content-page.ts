@@ -10,6 +10,7 @@ import type { Media } from "@/payload-types";
 
 const PATHS: Record<PageKey, string> = {
   about: "/about",
+  products: "/products",
   clients: "/clients",
   "success-stories": "/success-stories",
   privacy: "/privacy",

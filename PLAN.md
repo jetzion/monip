@@ -434,16 +434,17 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 56 tests)
+### Unit tests (`pnpm test`, Vitest, 61 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
 safety, the publish-state rule for revalidation, and chat request
 validation, rate limiting, OpenRouter error mapping (mocked fetch; the
-API key is never logged), "Contact us" link rendering, and office map
-pin positions and label placement.
+API key is never logged), "Contact us" link rendering, office map
+pin positions (cropped view) and label placement, and success story
+customer-name approval and date formatting.
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 55 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 60 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -459,6 +460,8 @@ content.
 -   Home featured products and CMS copy, hero video pause, sticky header,
     header CTA, content and Our clients pages, About offices map and
     list, removed Sustainability page, Privacy policy link, mobile menu.
+-   Success Stories: menu link, cards to detail page and back, 404 for
+    unknown stories, sitemap entries.
 -   Website chat with a mocked `/api/chat`: context, Shift+Enter, state
     across pages, errors, Escape and focus, "Contact us" links, Mike's
     AI label; endpoint rejects system messages and malformed bodies.
@@ -579,6 +582,7 @@ Update this section as decisions are confirmed.
 | Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
 | Sustainability page | Removed 2026-10-23 at the owner's request; /sustainability now returns 404. The product "Sustainable" label is kept | Confirmed |
 | Navigation | Home, Products, Services, Clients, Success Stories, About (Success Stories once published, 2026-10-24); footer adds Contact and Privacy policy | Confirmed |
+| Products page header | Pages entry "Products (/products)": title and intro (was fixed in code); the catalog works without it (2026-10-24) | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
@@ -648,6 +652,7 @@ Update this section as decisions are confirmed.
 - [ ] Final QA with real content, deployment, editor training, handover
 - [x] Success Stories: collection and migration (`20261024_123343_success_stories`, verified against a fresh database), list page, detail page, navigation, sitemap, unit and e2e tests, editor guide
 - [x] Success Stories: headline and intro from `PLAN.md` set on the page (2026-10-24)
+- [x] Products page title and intro editable in Pages ("Products" entry; migration `20261024_140836_products_page`)
 - [ ] Success Stories: real stories from MONIP (one labelled placeholder story is published locally)
 
 ## 13. Next Steps
@@ -753,7 +758,7 @@ Authorized staff must be able to create, edit, preview, publish, unpublish, orga
 | --- | --- | --- |
 | CMS | Payload `success-stories` collection: drafts, autosave, Live Preview, unique slug | Confirmed |
 | Detail page | One page per story at `/success-stories/<slug>` | Confirmed |
-| Page header | Pages entry "Success Stories (/success-stories)": title, optional headline, intro | Assumption to confirm |
+| Page header | Pages entry "Success Stories (/success-stories)": title, headline, intro | Confirmed |
 | Customer name | Shown only when "Customer approved for public display" is ticked | Assumption to confirm |
 | Industry / category | Optional free text (no filters) | Assumption to confirm |
 | Order | Drag and drop in the admin list, like Clients | Assumption to confirm |

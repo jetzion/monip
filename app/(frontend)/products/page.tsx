@@ -5,14 +5,17 @@ import { PageHeader } from "@/components/content/PageHeader";
 import { CatalogFilters } from "@/components/products/CatalogFilters";
 import { ProductCard } from "@/components/products/ProductCard";
 import { catalogHref, parseCatalogParams } from "@/lib/catalog-params";
+import { contentAccess } from "@/lib/queries/access";
 import { getCategories } from "@/lib/queries/categories";
+import { getPage } from "@/lib/queries/content";
 import { getPublishedProducts } from "@/lib/queries/products";
 
 export async function generateMetadata({ searchParams }: PageProps<"/products">): Promise<Metadata> {
   const { q, category } = parseCatalogParams(await searchParams);
+  const page = await getPage("products", await contentAccess());
   return {
-    title: "Products",
-    description: "Browse MONIP Group product samples.",
+    title: page?.seo?.title || page?.title || "Products",
+    description: page?.seo?.description || page?.intro || "Browse MONIP Group product samples.",
     // Filtered and search views share one canonical URL and are not indexed.
     alternates: { canonical: "/products" },
     robots: q || category ? { index: false, follow: true } : undefined,
@@ -21,7 +24,8 @@ export async function generateMetadata({ searchParams }: PageProps<"/products">)
 
 export default async function ProductsPage({ searchParams }: PageProps<"/products">) {
   const params = parseCatalogParams(await searchParams);
-  const categories = await getCategories();
+  // Title and intro come from Pages ("Products"); the catalog works without that entry.
+  const [categories, page] = await Promise.all([getCategories(), getPage("products", await contentAccess())]);
   const category = categories.find((item) => item.slug === params.category);
   const categoryParent = typeof category?.parent === "number" ? category.parent : undefined;
   const unknownCategory = params.category !== "" && !category;
@@ -36,7 +40,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
 
   return (
     <>
-      <PageHeader title="Products" intro="Product samples MONIP can source and customize.">
+      <PageHeader title={page?.title ?? "Products"} intro={page?.intro}>
         <div className="mt-8">
           <CatalogFilters
             params={params}

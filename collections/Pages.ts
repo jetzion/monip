@@ -7,6 +7,7 @@ import { autosaveDrafts, livePreview } from "../lib/live-preview";
 /** Fixed site pages. Each key maps to a route defined in code. */
 export const PAGE_KEYS = [
   { label: "About (/about)", value: "about" },
+  { label: "Products (/products)", value: "products" },
   { label: "Our clients (/clients)", value: "clients" },
   { label: "Success Stories (/success-stories)", value: "success-stories" },
   { label: "Privacy policy (/privacy)", value: "privacy" },
@@ -20,7 +21,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "key", "_status", "updatedAt"],
     description:
-      "About, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published.",
+      "About, Products, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published (the Products catalog is always shown; its entry sets the title and intro).",
     livePreview: livePreview((data) => (typeof data.key === "string" ? `/${data.key}` : null)),
   },
   versions: autosaveDrafts,

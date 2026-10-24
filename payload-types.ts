@@ -485,7 +485,7 @@ export interface Office {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * About, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published.
+ * About, Products, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published (the Products catalog is always shown; its entry sets the title and intro).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
@@ -500,7 +500,7 @@ export interface Page {
   /**
    * Which site page this content is for.
    */
-  key: 'about' | 'clients' | 'success-stories' | 'privacy';
+  key: 'about' | 'products' | 'clients' | 'success-stories' | 'privacy';
   /**
    * Short introduction shown under the page title.
    */

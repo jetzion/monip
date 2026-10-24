@@ -10,6 +10,7 @@ import * as migration_20261023_210736_offices from './20261023_210736_offices';
 import * as migration_20261023_211829_add_client_order from './20261023_211829_add_client_order';
 import * as migration_20261023_211844_drop_client_sort_order from './20261023_211844_drop_client_sort_order';
 import * as migration_20261024_123343_success_stories from './20261024_123343_success_stories';
+import * as migration_20261024_140836_products_page from './20261024_140836_products_page';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20261024_123343_success_stories.up,
     down: migration_20261024_123343_success_stories.down,
-    name: '20261024_123343_success_stories'
+    name: '20261024_123343_success_stories',
+  },
+  {
+    up: migration_20261024_140836_products_page.up,
+    down: migration_20261024_140836_products_page.down,
+    name: '20261024_140836_products_page'
   },
 ];
