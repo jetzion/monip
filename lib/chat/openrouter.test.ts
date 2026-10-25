@@ -62,3 +62,19 @@ describe("completeChat", () => {
     expect(logged).not.toContain("test-key");
   });
 });
+
+describe("completeChat with a model list", () => {
+  beforeEach(() => vi.stubEnv("OPENROUTER_API_KEY", "test-key"));
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
+  it("sends models for fallback and reports the model that answered", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ model: "b:free", choices: [{ message: { content: "Hi" } }] }));
+    expect(await completeChat({ ...options, models: ["a:free", "b:free"] })).toEqual({ ok: true, reply: "Hi", model: "b:free" });
+    const body = JSON.parse(fetch.mock.calls[0][1]?.body as string);
+    expect(body.models).toEqual(["a:free", "b:free"]);
+    expect(body.model).toBeUndefined();
+  });
+});

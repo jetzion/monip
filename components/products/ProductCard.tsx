@@ -18,7 +18,7 @@ export function ProductCard({ product, eager }: Props) {
           image={product.primaryImage}
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           eager={eager}
-          className="h-full w-full object-cover transition duration-300 motion-safe:group-hover:scale-[1.02]"
+          className="h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-[1.02]"
         />
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">

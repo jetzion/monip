@@ -47,7 +47,9 @@ requirements.
 -   **pnpm** as the package manager.
 -   **Vercel Observability and runtime logs** for basic monitoring.
 -   **OpenRouter** (OpenAI-compatible Chat Completions) for the website
-    chat, called only from the server route `POST /api/chat`.
+    chat, called only from the server route `POST /api/chat`, and for the
+    admin "Write description with AI" button (`POST /api/products/describe`,
+    logged-in editors only).
 
 ### Architectural principles
 
@@ -88,8 +90,8 @@ Current structure (no `src/` directory):
 ├── globals/                    # Home (homepage copy)
 ├── access/  fields/  hooks/    # access rules, slug field, revalidation hooks
 ├── components/                 # layout, home, products, stories, forms, content, media, preview, chat, ui;
-│                               # admin/ holds custom admin views (Categories tree)
-├── lib/                        # queries/, validation/, inquiries/, chat/, site, seo, preview helpers
+│                               # admin/ holds custom admin views (Categories tree, AI description button)
+├── lib/                        # queries/, validation/, inquiries/, chat/, describe/ (AI product description), site, seo, preview helpers
 ├── migrations/                 # Payload migrations (generated)
 ├── scripts/seed.ts             # dev-only placeholder content
 ├── docs/briefs/                # original feature requests (history only)
@@ -444,7 +446,7 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 63 tests)
+### Unit tests (`pnpm test`, Vitest, 70 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
@@ -453,9 +455,11 @@ validation, rate limiting, OpenRouter error mapping (mocked fetch; the
 API key is never logged), "Contact us" link rendering, office map
 pin positions (cropped view) and label placement, and success story
 customer-name approval and date formatting, and grouping categories
-under their parent for the admin Categories list.
+under their parent for the admin Categories list, and the AI product
+description (input check, prompt, paragraph conversion, free vision model
+selection, model fallback).
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 61 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 62 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -478,7 +482,8 @@ content.
     AI label; endpoint rejects system messages and malformed bodies.
 -   robots.txt, sitemap, canonical and social metadata, legacy
     `/project-5` redirect.
--   Preview route refusals (no session, unsafe paths).
+-   Preview route refusals (no session, unsafe paths); AI description
+    endpoint refuses anonymous requests.
 -   axe accessibility scan (WCAG 2.2 AA) of all public pages, plus the
     chat panel open on desktop and mobile.
 
@@ -599,6 +604,8 @@ Update this section as decisions are confirmed.
 | Products page header | Pages entry "Products (/products)": title and intro (was fixed in code); the catalog works without it (2026-10-24) | Confirmed |
 | Admin styling | 14px admin text, indented sidebar links clear of the collapse button, wider table columns, wrapping titles (`app/(payload)/custom.scss`, 2026-10-24) | Confirmed |
 | Admin Categories list | Custom list view: top-level categories with subcategories indented underneath, each parent expandable/collapsible (native `<details>`, open by default); search or filters fall back to the standard table (2026-10-24) | Confirmed |
+| Product card images | Whole image shown (`object-contain`), not cropped, so samples are not misrepresented (2026-10-25) | Confirmed |
+| AI product description | Admin button drafts Description from images and data via OpenRouter; free vision models first, then `OPENROUTER_MODEL`; fills the form only, editor reviews and saves (2026-10-25) | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
@@ -655,6 +662,7 @@ Update this section as decisions are confirmed.
 - [x] Lighthouse (mobile, local prod build): performance 96-97, accessibility/best practices/SEO 100, CLS 0
 - [x] Editor guide (`Editor_guide_for_MONIP.md`)
 - [x] Website chat (OpenRouter): floating panel on public pages, server endpoint, validation, rate limit, tests with mocked API
+- [x] Admin "Write description with AI" button on products: sends entered data and up to 4 images (resized to 1024 px) to OpenRouter (free vision models found via the OpenRouter model list, 3 per request, then the paid `OPENROUTER_MODEL`), fills Description in the form only; disabled until an image or data is entered; logged-in only, 10/min per user
 - [x] Duplicate products in the CMS (copy is a draft named "(copy)", unique "-copy" slug, not featured; slug rule also applies to services and categories)
 - [x] Offices on the About page: world map with pins and list (Offices collection; 5 offices from monip-group.com)
 - [x] Clients list: logo thumbnails (whole logo, `app/(payload)/custom.scss`) and drag-and-drop ordering (Payload `orderable`; migrations add `_order` with the old order, then drop `sort_order`)

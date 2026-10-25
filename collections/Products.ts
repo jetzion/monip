@@ -2,6 +2,7 @@ import type { CollectionBeforeChangeHook, CollectionConfig, Where } from "payloa
 
 import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
 import { slugField } from "../fields/slug";
+import { describeEndpoint } from "../lib/describe/endpoint";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 import { revalidateDeletedProduct, revalidateProduct } from "../hooks/revalidate";
 
@@ -31,6 +32,7 @@ export const Products: CollectionConfig = {
     livePreview: livePreview((data) => (data.slug ? `/products/${data.slug}` : null)),
   },
   versions: autosaveDrafts,
+  endpoints: [describeEndpoint],
   access: {
     read: publishedOrLoggedIn,
     create: isLoggedIn,
@@ -81,6 +83,11 @@ export const Products: CollectionConfig = {
               required: true,
               maxLength: 200,
               admin: { description: "One or two sentences shown on product cards." },
+            },
+            {
+              name: "describeWithAi",
+              type: "ui",
+              admin: { components: { Field: "/components/admin/DescribeProductButton#DescribeProductButton" } },
             },
             {
               name: "description",

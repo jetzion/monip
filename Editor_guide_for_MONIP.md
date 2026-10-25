@@ -32,6 +32,7 @@ A product needs a name, a summary, a main image, and a category before it can be
 
 - **Summary** (required, up to 200 characters): one or two sentences shown on product cards and at the top of the product page.
 - **Description**: the full text. Use headings and lists from the toolbar or by typing "/".
+- **Write description with AI**: drafts the Description from the photos and details entered so far. It replaces the current Description but saves nothing; read it, correct anything inaccurate, then save. The button is greyed out until you add a photo or some details.
 - **Primary image** (required): the main photo on cards and the product page.
 - **Gallery**: extra photos, shown in the order you drag them into.
 
