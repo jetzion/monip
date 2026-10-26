@@ -1,8 +1,8 @@
 # MONIP Group Website Rebuild --- Implementation Plan
 
 **Document:** `PLAN.md`\
-**Status:** In progress --- core site built and tested locally;
-deployment on hold (last updated 2026-10-24)\
+**Status:** In progress --- core site built and tested; temporary
+deployment at https://monip-group.vercel.app (last updated 2026-10-26)\
 **Companion documents:** `REQUIREMENTS.md`, `CLAUDE.md`, `README.md`,
 `Editor_guide_for_MONIP.md`
 
@@ -610,7 +610,7 @@ Update this section as decisions are confirmed.
 | Text pages | `pages` collection with fixed keys (about, products, clients, success-stories, privacy) instead of globals | Confirmed |
 | Case studies | Replaced by Success Stories (2026-10-24) | Confirmed |
 | Task briefs | Original feature requests kept as history in `docs/briefs/`; this plan records what was decided | Confirmed |
-| Deployment | Local only until hosting accounts are decided | On hold |
+| Deployment | Temporary: https://monip-group.vercel.app on MONIP's Vercel team `monip` (Pro), Neon `monip-db` (free, iad1), public Blob store `monip-media`. Content copied from local on 2026-10-26 (schema from migrations, data only; inquiries and sessions excluded). Custom domain and DNS later | Confirmed 2026-10-26 |
 | Editor guide | `Editor_guide_for_MONIP.md` (exported from the shared editor guide doc) | Confirmed |
 | Homepage hero video | `public/hero/decoration.mp4`: 14 s montage of decoration techniques (2.0 MB, muted loop, poster for reduced motion, pause button). Pexels License clips (free commercial use, no attribution required): 28050441 embroidery machine, 34888657 screen printing (first seconds), 34240702 laser engraving (cropped to exclude a maker URL and engraved name), 5963499 leather hot-stamping. Old site videos are Wix library stock and not reusable | Confirmed (replace with MONIP footage if available) |
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
@@ -737,10 +737,15 @@ Update this section as decisions are confirmed.
     recorded as `?` in the workbook (Celebrity Reflection 2025-07-26,
     Iona 2025-10-23).
 
-**On hold until hosting accounts are decided**
+**Deployment follow-ups**
 
--   Create the Vercel project, Neon database, and Blob store; set
-    environment variables; first preview deployment.
+-   Connect GitHub to the MONIP Vercel account so pushes to `main`
+    deploy automatically (until then, deploy with
+    `vercel deploy --prod --scope monip`).
+-   Production is now the source of truth for content; do not copy the
+    local database over it again.
+-   `INQUIRY_NOTIFY_EMAIL` is not set on Vercel: inquiries are saved
+    with `emailStatus: failed` until it and Resend are configured.
 -   Resend account with a verified sending domain.
 -   Rate limiting for inquiry forms and `/api/chat` (Vercel Firewall rule; launch
     blocker).

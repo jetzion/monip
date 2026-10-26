@@ -6,6 +6,11 @@ export function siteUrl(): string {
   return "http://localhost:3000";
 }
 
-/** True only on the production deployment; previews and local dev are not indexed. */
-export const isIndexable = () =>
-  process.env.VERCEL_ENV ? process.env.VERCEL_ENV === "production" : true;
+/**
+ * True only on the production deployment of the real domain. Previews and
+ * temporary `*.vercel.app` sites are not indexed.
+ */
+export function isIndexable(): boolean {
+  if (new URL(siteUrl()).hostname.endsWith(".vercel.app")) return false;
+  return process.env.VERCEL_ENV ? process.env.VERCEL_ENV === "production" : true;
+}

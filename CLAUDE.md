@@ -224,7 +224,9 @@ If credentials, content, access, or a business decision is missing:
 ## Project-Specific Notes
 
 -   Current state, decisions, and next steps live in `PLAN.md`
-    (sections 10, 12, 13). Deployment is on hold: work locally only.
+    (sections 10, 12, 13). A temporary deployment runs at
+    https://monip-group.vercel.app (Vercel team `monip`); no custom
+    domain or DNS changes without authorization.
 -   Public queries use Payload's Local API with `overrideAccess: false`
     (the Local API skips access control by default).
 -   Restart `pnpm dev` after changing `payload.config.ts` or collections;

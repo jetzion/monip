@@ -29,9 +29,16 @@ describe("isIndexable", () => {
     expect(isIndexable()).toBe(false);
   });
 
-  it("allows the Vercel production deployment", () => {
+  it("allows the Vercel production deployment on the real domain", () => {
     vi.stubEnv("VERCEL_ENV", "production");
+    vi.stubEnv("SITE_URL", "https://www.example.com");
     expect(isIndexable()).toBe(true);
+  });
+
+  it("blocks a temporary vercel.app production site", () => {
+    vi.stubEnv("VERCEL_ENV", "production");
+    vi.stubEnv("SITE_URL", "https://monip-group.vercel.app");
+    expect(isIndexable()).toBe(false);
   });
 
   it("allows non-Vercel environments", () => {
