@@ -110,6 +110,16 @@ Every form submission is saved under **Inquiries**, newest first, and only admin
 
 Until the email service is set up, notification emails are not delivered: check **Inquiries** in the admin regularly.
 
+## Cruise Fleet Schedule (admins only)
+
+**Cruise Fleet Schedule** lists every cruise sailing from the fleet calendar workbook. Only admins can see it; it never appears on the website or in the chat.
+
+- **Filter** with Port (the start port), Month, Date, Cruise line, Operator, and Ship. Filters combine: a sailing must match all of them. Once a cruise line is chosen, Ship lists only that line's ships. **Clear filters** shows everything again.
+- **Sort** by clicking a column heading; click again to reverse.
+- **Open a sailing** by clicking its cruise line to see every field in full. Admins can correct a sailing there, add one with **Create New**, or delete one.
+- **Add sailings in bulk:** click **Download Excel Template**, fill in one row per sailing without renaming the sheet or columns (dates as 2026-10-03, times as 06:00), and ask the developer to import it.
+- **Updating the data:** an import matches sailings by Ship and Start date. It updates sailings that changed, adds new ones, and keeps sailings that are not in the file. Rows with a missing ship, cruise line, or start date are reported and skipped.
+
 ## Website chat
 
 The chat assistant, Mike, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, the client list, and the offices. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to Mike's name. Conversations are not saved.

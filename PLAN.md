@@ -446,7 +446,7 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 70 tests)
+### Unit tests (`pnpm test`, Vitest, 92 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
@@ -457,9 +457,11 @@ pin positions (cropped view) and label placement, and success story
 customer-name approval and date formatting, and grouping categories
 under their parent for the admin Categories list, and the AI product
 description (input check, prompt, paragraph conversion, free vision model
-selection, model fallback).
+selection, model fallback), and the Cruise Fleet Schedule (workbook row
+parsing and dates at 12:00 UTC, filter queries and month ranges, the Ship
+list per cruise line, and the template round trip through the importer).
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 62 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 67 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -467,7 +469,7 @@ Inquiry tests leave Inquiry records behind (delete
 `e2e-*@example.com` inquiries afterwards). Because the tests share the database editors use,
 some catalog tests depend on placeholder content and fail once it is
 replaced; a separate seeded test database is planned (section 13).
-Last run (2026-10-24): 57 passed, 4 catalog filter tests failed on real
+Last run (2026-10-26): 63 passed, 4 catalog filter tests failed on real
 content.
 
 -   Catalog browsing, search, category/subcategory filters, empty states.
@@ -484,6 +486,10 @@ content.
     `/project-5` redirect.
 -   Preview route refusals (no session, unsafe paths); AI description
     endpoint refuses anonymous requests.
+-   Cruise Fleet Schedule (creates and deletes `e2e-admin@example.com` and
+    `e2e-editor@example.com`): admin-only API and template, filters
+    combined with AND and cleared, Ship list narrowed by cruise line,
+    empty state, template download with the 13 headers.
 -   axe accessibility scan (WCAG 2.2 AA) of all public pages, plus the
     chat panel open on desktop and mobile.
 
@@ -828,4 +834,4 @@ column, and download a blank Excel template for new data. Full brief:
 - [x] Filter options: loaded server-side with `findDistinct` for the admin view (no separate endpoint needed)
 - [x] Filter bar above the standard admin list (six filters, AND logic, stored in the URL; 25 per page; default sort Start date, Cruise line, Ship)
 - [x] Blank Excel template download (`GET /api/cruise-sailings/template`, admins only; round trip through the importer tested)
-- [ ] Tests and documentation
+- [x] Tests and documentation (5 e2e tests; README, editor guide)
