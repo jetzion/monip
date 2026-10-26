@@ -41,6 +41,9 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      icons: [{ rel: "icon", type: "image/png", sizes: "48x48", url: "/admin-favicon.png" }],
+    },
     livePreview: {
       breakpoints: [
         { label: "Mobile", name: "mobile", width: 390, height: 844 },
