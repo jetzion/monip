@@ -817,6 +817,8 @@ column, and download a blank Excel template for new data. Full brief:
 | Filters | Port = start port; Date is a date picker; Ship and Port searchable | Confirmed |
 | Ship dropdown | Lists only the selected cruise line's ships; changing cruise line clears a ship from another line | Confirmed |
 | Dataset shown | All sailings, past and future | Confirmed |
+| Empty values | Payload's default placeholder (e.g. `<No Arrival>`) instead of `—` | Confirmed |
+| Long text | Ports in order and Source wrap in full in the list (320px columns) | Confirmed |
 | Workbook | Not committed; passed to the import script by path | Confirmed |
 | Not included yet | Admin upload screen; bulk search-select-delete of old sailings | Future option |
 
@@ -825,5 +827,5 @@ column, and download a blank Excel template for new data. Full brief:
 - [x] Import script and initial data load (25,896 sailings; re-import idempotent; rollback verified)
 - [x] Filter options: loaded server-side with `findDistinct` for the admin view (no separate endpoint needed)
 - [x] Filter bar above the standard admin list (six filters, AND logic, stored in the URL; 25 per page; default sort Start date, Cruise line, Ship)
-- [ ] Blank Excel template download
+- [x] Blank Excel template download (`GET /api/cruise-sailings/template`, admins only; round trip through the importer tested)
 - [ ] Tests and documentation

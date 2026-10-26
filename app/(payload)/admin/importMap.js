@@ -23,6 +23,8 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93
 import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { FullTextCell as FullTextCell_e04bfd2377652c449b32de2642fbb4e8 } from '../../../components/admin/FullTextCell'
+import { SailingTemplateButton as SailingTemplateButton_52ee2434e62aa7effb192e8c6007934b } from '../../../components/admin/SailingTemplateButton'
 import { SailingFilters as SailingFilters_0ba85c529e77b4340522f0eed15d2531 } from '../../../components/admin/SailingFilters'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
@@ -54,6 +56,8 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "/components/admin/FullTextCell#FullTextCell": FullTextCell_e04bfd2377652c449b32de2642fbb4e8,
+  "/components/admin/SailingTemplateButton#SailingTemplateButton": SailingTemplateButton_52ee2434e62aa7effb192e8c6007934b,
   "/components/admin/SailingFilters#SailingFilters": SailingFilters_0ba85c529e77b4340522f0eed15d2531,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e

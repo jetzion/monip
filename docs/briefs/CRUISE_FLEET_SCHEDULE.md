@@ -26,6 +26,10 @@ These override the generic wording in the sections below.
 - **Ship dropdown:** once a cruise line is selected, lists only that line's
   ships; choosing a cruise line clears a selected ship from another line.
 - **Dates shown:** all sailings, past and future.
+- **Empty values:** Payload's default list placeholder (for example
+  `<No Arrival>`) is acceptable instead of `—`.
+- **Long text:** Ports in order and Source wrap in full in the list
+  instead of being truncated.
 
 ## 1. Overview
 

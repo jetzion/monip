@@ -216,17 +216,27 @@ html {
   }
 }
 
-// Long itinerary and source values stay on one line; the full value is on
-// the record's page.
+// Long itinerary and source values wrap within a fixed width; URLs may
+// break anywhere.
 .table td.cell-portsInOrder,
 .table td.cell-source {
+  min-width: 320px;
   max-width: 320px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .table td.cell-startDate,
 .table td.cell-endDate {
   white-space: nowrap;
+}
+
+.sailing-template {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+
+  .btn {
+    margin: 0;
+  }
 }

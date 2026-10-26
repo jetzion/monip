@@ -10,29 +10,20 @@ import config from "@payload-config";
 import ExcelJS from "exceljs";
 import { commitTransaction, createLocalReq, getPayload, initTransaction, killTransaction } from "payload";
 
-import { SAILING_COLUMNS, SAILINGS_SHEET } from "../lib/sailings/columns";
+import { SAILING_COLUMNS } from "../lib/sailings/columns";
 import { parseSailingRows, sailingKey, type SailingInput } from "../lib/sailings/parse";
+import { readSailingRows } from "../lib/sailings/workbook";
 import type { CruiseSailing } from "../payload-types";
 
 const file = process.argv[2];
 if (!file) throw new Error('Usage: pnpm import:sailings "<path to workbook.xlsx>"');
 
-const readRows = async (path: string): Promise<unknown[][]> => {
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(path);
-  const sheet = workbook.getWorksheet(SAILINGS_SHEET);
-  if (!sheet) throw new Error(`Worksheet "${SAILINGS_SHEET}" not found in ${path}`);
-  const rows: unknown[][] = [];
-  for (let n = 1; n <= sheet.rowCount; n++) {
-    rows.push(Array.from(sheet.getRow(n).values as unknown[]).slice(1));
-  }
-  return rows;
-};
-
 const isUnchanged = (existing: CruiseSailing, incoming: SailingInput) =>
   SAILING_COLUMNS.every(({ field }) => (existing[field] ?? null) === incoming[field]);
 
-const { sailings, rejected } = parseSailingRows(await readRows(file));
+const workbook = new ExcelJS.Workbook();
+await workbook.xlsx.readFile(file);
+const { sailings, rejected } = parseSailingRows(readSailingRows(workbook));
 
 const payload = await getPayload({ config });
 const existing = await payload.find({

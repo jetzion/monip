@@ -1,6 +1,9 @@
 import type { CollectionConfig } from "payload";
 
 import { isAdmin } from "../access/roles";
+import { templateEndpoint } from "../lib/sailings/template-endpoint";
+
+const fullTextCell = "/components/admin/FullTextCell#FullTextCell";
 
 const dayOnly = { date: { pickerAppearance: "dayOnly" as const, displayFormat: "d MMM yyyy" } };
 
@@ -32,10 +35,14 @@ export const CruiseSailings: CollectionConfig = {
     description: "Cruise sailings imported from the fleet calendar workbook. Admins only.",
     pagination: { defaultLimit: 25, limits: [25, 50, 100] },
     components: {
-      beforeListTable: ["/components/admin/SailingFilters#SailingFilters"],
+      beforeListTable: [
+        "/components/admin/SailingTemplateButton#SailingTemplateButton",
+        "/components/admin/SailingFilters#SailingFilters",
+      ],
     },
   },
   defaultSort: ["startDate", "cruiseLine", "ship"],
+  endpoints: [templateEndpoint],
   access: {
     read: isAdmin,
     create: isAdmin,
@@ -71,13 +78,21 @@ export const CruiseSailings: CollectionConfig = {
       name: "portsInOrder",
       label: "Ports in order",
       type: "textarea",
-      admin: { description: 'Itinerary as in the workbook, for example "Miami, Florida → At sea → …".' },
+      admin: {
+        description: 'Itinerary as in the workbook, for example "Miami, Florida → At sea → …".',
+        components: { Cell: fullTextCell },
+      },
     },
     {
       type: "row",
       fields: [
         { name: "confidence", label: "Confidence", type: "text" },
-        { name: "source", label: "Source", type: "textarea", admin: { description: "Usually a URL." } },
+        {
+          name: "source",
+          label: "Source",
+          type: "textarea",
+          admin: { description: "Usually a URL.", components: { Cell: fullTextCell } },
+        },
       ],
     },
     {
