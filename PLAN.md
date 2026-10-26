@@ -792,3 +792,38 @@ Authorized staff must be able to create, edit, preview, publish, unpublish, orga
 | Navigation | "Success Stories" between Clients and About; shown only when the page and at least one story are published | Confirmed |
 | Content | Supplied by MONIP; no invented stories, customers, quotes, or figures | Requires MONIP content |
 | Not included yet | Homepage feature, links to products/services/clients, chat answers from stories | Future option |
+
+
+## 16. Cruise Fleet Schedule
+
+### Overview
+An admin-only page listing cruise sailings imported from the `Sailings`
+worksheet of the cruise fleet calendar workbook (25,896 rows, 13 columns).
+Admins filter by Port, Month, Date, Cruise line, Operator, and Ship, sort by
+column, and download a blank Excel template for new data. Full brief:
+`docs/briefs/CRUISE_FLEET_SCHEDULE.md`.
+
+### Implementation decisions
+
+| Topic | Decision | Status |
+| --- | --- | --- |
+| Storage | Payload `cruise-sailings` collection with a custom admin list view | Confirmed |
+| Access | Admin role only; never on the public site, search, sitemap, or chat | Confirmed |
+| Editing | Admins can create, edit, and delete individual sailings | Confirmed |
+| Import | CLI script `pnpm import:sailings <file.xlsx>`; upload screen later | Confirmed |
+| Matching key | Ship + Start date | Confirmed |
+| Re-import | Update matches, insert new, keep records missing from the workbook | Confirmed |
+| Arrival / Departure | Ship's times at the start port on embarkation day, `HH:MM` text | Confirmed |
+| Filters | Port = start port; Date is a date picker; Ship and Port searchable | Confirmed |
+| Ship dropdown | Lists only the selected cruise line's ships; changing cruise line clears a ship from another line | Confirmed |
+| Dataset shown | All sailings, past and future | Confirmed |
+| Workbook | Not committed; passed to the import script by path | Confirmed |
+| Not included yet | Admin upload screen; bulk search-select-delete of old sailings | Future option |
+
+### Steps
+- [x] Collection and migration (`20261026_152914_cruise_sailings`, verified against a fresh database)
+- [x] Import script and initial data load (25,896 sailings; re-import idempotent; rollback verified)
+- [x] Filter options: loaded server-side with `findDistinct` for the admin view (no separate endpoint needed)
+- [x] Filter bar above the standard admin list (six filters, AND logic, stored in the URL; 25 per page; default sort Start date, Cruise line, Ship)
+- [ ] Blank Excel template download
+- [ ] Tests and documentation

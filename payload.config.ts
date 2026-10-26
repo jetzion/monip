@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 
 import { Categories } from "./collections/Categories";
 import { Clients } from "./collections/Clients";
+import { CruiseSailings } from "./collections/CruiseSailings";
 import { Inquiries } from "./collections/Inquiries";
 import { Media } from "./collections/Media";
 import { Offices } from "./collections/Offices";
@@ -48,7 +49,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries],
+  collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries, CruiseSailings],
   globals: [Home],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),

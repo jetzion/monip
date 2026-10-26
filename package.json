@@ -17,7 +17,8 @@
     "generate:importmap": "payload generate:importmap",
     "seed": "payload run scripts/seed.ts",
     "db:up": "docker compose up -d",
-    "db:down": "docker compose down"
+    "db:down": "docker compose down",
+    "import:sailings": "payload run scripts/import-sailings.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -30,6 +31,7 @@
     "@payloadcms/ui": "3.91.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.0",
+    "exceljs": "4.4.0",
     "graphql": "^16.14.2",
     "lucide-react": "^1.61.0",
     "next": "16.4.2",

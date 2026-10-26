@@ -77,6 +77,7 @@ export interface Config {
     offices: Office;
     pages: Page;
     inquiries: Inquiry;
+    'cruise-sailings': CruiseSailing;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -94,6 +95,7 @@ export interface Config {
     offices: OfficesSelect<false> | OfficesSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
+    'cruise-sailings': CruiseSailingsSelect<false> | CruiseSailingsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -563,6 +565,42 @@ export interface Inquiry {
   createdAt: string;
 }
 /**
+ * Cruise sailings imported from the fleet calendar workbook. Admins only.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cruise-sailings".
+ */
+export interface CruiseSailing {
+  id: number;
+  cruiseLine: string;
+  ship: string;
+  operator?: string | null;
+  startDate: string;
+  endDate?: string | null;
+  nights?: number | null;
+  startPort?: string | null;
+  endPort?: string | null;
+  /**
+   * Itinerary as in the workbook, for example "Miami, Florida → At sea → …".
+   */
+  portsInOrder?: string | null;
+  confidence?: string | null;
+  /**
+   * Usually a URL.
+   */
+  source?: string | null;
+  /**
+   * Ship's arrival time at the start port on embarkation day (HH:MM).
+   */
+  arrival?: string | null;
+  /**
+   * Ship's departure time from the start port on embarkation day (HH:MM).
+   */
+  departure?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -625,6 +663,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'inquiries';
         value: number | Inquiry;
+      } | null)
+    | ({
+        relationTo: 'cruise-sailings';
+        value: number | CruiseSailing;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -873,6 +915,27 @@ export interface InquiriesSelect<T extends boolean = true> {
   productName?: T;
   productUrl?: T;
   emailStatus?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cruise-sailings_select".
+ */
+export interface CruiseSailingsSelect<T extends boolean = true> {
+  cruiseLine?: T;
+  ship?: T;
+  operator?: T;
+  startDate?: T;
+  endDate?: T;
+  nights?: T;
+  startPort?: T;
+  endPort?: T;
+  portsInOrder?: T;
+  confidence?: T;
+  source?: T;
+  arrival?: T;
+  departure?: T;
   updatedAt?: T;
   createdAt?: T;
 }

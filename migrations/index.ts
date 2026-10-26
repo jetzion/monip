@@ -11,6 +11,7 @@ import * as migration_20261023_211829_add_client_order from './20261023_211829_a
 import * as migration_20261023_211844_drop_client_sort_order from './20261023_211844_drop_client_sort_order';
 import * as migration_20261024_123343_success_stories from './20261024_123343_success_stories';
 import * as migration_20261024_140836_products_page from './20261024_140836_products_page';
+import * as migration_20261026_152914_cruise_sailings from './20261026_152914_cruise_sailings';
 
 export const migrations = [
   {
@@ -76,6 +77,11 @@ export const migrations = [
   {
     up: migration_20261024_140836_products_page.up,
     down: migration_20261024_140836_products_page.down,
-    name: '20261024_140836_products_page'
+    name: '20261024_140836_products_page',
+  },
+  {
+    up: migration_20261026_152914_cruise_sailings.up,
+    down: migration_20261026_152914_cruise_sailings.down,
+    name: '20261026_152914_cruise_sailings'
   },
 ];
