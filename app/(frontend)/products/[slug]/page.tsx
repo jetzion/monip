@@ -4,10 +4,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PageHeader } from "@/components/content/PageHeader";
-import { SectionHeading } from "@/components/content/SectionHeading";
-import { InquiryForm } from "@/components/forms/InquiryForm";
 import { CmsImage } from "@/components/media/CmsImage";
 import { SpecSheet } from "@/components/products/SpecSheet";
+import { ButtonLink } from "@/components/ui/button-link";
 import { pillClassName } from "@/components/ui/pill";
 import { populated } from "@/lib/payload";
 import { contentAccess } from "@/lib/queries/access";
@@ -141,20 +140,14 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
             </div>
           )}
           <SpecSheet rows={specs} />
+          <ButtonLink
+            href={`/contact?product=${encodeURIComponent(product.slug)}`}
+            className="h-11 self-start px-6"
+          >
+            Product inquiry
+          </ButtonLink>
         </div>
       </div>
-
-      <section aria-labelledby="inquiry-heading" className="border-t border-border">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
-          <div>
-            <SectionHeading id="inquiry-heading">Ask about this product</SectionHeading>
-            <p className="mt-4 text-muted-foreground">Your inquiry will reference {product.name}.</p>
-          </div>
-          <div className="rounded-xl border border-t-4 border-border border-t-primary bg-card p-6 shadow-card sm:p-8">
-            <InquiryForm productSlug={product.slug} productName={product.name} />
-          </div>
-        </div>
-      </section>
     </>
   );
 }

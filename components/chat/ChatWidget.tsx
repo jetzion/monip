@@ -10,10 +10,10 @@ import type { ChatMessage } from "@/lib/chat/validate";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
 
 /** Display name of the assistant; also set in the system prompt (lib/chat/knowledge.ts). */
-const ASSISTANT_NAME = "Mike";
+const ASSISTANT_NAME = "David";
 
 const WELCOME =
-  "Hi, I'm Mike from MONIP Group. Welcome! How can I help you today? I'm happy to tell you about our services, product samples, or how we work.";
+  "Hi, I'm David from MONIP Group. Welcome! How can I help you today? I'm happy to tell you about our services, product samples, or how we work.";
 
 /**
  * Floating chat button and panel. The conversation lives in memory: it
@@ -207,7 +207,7 @@ function ReplyText({ text, onNavigate }: { text: string; onNavigate: () => void 
 
 const bubble = "whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed";
 
-/** A message. Assistant replies carry Mike's avatar and name. */
+/** A message. Assistant replies carry David's avatar and name. */
 function Bubble({ role, children }: { role: ChatMessage["role"]; children: React.ReactNode }) {
   if (role === "user") {
     return (

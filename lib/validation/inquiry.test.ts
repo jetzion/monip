@@ -29,14 +29,32 @@ describe("validateInquiry", () => {
     if (!result.ok) expect(Object.keys(result.errors).sort()).toEqual(["email", "message", "name"]);
   });
 
-  it("rejects an invalid email", () => {
-    const result = validateInquiry(form({ ...valid, email: "not-an-email" }));
-    expect(result.ok === false && result.errors.email).toBeTruthy();
+  it.each(["not-an-email", "a@b", "a@b.c", "a..b@example.com", "a@-example.com", "a b@example.com"])(
+    "rejects the invalid email %s",
+    (email) => {
+      const result = validateInquiry(form({ ...valid, email }));
+      expect(result.ok === false && result.errors.email).toBeTruthy();
+    },
+  );
+
+  it.each(["alex@example.com", "alex.b+tag@mail.example.co.uk", "o'neil@my-company.io"])(
+    "accepts the valid email %s",
+    (email) => {
+      expect(validateInquiry(form({ ...valid, email })).ok).toBe(true);
+    },
+  );
+
+  it("rejects a phone under ten digits but allows an empty one", () => {
+    expect(validateInquiry(form({ ...valid, phone: "call me" })).ok).toBe(false);
+    expect(validateInquiry(form({ ...valid, phone: "555-0100" })).ok).toBe(false);
+    expect(validateInquiry(form({ ...valid, phone: "" })).ok).toBe(true);
   });
 
-  it("rejects an invalid phone but allows an empty one", () => {
-    expect(validateInquiry(form({ ...valid, phone: "call me" })).ok).toBe(false);
-    expect(validateInquiry(form({ ...valid, phone: "+1 (555) 010-0199" })).ok).toBe(true);
+  it("stores the phone in (xxx) xxx-xxxx ext:xxxxx format", () => {
+    const plain = validateInquiry(form({ ...valid, phone: "555.010.0199" }));
+    expect(plain.data.phone).toBe("(555) 010-0199");
+    const ext = validateInquiry(form({ ...valid, phone: "555010019912" }));
+    expect(ext.ok && ext.data.phone).toBe("(555) 010-0199 ext:12");
   });
 
   it("rejects messages that are too short or too long", () => {
