@@ -245,3 +245,11 @@ If credentials, content, access, or a business decision is missing:
     expect catalog tests to fail where editors replaced placeholders.
 -   The chat calls OpenRouter only from `app/api/chat`; tests mock it.
     Never log or expose `OPENROUTER_API_KEY`.
+-   For admin-only checks, `pnpm payload run scripts/e2e-users.ts create
+    <password>` makes `e2e-admin@example.com` and `e2e-editor@example.com`;
+    run it with `delete` afterwards (the Cruise Fleet Schedule e2e tests
+    do both).
+-   In development, `payload run` scripts sync the schema before running,
+    so hand-made constraints vanish; use `NODE_ENV=production` to avoid it.
+-   Cruise sailings are commercially sensitive: keep them admin-only and
+    out of public pages, search, the sitemap, and the chat.

@@ -614,6 +614,7 @@ Update this section as decisions are confirmed.
 | Admin Categories list | Custom list view: top-level categories with subcategories indented underneath, each parent expandable/collapsible (native `<details>`, open by default); search or filters fall back to the standard table (2026-10-24) | Confirmed |
 | Product card images | Whole image shown (`object-contain`), not cropped, so samples are not misrepresented (2026-10-25) | Confirmed |
 | AI product description | Admin button drafts Description from images and data via OpenRouter; free vision models first, then `OPENROUTER_MODEL`; fills the form only, editor reviews and saves (2026-10-25) | Confirmed |
+| Cruise Fleet Schedule | Internal admin-only tool for cruise sailings (Payload collection, Excel template and import); never public, in search, the sitemap, or the chat. Approved 2026-10-26; details in section 16 | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
@@ -689,6 +690,7 @@ Update this section as decisions are confirmed.
 - [x] About offices map: Arctic cropped, offices in equal columns on one row
 - [x] Admin Categories list as an expandable tree (`components/admin/CategoryListView.tsx`, `lib/category-tree.ts`)
 - [ ] Success Stories: real stories from MONIP (one labelled placeholder story is published locally)
+- [x] Cruise Fleet Schedule (admin only): collection and migration `20261026_152914_cruise_sailings`, 25,896 sailings imported, six filters, Excel template download and Import Excel, unit and e2e tests, editor guide (section 16)
 
 ## 13. Next Steps
 
@@ -703,6 +705,8 @@ Update this section as decisions are confirmed.
 4.  Optional: drag-and-drop ordering for Offices and Services (they
     still use a Sort order number); clickable product links in chat
     replies; related products on product pages.
+5.  Optional: Cruise Fleet Schedule bulk delete (search old sailings,
+    select several, delete).
 
 **Needs input from MONIP**
 
@@ -718,6 +722,9 @@ Update this section as decisions are confirmed.
 -   Inquiry notification recipient, and whether editors should see
     inquiries.
 -   Analytics: approve a provider (Vercel Web Analytics suggested) or none.
+-   Cruise Fleet Schedule: the real start ports for the two sailings
+    recorded as `?` in the workbook (Celebrity Reflection 2025-07-26,
+    Iona 2025-10-23).
 
 **On hold until hosting accounts are decided**
 
@@ -743,6 +750,16 @@ Update this section as decisions are confirmed.
     same field (name, summary, tags, or materials).
 -   Chat rate limiting is in server memory: per instance and reset on restart. Production needs the shared Firewall rule; also set a spending limit on the OpenRouter key.
 -   E2E tests run against the shared development database (see section 7).
+-   Cruise Fleet Schedule uploads are limited to 4 MB (Vercel's request
+    cap is 4.5 MB); larger workbooks, such as the full multi-sheet
+    calendar (5.2 MB), go through `pnpm import:sailings`. A full import of
+    25,896 new sailings takes about 20 seconds locally.
+-   The Cruise Fleet Schedule filter bar shows only its own selections;
+    conditions added with Payload's built-in Filters button still apply
+    but are not shown in the bar.
+-   In development, `payload run` scripts (seed, import) sync the database
+    schema to the Payload config first, removing anything added to the
+    schema by hand.
 -   The developer machine runs Node 24.21.0, slightly below Payload's
     stated minimum (24.22.1); everything works, but upgrading is advised.
 
@@ -808,8 +825,13 @@ Authorized staff must be able to create, edit, preview, publish, unpublish, orga
 An admin-only page listing cruise sailings imported from the `Sailings`
 worksheet of the cruise fleet calendar workbook (25,896 rows, 13 columns).
 Admins filter by Port, Month, Date, Cruise line, Operator, and Ship, sort by
-column, and download a blank Excel template for new data. Full brief:
+column, edit individual sailings, download a blank Excel template, and
+import a filled template with **Import Excel**. Full brief:
 `docs/briefs/CRUISE_FLEET_SCHEDULE.md`.
+
+Main files: `collections/CruiseSailings.ts`, `lib/sailings/` (parsing,
+import, filters, template, endpoints), `components/admin/Sailing*.tsx`,
+`scripts/import-sailings.ts`, `tests/e2e/cruise-schedule.spec.ts`.
 
 ### Implementation decisions
 

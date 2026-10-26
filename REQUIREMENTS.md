@@ -75,6 +75,8 @@ accessibility, performance, and lead generation.
 -   Advanced personalization or AI-powered recommendations. (A website
     chat assistant that answers from published content was approved on
     2026-10-23; see PLAN.md.)
+-   Internal admin tools. (An admin-only Cruise Fleet Schedule with
+    Excel import was approved on 2026-10-26; see PLAN.md section 16.)
 
 These may be added later after requirements and budget are confirmed.
 
