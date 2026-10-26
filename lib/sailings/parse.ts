@@ -1,4 +1,4 @@
-import { SAILING_COLUMNS, type SailingField } from "./columns";
+import { SAILING_COLUMNS, WorkbookFormatError, type SailingField } from "./columns";
 
 /** A validated sailing, ready to save. Dates are ISO strings at 12:00 UTC. */
 export type SailingInput = {
@@ -68,7 +68,7 @@ const columnIndexes = (header: unknown[]): Record<SailingField, number> => {
   const names = header.map((cell) => text(cellValue(cell)));
   const missing = SAILING_COLUMNS.filter((column) => !names.includes(column.header));
   if (missing.length > 0) {
-    throw new Error(`Missing columns: ${missing.map((column) => column.header).join(", ")}`);
+    throw new WorkbookFormatError(`Missing columns: ${missing.map((column) => column.header).join(", ")}`);
   }
   return Object.fromEntries(
     SAILING_COLUMNS.map((column) => [column.field, names.indexOf(column.header)]),

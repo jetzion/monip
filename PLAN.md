@@ -461,7 +461,7 @@ selection, model fallback), and the Cruise Fleet Schedule (workbook row
 parsing and dates at 12:00 UTC, filter queries and month ranges, the Ship
 list per cruise line, and the template round trip through the importer).
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 67 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 69 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -469,7 +469,7 @@ Inquiry tests leave Inquiry records behind (delete
 `e2e-*@example.com` inquiries afterwards). Because the tests share the database editors use,
 some catalog tests depend on placeholder content and fail once it is
 replaced; a separate seeded test database is planned (section 13).
-Last run (2026-10-26): 63 passed, 4 catalog filter tests failed on real
+Last run (2026-10-26): 65 passed, 4 catalog filter tests failed on real
 content.
 
 -   Catalog browsing, search, category/subcategory filters, empty states.
@@ -489,7 +489,9 @@ content.
 -   Cruise Fleet Schedule (creates and deletes `e2e-admin@example.com` and
     `e2e-editor@example.com`): admin-only API and template, filters
     combined with AND and cleared, Ship list narrowed by cruise line,
-    empty state, template download with the 13 headers.
+    empty state, template download with the 13 headers, Import Excel
+    (summary, rejected rows, list refresh; the test sailing is deleted)
+    and its refusal of non-.xlsx files.
 -   axe accessibility scan (WCAG 2.2 AA) of all public pages, plus the
     chat panel open on desktop and mobile.
 
@@ -816,7 +818,7 @@ column, and download a blank Excel template for new data. Full brief:
 | Storage | Payload `cruise-sailings` collection with a custom admin list view | Confirmed |
 | Access | Admin role only; never on the public site, search, sitemap, or chat | Confirmed |
 | Editing | Admins can create, edit, and delete individual sailings | Confirmed |
-| Import | CLI script `pnpm import:sailings <file.xlsx>`; upload screen later | Confirmed |
+| Import | Admin **Import Excel** button (`POST /api/cruise-sailings/import`, .xlsx up to 4 MB, below Vercel's 4.5 MB request cap); `pnpm import:sailings <file.xlsx>` for larger workbooks | Confirmed |
 | Matching key | Ship + Start date | Confirmed |
 | Re-import | Update matches, insert new, keep records missing from the workbook | Confirmed |
 | Arrival / Departure | Ship's times at the start port on embarkation day, `HH:MM` text | Confirmed |
@@ -826,7 +828,7 @@ column, and download a blank Excel template for new data. Full brief:
 | Empty values | Payload's default placeholder (e.g. `<No Arrival>`) instead of `—` | Confirmed |
 | Long text | Ports in order and Source wrap in full in the list (320px columns) | Confirmed |
 | Workbook | Not committed; passed to the import script by path | Confirmed |
-| Not included yet | Admin upload screen; bulk search-select-delete of old sailings | Future option |
+| Not included yet | Bulk search-select-delete of old sailings | Future option |
 
 ### Steps
 - [x] Collection and migration (`20261026_152914_cruise_sailings`, verified against a fresh database)
@@ -834,4 +836,5 @@ column, and download a blank Excel template for new data. Full brief:
 - [x] Filter options: loaded server-side with `findDistinct` for the admin view (no separate endpoint needed)
 - [x] Filter bar above the standard admin list (six filters, AND logic, stored in the URL; 25 per page; default sort Start date, Cruise line, Ship)
 - [x] Blank Excel template download (`GET /api/cruise-sailings/template`, admins only; round trip through the importer tested)
-- [x] Tests and documentation (5 e2e tests; README, editor guide)
+- [x] Tests and documentation (7 e2e tests; README, editor guide)
+- [x] Admin Import Excel button (shared import logic with the script; rollback re-verified)

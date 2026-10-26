@@ -13,8 +13,10 @@ These override the generic wording in the sections below.
   sensitive).
 - **Editing:** admins may create, edit, and delete individual sailings in
   the Payload admin to add or clean data.
-- **Import:** a CLI script for v1 (`pnpm import:sailings <file.xlsx>`); an
-  admin upload screen may follow later. The workbook is not committed.
+- **Import:** an **Import Excel** button on the admin page uploads a filled
+  template (.xlsx, up to 4 MB) and shows the import summary; the CLI script
+  (`pnpm import:sailings <file.xlsx>`) handles larger workbooks. The
+  workbook is not committed.
 - **Matching key:** Ship + Start date (unique across all 25,896 source rows).
 - **Re-import:** matching records are updated, new ones inserted; records
   missing from the workbook are kept. Bulk search-select-delete of old

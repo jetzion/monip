@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { isAdmin } from "../access/roles";
+import { importEndpoint } from "../lib/sailings/import-endpoint";
 import { templateEndpoint } from "../lib/sailings/template-endpoint";
 
 const fullTextCell = "/components/admin/FullTextCell#FullTextCell";
@@ -36,13 +37,13 @@ export const CruiseSailings: CollectionConfig = {
     pagination: { defaultLimit: 25, limits: [25, 50, 100] },
     components: {
       beforeListTable: [
-        "/components/admin/SailingTemplateButton#SailingTemplateButton",
+        "/components/admin/SailingActions#SailingActions",
         "/components/admin/SailingFilters#SailingFilters",
       ],
     },
   },
   defaultSort: ["startDate", "cruiseLine", "ship"],
-  endpoints: [templateEndpoint],
+  endpoints: [templateEndpoint, importEndpoint],
   access: {
     read: isAdmin,
     create: isAdmin,

@@ -19,3 +19,6 @@ export const SAILING_COLUMNS = [
 ] as const;
 
 export type SailingField = (typeof SAILING_COLUMNS)[number]["field"];
+
+/** A workbook without the Sailings worksheet or one of its column headers. */
+export class WorkbookFormatError extends Error {}

@@ -1,63 +1,28 @@
 /**
  * Imports the Sailings worksheet of a fleet calendar workbook into the
- * Cruise Fleet Schedule. Matches on Ship + Start date: updates changed
- * sailings, inserts new ones, and keeps sailings missing from the workbook.
- * Invalid rows are reported and skipped; any database error rolls back the
- * whole import.
+ * Cruise Fleet Schedule (see lib/sailings/import.ts for the rules). Use this
+ * for workbooks over the 4 MB admin upload limit.
  * Run with: pnpm import:sailings "<path to workbook.xlsx>"
  */
-import config from "@payload-config";
-import ExcelJS from "exceljs";
-import { commitTransaction, createLocalReq, getPayload, initTransaction, killTransaction } from "payload";
+import { openAsBlob } from "node:fs";
 
-import { SAILING_COLUMNS } from "../lib/sailings/columns";
-import { parseSailingRows, sailingKey, type SailingInput } from "../lib/sailings/parse";
-import { readSailingRows } from "../lib/sailings/workbook";
-import type { CruiseSailing } from "../payload-types";
+import config from "@payload-config";
+import { getPayload } from "payload";
+
+import { importSailings, loadWorkbook } from "../lib/sailings/import";
 
 const file = process.argv[2];
 if (!file) throw new Error('Usage: pnpm import:sailings "<path to workbook.xlsx>"');
 
-const isUnchanged = (existing: CruiseSailing, incoming: SailingInput) =>
-  SAILING_COLUMNS.every(({ field }) => (existing[field] ?? null) === incoming[field]);
-
-const workbook = new ExcelJS.Workbook();
-await workbook.xlsx.readFile(file);
-const { sailings, rejected } = parseSailingRows(readSailingRows(workbook));
-
+const workbook = await loadWorkbook(await (await openAsBlob(file)).arrayBuffer());
 const payload = await getPayload({ config });
-const existing = await payload.find({
-  collection: "cruise-sailings",
-  pagination: false,
-  depth: 0,
-  overrideAccess: true,
-});
-const byKey = new Map(existing.docs.map((doc) => [sailingKey(doc), doc]));
-
-const req = await createLocalReq({}, payload);
-await initTransaction(req);
-const summary = { processed: sailings.length + rejected.length, inserted: 0, updated: 0, unchanged: 0, rejected: rejected.length };
 
 try {
-  for (const sailing of sailings) {
-    const match = byKey.get(sailingKey(sailing));
-    if (!match) {
-      await payload.create({ collection: "cruise-sailings", data: sailing, req, overrideAccess: true });
-      summary.inserted++;
-    } else if (isUnchanged(match, sailing)) {
-      summary.unchanged++;
-    } else {
-      await payload.update({ collection: "cruise-sailings", id: match.id, data: sailing, req, overrideAccess: true });
-      summary.updated++;
-    }
-  }
-  await commitTransaction(req);
+  const { rejected, ...counts } = await importSailings(payload, workbook);
+  for (const { row, reason } of rejected) console.log(`Rejected row ${row}: ${reason}`);
+  console.log("Import complete:", { ...counts, rejected: rejected.length });
 } catch (error) {
-  await killTransaction(req);
   console.error("Import failed; no changes were saved.");
   throw error;
 }
-
-for (const { row, reason } of rejected) console.log(`Rejected row ${row}: ${reason}`);
-console.log("Import complete:", summary);
 process.exit(0);

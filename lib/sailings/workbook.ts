@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 
-import { SAILING_COLUMNS, SAILINGS_SHEET, type SailingField } from "./columns";
+import { SAILING_COLUMNS, SAILINGS_SHEET, WorkbookFormatError, type SailingField } from "./columns";
 
 /** Rows in the template that get date and number checks. */
 const TEMPLATE_ROWS = 1000;
@@ -22,7 +22,7 @@ const WIDTHS: Partial<Record<SailingField, number>> = {
 /** Reads every row of the Sailings worksheet as cell values (first row = headers). */
 export function readSailingRows(workbook: ExcelJS.Workbook): unknown[][] {
   const sheet = workbook.getWorksheet(SAILINGS_SHEET);
-  if (!sheet) throw new Error(`Worksheet "${SAILINGS_SHEET}" not found`);
+  if (!sheet) throw new WorkbookFormatError(`Worksheet "${SAILINGS_SHEET}" not found`);
   const rows: unknown[][] = [];
   for (let n = 1; n <= sheet.rowCount; n++) {
     rows.push(Array.from(sheet.getRow(n).values as unknown[]).slice(1));

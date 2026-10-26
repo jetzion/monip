@@ -117,7 +117,7 @@ Until the email service is set up, notification emails are not delivered: check 
 - **Filter** with Port (the start port), Month, Date, Cruise line, Operator, and Ship. Filters combine: a sailing must match all of them. Once a cruise line is chosen, Ship lists only that line's ships. **Clear filters** shows everything again.
 - **Sort** by clicking a column heading; click again to reverse.
 - **Open a sailing** by clicking its cruise line to see every field in full. Admins can correct a sailing there, add one with **Create New**, or delete one.
-- **Add sailings in bulk:** click **Download Excel Template**, fill in one row per sailing without renaming the sheet or columns (dates as 2026-10-03, times as 06:00), and ask the developer to import it.
+- **Add or update sailings in bulk:** click **Download Excel Template**, fill in one row per sailing without renaming the sheet or columns (dates as 2026-10-03, times as 06:00), then click **Import Excel** and choose the file. A summary shows how many sailings were added, updated, unchanged, or rejected, with the row number and reason for each rejected row. Files must be .xlsx and at most 4 MB (the template holds about 25,000 sailings in under 2 MB). If anything goes wrong while saving, nothing is changed.
 - **Updating the data:** an import matches sailings by Ship and Start date. It updates sailings that changed, adds new ones, and keeps sailings that are not in the file. Rows with a missing ship, cruise line, or start date are reported and skipped.
 
 ## Website chat

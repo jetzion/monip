@@ -8,6 +8,22 @@ const ADMIN = "e2e-admin@example.com";
 const EDITOR = "e2e-editor@example.com";
 const PASSWORD = randomBytes(12).toString("hex");
 const LIST = "/admin/collections/cruise-sailings";
+const TEST_SHIP = "E2E Test Ship";
+const HEADERS = [
+  "Cruise line",
+  "Ship",
+  "Operator",
+  "Start date",
+  "End date",
+  "Nights",
+  "Start port",
+  "End port",
+  "Ports in order",
+  "Confidence",
+  "Source",
+  "Arrival",
+  "Departure",
+];
 
 const users = (...args: string[]) =>
   execFileSync("pnpm", ["-s", "payload", "run", "scripts/e2e-users.ts", ...args], { stdio: "pipe" });
@@ -107,19 +123,43 @@ test("the template downloads with the 13 import headers", async ({ page }) => {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(await download.path());
   const headers = (workbook.getWorksheet("Sailings")?.getRow(1).values as unknown[]).slice(1);
-  expect(headers).toEqual([
-    "Cruise line",
-    "Ship",
-    "Operator",
-    "Start date",
-    "End date",
-    "Nights",
-    "Start port",
-    "End port",
-    "Ports in order",
-    "Confidence",
-    "Source",
-    "Arrival",
-    "Departure",
-  ]);
+  expect(headers).toEqual(HEADERS);
+});
+
+test("Import Excel adds sailings and reports rejected rows", async ({ page, request }) => {
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Sailings");
+  sheet.addRow(HEADERS);
+  sheet.addRow(["E2E Line", TEST_SHIP, null, new Date("2026-11-01T00:00:00Z"), null, 7, "E2E Port"]);
+  sheet.addRow(["E2E Line", "", null, new Date("2026-11-01T00:00:00Z")]);
+  const buffer = Buffer.from(await workbook.xlsx.writeBuffer());
+  const jwt = await token(request, ADMIN);
+
+  try {
+    await logIn(page);
+    const before = await total(request, jwt, "");
+    const [chooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.getByRole("button", { name: "Import Excel" }).click(),
+    ]);
+    await chooser.setFiles({ name: "e2e-sailings.xlsx", mimeType: "application/octet-stream", buffer });
+
+    const result = page.getByRole("status").filter({ hasText: "Imported" });
+    await expect(result).toContainText("1 added, 0 updated, 0 unchanged, 1 rejected");
+    await expect(result).toContainText("Row 3: Ship is empty");
+    await expect(pageInfo(page)).toHaveText(new RegExp(`of ${before + 1}$`));
+  } finally {
+    await request.delete(`/api/cruise-sailings?where[ship][equals]=${TEST_SHIP}`, {
+      headers: { Authorization: `JWT ${jwt}` },
+    });
+  }
+});
+
+test("Import Excel refuses files that are not .xlsx", async ({ request }) => {
+  const response = await request.post("/api/cruise-sailings/import", {
+    headers: { Authorization: `JWT ${await token(request, ADMIN)}` },
+    multipart: { file: { name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("not excel") } },
+  });
+  expect(response.status()).toBe(400);
+  expect(await response.json()).toEqual({ error: "The file must be an Excel workbook (.xlsx)." });
 });
