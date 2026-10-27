@@ -62,6 +62,16 @@ const pick = async (page: Page, label: string, option: string) => {
 
 const pageInfo = (page: Page) => page.locator(".page-controls__page-info");
 
+const TIMES_ONLY = "Hide sailings without arrival and departure times";
+const BOTH_TIMES = "where[and][0][arrival][exists]=true&where[and][1][departure][exists]=true";
+
+/** Unticks the times checkbox so the list shows every sailing, matching API totals. */
+const showAllSailings = async (page: Page) => {
+  const toggle = page.getByLabel(TIMES_ONLY);
+  if (await toggle.isChecked()) await toggle.click();
+  await expect(toggle).not.toBeChecked();
+};
+
 test("sailings and the template require an admin", async ({ request }) => {
   expect((await request.get("/api/cruise-sailings")).status()).toBe(403);
   expect((await request.get("/api/cruise-sailings/template")).status()).toBe(401);
@@ -69,6 +79,27 @@ test("sailings and the template require an admin", async ({ request }) => {
   const editor = { Authorization: `JWT ${await token(request, EDITOR)}` };
   expect((await request.get("/api/cruise-sailings", { headers: editor })).status()).toBe(403);
   expect((await request.get("/api/cruise-sailings/template", { headers: editor })).status()).toBe(403);
+});
+
+test("sailings without both times are hidden by default; 10 rows per page", async ({ page, request }) => {
+  const jwt = await token(request, ADMIN);
+  const all = await total(request, jwt, "");
+  const withTimes = await total(request, jwt, BOTH_TIMES);
+  expect(withTimes).toBeLessThan(all);
+
+  await logIn(page);
+  await expect(page.getByLabel(TIMES_ONLY)).toBeChecked();
+  await expect(pageInfo(page)).toHaveText(new RegExp(`^1-10 of ${withTimes}$`));
+  await expect(page.locator("tbody tr")).toHaveCount(10);
+
+  await page.getByLabel(TIMES_ONLY).click();
+  await expect(pageInfo(page)).toHaveText(new RegExp(`of ${all}$`));
+  await page.reload();
+  await expect(page.getByLabel(TIMES_ONLY)).not.toBeChecked();
+  await expect(pageInfo(page)).toHaveText(new RegExp(`of ${all}$`));
+
+  await page.getByLabel(TIMES_ONLY).click();
+  await expect(pageInfo(page)).toHaveText(new RegExp(`of ${withTimes}$`));
 });
 
 test("filters combine with AND and clear together", async ({ page, request }) => {
@@ -82,6 +113,7 @@ test("filters combine with AND and clear together", async ({ page, request }) =>
   );
 
   await logIn(page);
+  await showAllSailings(page);
   await expect(pageInfo(page)).toHaveText(new RegExp(`of ${all}$`));
   await pick(page, "Port", "Miami, Florida");
   await expect(pageInfo(page)).toHaveText(new RegExp(`of ${miami}$`));
@@ -97,6 +129,7 @@ test("the Ship list narrows to the selected cruise line", async ({ page, request
   const carnival = await total(request, jwt, "where[cruiseLine][equals]=Carnival");
 
   await logIn(page);
+  await showAllSailings(page);
   await pick(page, "Ship", "Icon of the Seas");
   await pick(page, "Cruise line", "Carnival");
   await expect(pageInfo(page)).toHaveText(new RegExp(`of ${carnival}$`));
@@ -137,6 +170,7 @@ test("Import Excel adds sailings and reports rejected rows", async ({ page, requ
 
   try {
     await logIn(page);
+    await showAllSailings(page);
     const before = await total(request, jwt, "");
     const [chooser] = await Promise.all([
       page.waitForEvent("filechooser"),

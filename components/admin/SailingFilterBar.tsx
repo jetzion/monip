@@ -6,6 +6,7 @@ import type { SailingFilterOptions } from "@/lib/sailings/filter-options";
 import { changeFilter, filtersToWhere, shipsFor, whereToFilters, type SailingFilters } from "@/lib/sailings/filters";
 
 import { HideItineraryColumns } from "./HideItineraryColumns";
+import { TimesOnlyToggle } from "./TimesOnlyToggle";
 
 type Option = { label: string; value: string };
 
@@ -17,7 +18,7 @@ const toOptions = (values: string[]): Option[] => values.map((value) => ({ label
  * Selections combine with AND and are stored in the list's
  * URL query, so pagination, sorting, and the record count follow them.
  */
-export function SailingFilterBar({ options }: { options: SailingFilterOptions }) {
+export function SailingFilterBar({ options, timesOnly }: { options: SailingFilterOptions; timesOnly: boolean }) {
   const { query, handleWhereChange } = useListQuery();
   const filters = whereToFilters(query.where);
 
@@ -61,6 +62,7 @@ export function SailingFilterBar({ options }: { options: SailingFilterOptions })
         Clear filters
       </Button>
       <HideItineraryColumns />
+      <TimesOnlyToggle initial={timesOnly} />
     </div>
   );
 }

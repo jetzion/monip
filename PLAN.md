@@ -872,8 +872,9 @@ import, filters, template, endpoints), `components/admin/Sailing*.tsx`,
 - [x] Collection and migration (`20261026_152914_cruise_sailings`, verified against a fresh database)
 - [x] Import script and initial data load (25,896 sailings; re-import idempotent; rollback verified)
 - [x] Filter options: loaded server-side with `findDistinct` for the admin view (no separate endpoint needed)
-- [x] Filter bar above the standard admin list (six filters, AND logic, stored in the URL; 25 per page; default sort Start date, Cruise line, Ship)
+- [x] Filter bar above the standard admin list (six filters, AND logic, stored in the URL; 10 per page (choices 10, 25, 50, 100); default sort Start date, Cruise line, Ship)
 - [x] "Hide Ports in order and Source" checkbox in the filter bar, ticked by default (both columns are left out of `defaultColumns`): hides both columns through Payload's column state (same as the Columns menu; remembered per admin)
+- [x] "Hide sailings without arrival and departure times" checkbox, ticked by default: the collection's `baseFilter` keeps only sailings with both times (3,263 of 25,896 on 2026-10-27). The choice is an admin preference (`cruise-sailings-times-only`, "hide"/"show"; Payload cannot store a `false` preference). The API and Excel import are not filtered
 - [x] Blank Excel template download (`GET /api/cruise-sailings/template`, admins only; round trip through the importer tested)
 - [x] Tests and documentation (7 e2e tests; README, editor guide)
 - [x] Admin Import Excel button (shared import logic with the script; rollback re-verified)

@@ -3,6 +3,7 @@ import type { CollectionConfig } from "payload";
 import { isAdmin } from "../access/roles";
 import { importEndpoint } from "../lib/sailings/import-endpoint";
 import { templateEndpoint } from "../lib/sailings/template-endpoint";
+import { isTimesOnly, timesOnlyWhere } from "../lib/sailings/times-only";
 
 const fullTextCell = "/components/admin/FullTextCell#FullTextCell";
 
@@ -33,7 +34,9 @@ export const CruiseSailings: CollectionConfig = {
       "departure",
     ],
     description: "Cruise sailings imported from the fleet calendar workbook. Admins only.",
-    pagination: { defaultLimit: 25, limits: [25, 50, 100] },
+    pagination: { defaultLimit: 10, limits: [10, 25, 50, 100] },
+    // "Hide sailings without arrival and departure times" (on by default).
+    baseFilter: async ({ req }) => ((await isTimesOnly(req.payload, req.user)) ? timesOnlyWhere : null),
     components: {
       beforeListTable: [
         "/components/admin/SailingActions#SailingActions",
