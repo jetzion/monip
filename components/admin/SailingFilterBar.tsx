@@ -5,6 +5,8 @@ import { Button, DatePicker, ReactSelect, useListQuery } from "@payloadcms/ui";
 import type { SailingFilterOptions } from "@/lib/sailings/filter-options";
 import { changeFilter, filtersToWhere, shipsFor, whereToFilters, type SailingFilters } from "@/lib/sailings/filters";
 
+import { HideItineraryColumns } from "./HideItineraryColumns";
+
 type Option = { label: string; value: string };
 
 const toOptions = (values: string[]): Option[] => values.map((value) => ({ label: value, value }));
@@ -58,6 +60,7 @@ export function SailingFilterBar({ options }: { options: SailingFilterOptions })
       >
         Clear filters
       </Button>
+      <HideItineraryColumns />
     </div>
   );
 }

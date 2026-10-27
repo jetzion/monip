@@ -873,6 +873,7 @@ import, filters, template, endpoints), `components/admin/Sailing*.tsx`,
 - [x] Import script and initial data load (25,896 sailings; re-import idempotent; rollback verified)
 - [x] Filter options: loaded server-side with `findDistinct` for the admin view (no separate endpoint needed)
 - [x] Filter bar above the standard admin list (six filters, AND logic, stored in the URL; 25 per page; default sort Start date, Cruise line, Ship)
+- [x] "Hide Ports in order and Source" checkbox in the filter bar, ticked by default (both columns are left out of `defaultColumns`): hides both columns through Payload's column state (same as the Columns menu; remembered per admin)
 - [x] Blank Excel template download (`GET /api/cruise-sailings/template`, admins only; round trip through the importer tested)
 - [x] Tests and documentation (7 e2e tests; README, editor guide)
 - [x] Admin Import Excel button (shared import logic with the script; rollback re-verified)

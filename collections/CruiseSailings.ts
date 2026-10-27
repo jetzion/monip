@@ -27,9 +27,8 @@ export const CruiseSailings: CollectionConfig = {
       "nights",
       "startPort",
       "endPort",
-      "portsInOrder",
+      // portsInOrder and source start hidden; "Hide Ports in order and Source" shows them.
       "confidence",
-      "source",
       "arrival",
       "departure",
     ],

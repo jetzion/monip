@@ -216,6 +216,10 @@ html {
   }
 }
 
+.sailing-filters__toggle {
+  align-self: center;
+}
+
 // Long itinerary and source values wrap within a fixed width; URLs may
 // break anywhere.
 .table td.cell-portsInOrder,

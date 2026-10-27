@@ -163,3 +163,26 @@ test("Import Excel refuses files that are not .xlsx", async ({ request }) => {
   expect(response.status()).toBe(400);
   expect(await response.json()).toEqual({ error: "The file must be an Excel workbook (.xlsx)." });
 });
+
+test("Ports in order and Source start hidden; the checkbox shows them", async ({ page }) => {
+  await logIn(page);
+  const toggle = () => page.getByLabel("Hide Ports in order and Source");
+  const header = (name: string) => page.locator("thead th").filter({ hasText: name });
+  await expect(toggle()).toBeChecked();
+  await expect(header("Ports in order")).toHaveCount(0);
+  await expect(header("Source")).toHaveCount(0);
+  await expect(header("Ship")).toBeVisible();
+
+  await toggle().click();
+  await expect(header("Ports in order")).toBeVisible();
+  await expect(header("Source")).toBeVisible();
+  await expect(toggle()).not.toBeChecked();
+
+  await page.reload();
+  await expect(toggle()).not.toBeChecked();
+  await expect(header("Ports in order")).toBeVisible();
+
+  await toggle().click();
+  await expect(header("Ports in order")).toHaveCount(0);
+  await expect(header("Source")).toHaveCount(0);
+});
