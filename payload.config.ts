@@ -14,9 +14,12 @@ import { Inquiries } from "./collections/Inquiries";
 import { Media } from "./collections/Media";
 import { Offices } from "./collections/Offices";
 import { Pages } from "./collections/Pages";
+import { PortTimeZones } from "./collections/PortTimeZones";
 import { Products } from "./collections/Products";
 import { Services } from "./collections/Services";
 import { SuccessStories } from "./collections/SuccessStories";
+import { Trainers } from "./collections/Trainers";
+import { TrainingSessions } from "./collections/TrainingSessions";
 import { Users } from "./collections/Users";
 import { Home } from "./globals/Home";
 
@@ -52,7 +55,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries, CruiseSailings],
+  collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries, CruiseSailings, TrainingSessions, Trainers, PortTimeZones],
   globals: [Home],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),

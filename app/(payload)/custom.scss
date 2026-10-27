@@ -269,3 +269,388 @@ html {
 .sailing-import__error {
   color: var(--theme-error-500);
 }
+
+// Training Schedule: "Add to Calendar" form above the sessions.
+.training-form {
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+
+  h2 {
+    margin: 0;
+  }
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.training-form__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.training-form__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.training-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-weight: 600;
+  }
+}
+
+.training-form__types {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.training-form__time {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-s, 4px);
+  background: var(--theme-input-bg, var(--theme-elevation-0));
+  color: var(--theme-text);
+  font: inherit;
+}
+
+.training-form__submit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 20px;
+}
+
+.training-form__check {
+  margin: 0;
+  color: var(--theme-elevation-650);
+}
+
+.training-form__saved {
+  margin-top: 12px;
+  color: var(--theme-success-650, var(--theme-text));
+  font-weight: 600;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.training-form__error {
+  margin-top: 12px;
+  color: var(--theme-error-500);
+
+  p {
+    margin: 0;
+  }
+}
+
+// Training Schedule: page header, calendar, and session details.
+.training-schedule__header {
+  margin: 20px 0 24px;
+
+  h1 {
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--theme-elevation-650);
+  }
+}
+
+.training-calendar__filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px 16px;
+  align-items: end;
+  margin-bottom: 20px;
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.training-calendar__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  margin-bottom: 12px;
+
+  // Wide enough for the longest title ("September 2026", about 7.6em), so the
+  // month buttons stay put as the month changes.
+  h2 {
+    min-width: 8em;
+    margin: 0;
+  }
+}
+
+.training-calendar__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.training-calendar__count {
+  margin: 0 0 0 auto;
+  color: var(--theme-elevation-650);
+}
+
+.training-calendar__grid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  th {
+    padding: 6px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  td {
+    height: 110px;
+    padding: 4px;
+    vertical-align: top;
+    border: 1px solid var(--theme-elevation-150);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li + li {
+    margin-top: 3px;
+  }
+}
+
+.training-calendar__date {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.training-calendar__day.is-outside {
+  background: var(--theme-elevation-50);
+
+  .training-calendar__date {
+    color: var(--theme-elevation-500);
+  }
+}
+
+.training-calendar__day.is-today .training-calendar__date time {
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--theme-elevation-900);
+  color: var(--theme-elevation-0);
+}
+
+// One color per training type; the left border keeps types apart without color too.
+.training-calendar__entry--online {
+  --entry-color: #2563eb;
+}
+
+.training-calendar__entry--departureDay {
+  --entry-color: #c2410c;
+}
+
+.training-calendar__entry--onboarding {
+  --entry-color: #15803d;
+}
+
+.training-calendar__entry {
+  display: block;
+  padding: 2px 6px;
+  overflow: hidden;
+  border-left: 4px solid var(--entry-color);
+  border-radius: 3px;
+  background: var(--theme-elevation-100);
+  color: var(--theme-text);
+  font-size: 13px;
+  line-height: 1.35;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover,
+  &[aria-current="true"] {
+    background: var(--theme-elevation-200);
+    text-decoration: underline;
+  }
+}
+
+.training-calendar__time {
+  font-weight: 600;
+}
+
+.training-calendar__long-date {
+  display: none;
+}
+
+.training-calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding-left: 8px;
+    border-left: 4px solid var(--entry-color);
+  }
+}
+
+.training-details {
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+  background: var(--theme-elevation-50);
+
+  h3 {
+    margin: 0 0 12px;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 16px;
+    margin: 0 0 16px;
+  }
+
+  dt {
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.training-details__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+// Narrow screens: a list of days with sessions instead of a grid.
+@media (max-width: 768px) {
+  .training-calendar__grid {
+    thead {
+      display: none;
+    }
+
+    tbody,
+    tr,
+    td {
+      display: block;
+    }
+
+    td {
+      height: auto;
+      border-width: 0 0 1px;
+    }
+
+    td.is-empty,
+    td.is-outside {
+      display: none;
+    }
+  }
+
+  .training-calendar__date time {
+    display: none;
+  }
+
+  .training-calendar__long-date {
+    display: inline;
+  }
+
+  .training-calendar__entry {
+    white-space: normal;
+  }
+
+  .training-calendar__count {
+    margin-left: 0;
+  }
+}
+
+// Training Schedule: sessions whose cruise changed since they were saved.
+.training-review,
+.training-details__review {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border: 1px solid var(--theme-warning-500, #b45309);
+  border-left-width: 6px;
+  border-radius: 6px;
+  background: var(--theme-warning-50, #fffbeb);
+
+  h3,
+  p {
+    margin: 0 0 8px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .training-details__actions {
+    margin-top: 12px;
+  }
+}
+
+.training-calendar__review {
+  margin-right: 4px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: var(--theme-warning-500, #b45309);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}

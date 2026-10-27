@@ -26,6 +26,7 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { FullTextCell as FullTextCell_e04bfd2377652c449b32de2642fbb4e8 } from '../../../components/admin/FullTextCell'
 import { SailingActions as SailingActions_ee8702e49f227826a466e738562c37c1 } from '../../../components/admin/SailingActions'
 import { SailingFilters as SailingFilters_0ba85c529e77b4340522f0eed15d2531 } from '../../../components/admin/SailingFilters'
+import { TrainingListView as TrainingListView_b7d1e6dccebff39962c3ba895682b4fe } from '../../../components/admin/TrainingListView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
@@ -59,6 +60,7 @@ export const importMap = {
   "/components/admin/FullTextCell#FullTextCell": FullTextCell_e04bfd2377652c449b32de2642fbb4e8,
   "/components/admin/SailingActions#SailingActions": SailingActions_ee8702e49f227826a466e738562c37c1,
   "/components/admin/SailingFilters#SailingFilters": SailingFilters_0ba85c529e77b4340522f0eed15d2531,
+  "/components/admin/TrainingListView#TrainingListView": TrainingListView_b7d1e6dccebff39962c3ba895682b4fe,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }

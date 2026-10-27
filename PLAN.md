@@ -457,7 +457,7 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 92 tests)
+### Unit tests (`pnpm test`, Vitest, 145 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
@@ -470,9 +470,13 @@ under their parent for the admin Categories list, and the AI product
 description (input check, prompt, paragraph conversion, free vision model
 selection, model fallback), and the Cruise Fleet Schedule (workbook row
 parsing and dates at 12:00 UTC, filter queries and month ranges, the Ship
-list per cruise line, and the template round trip through the importer).
+list per cruise line, and the template round trip through the importer),
+and the Training Schedule (time zone conversion including daylight-saving
+gaps and overlaps, session times per training type, the form check and
+request body, the cruise dropdowns narrowing and clearing, the month
+grid and session placement, calendar URLs, and cruise change detection).
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 69 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 83 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -480,8 +484,9 @@ Inquiry tests leave Inquiry records behind (delete
 `e2e-*@example.com` inquiries afterwards). Because the tests share the database editors use,
 some catalog tests depend on placeholder content and fail once it is
 replaced; a separate seeded test database is planned (section 13).
-Last run (2026-10-26): 65 passed, 4 catalog filter tests failed on real
-content.
+Last run (2026-10-27): 79 passed, 4 catalog filter tests failed on real
+content. Spec files run in parallel workers, so specs that need admin
+accounts use their own (`E2E_USER_SET`, see CLAUDE.md).
 
 -   Catalog browsing, search, category/subcategory filters, empty states.
 -   Product and general inquiries, validation errors, honeypot.
@@ -503,6 +508,13 @@ content.
     empty state, template download with the 13 headers, Import Excel
     (summary, rejected rows, list refresh; the test sailing is deleted)
     and its refusal of non-.xlsx files.
+-   Training Schedule (its own `e2e-training-*` accounts, trainers with a
+    per-run suffix, and a temporary sailing, all deleted afterwards):
+    admin-only API; Add to Calendar disabled until complete; departure-day
+    and online sessions saved with the right times; a clash refused with
+    the form kept; calendar placement, filters, details, and month
+    navigation; an edit that clashes refused; delete; a changed or removed
+    cruise flagged until updated.
 -   axe accessibility scan (WCAG 2.2 AA) of all public pages, plus the
     chat panel open on desktop and mobile.
 
@@ -702,6 +714,7 @@ Update this section as decisions are confirmed.
 - [x] Admin Categories list as an expandable tree (`components/admin/CategoryListView.tsx`, `lib/category-tree.ts`)
 - [ ] Success Stories: real stories from MONIP (one labelled placeholder story is published locally)
 - [x] Cruise Fleet Schedule (admin only): collection and migration `20261026_152914_cruise_sailings`, 25,896 sailings imported, six filters, Excel template download and Import Excel, unit and e2e tests, editor guide (section 16)
+- [x] Training Schedule (admin only): trainers, port time zones (150 ports pre-filled), training sessions with conflict checks, scheduling form, monthly calendar, "Cruise changed — review"; migrations `20261027_205726_trainers_and_port_time_zones` and `20261027_214735_training_sessions`; deployed 2026-10-27 (section 17)
 
 ## 13. Next Steps
 
@@ -878,3 +891,36 @@ import, filters, template, endpoints), `components/admin/Sailing*.tsx`,
 - [x] Blank Excel template download (`GET /api/cruise-sailings/template`, admins only; round trip through the importer tested)
 - [x] Tests and documentation (7 e2e tests; README, editor guide)
 - [x] Admin Import Excel button (shared import logic with the script; rollback re-verified)
+
+## 17. Training Schedule
+
+### Overview
+An admin-only page, directly below Cruise Fleet Schedule in the admin
+navigation, for scheduling product training for cruise personnel. Each
+session links one cruise from the Cruise Fleet Schedule and one trainer,
+and is shown on a monthly calendar. Full brief and confirmed decisions:
+`docs/briefs/TRAINING_SCHEDULE.md`.
+
+### Implementation decisions
+
+| Topic | Decision | Status |
+| --- | --- | --- |
+| Storage | Payload collections `training-sessions`, `trainers`, `port-time-zones` | Confirmed |
+| Access | Admin role only; never on the public site, search, sitemap, or chat | Confirmed |
+| Training types | Online (date, start time, time zone, 2/4/8 hours); Departure day (cruise start date, arrival to departure); Onboarding (cruise start date to an end date defaulting to the cruise's end date) | Confirmed |
+| Time zones | Online: chosen by the admin. Departure day and Onboarding: the start port's zone from Port time zones; no zone means they cannot be scheduled | Confirmed |
+| Stored times | Start and end as UTC instants plus the IANA time zone | Confirmed |
+| Conflicts | Any overlap for the same trainer; onboarding blocks whole days; back-to-back allowed; no buffer; checked on create and edit | Confirmed |
+| Cruises without times | No departure-day training | Confirmed |
+| Removed trainers | Blocked while they have sessions | Confirmed |
+| Changed cruises | Session keeps a copy of the cruise details; a "Cruise changed — review" warning when the cruise differs or is gone | Confirmed |
+| Calendar | Monthly grid built in the project; each session in its own time zone | Confirmed |
+| Not included | Notifications, .ics export, cancelled status, notes, editor access | Confirmed |
+
+### Steps
+- [x] Trainers and Port time zones collections, migration `20261027_205726_trainers_and_port_time_zones` (pre-fills 150 start ports; the `?` port is skipped; verified against a fresh database)
+- [x] Training sessions collection, migration `20261027_214735_training_sessions`: times worked out on save (`lib/training/schedule.ts`, `lib/training/time.ts`), conflict check on create and edit, cruise copy, trainers with sessions cannot be deleted (`lib/training/hooks.ts`); verified against a fresh database
+- [x] Scheduling form above the calendar (`components/admin/TrainingFormClient.tsx`, `lib/training/form.ts`): cruise chosen with four dropdowns (Cruise line, Ship, Port, Cruise dates; line/ship/port combinations of upcoming sailings from one `SELECT DISTINCT` in `lib/training/cruise-options.ts`, dates through REST; each list narrows to the choices above it), trainer dropdown, type-specific fields, live preview using the server's rules, Add to Calendar enabled only when valid; errors keep the form values. Hook errors are public `APIError`s with an explicit name (production bundling breaks `instanceof ValidationError` and empties class names). 4 e2e tests
+- [x] Monthly calendar (custom list view `components/admin/TrainingListView.tsx`, `lib/training/calendar.ts`): Monday-first month grid, Previous month / This month / Next month buttons (links styled as buttons; no limit either way; the month title has a fixed minimum width so they never shift), sessions on their days in their own time zone (onboarding on every day it covers), Trainer / Cruise / Training type filters, details with Edit (Payload edit view; conflicts rechecked) and Delete; month, filters, and selection in the URL; a list of days on narrow screens. Session title set on save. 7 e2e tests
+- [x] "Cruise changed — review" (`lib/training/review.ts`): each session's cruise copy is compared with the live sailing; a banner lists flagged sessions in any month, calendar entries show "Review", and the details list each change with **Update to current cruise details** (an unchanged PATCH, so the hook recalculates times and rechecks conflicts; Payload's Save is disabled on an unchanged form). 8 e2e tests
+- [x] Tests and documentation: 145 unit and 8 Training Schedule e2e tests; editor guide section and troubleshooting rows; full e2e run 79 passed (4 known catalog failures)

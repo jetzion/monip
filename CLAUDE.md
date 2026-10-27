@@ -250,9 +250,13 @@ If credentials, content, access, or a business decision is missing:
 -   For admin-only checks, `pnpm payload run scripts/e2e-users.ts create
     <password>` makes `e2e-admin@example.com` and `e2e-editor@example.com`;
     run it with `delete` afterwards (the Cruise Fleet Schedule e2e tests
-    do both). Deleting them leaves their `payload_preferences` rows;
+    do both). Spec files run in parallel workers, so each spec that needs
+    these accounts sets `E2E_USER_SET=<name>` for its own
+    `e2e-<name>-admin@example.com` (the Training Schedule spec uses
+    `training`). Deleting them leaves their `payload_preferences` rows;
     remove rows no longer linked to an existing user.
 -   In development, `payload run` scripts sync the schema before running,
     so hand-made constraints vanish; use `NODE_ENV=production` to avoid it.
--   Cruise sailings are commercially sensitive: keep them admin-only and
+-   Cruise sailings and the Training Schedule (sessions, trainers, port
+    time zones) are commercially sensitive: keep them admin-only and
     out of public pages, search, the sitemap, and the chat.

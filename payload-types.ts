@@ -78,6 +78,9 @@ export interface Config {
     pages: Page;
     inquiries: Inquiry;
     'cruise-sailings': CruiseSailing;
+    'training-sessions': TrainingSession;
+    trainers: Trainer;
+    'port-time-zones': PortTimeZone;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +99,9 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     'cruise-sailings': CruiseSailingsSelect<false> | CruiseSailingsSelect<true>;
+    'training-sessions': TrainingSessionsSelect<false> | TrainingSessionsSelect<true>;
+    trainers: TrainersSelect<false> | TrainersSelect<true>;
+    'port-time-zones': PortTimeZonesSelect<false> | PortTimeZonesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -601,6 +607,91 @@ export interface CruiseSailing {
   createdAt: string;
 }
 /**
+ * Product training scheduled on cruises. Admins only.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-sessions".
+ */
+export interface TrainingSession {
+  id: number;
+  title?: string | null;
+  /**
+   * One cruise from the Cruise Fleet Schedule (required).
+   */
+  cruise?: (number | null) | CruiseSailing;
+  trainer: number | Trainer;
+  type: 'online' | 'departureDay' | 'onboarding';
+  date?: string | null;
+  /**
+   * 24-hour HH:MM.
+   */
+  startTime?: string | null;
+  /**
+   * Departure day and onboarding use the start port's time zone.
+   */
+  timeZone?: string | null;
+  durationHours?: ('2' | '4' | '8') | null;
+  /**
+   * Defaults to the cruise's end date.
+   */
+  endDate?: string | null;
+  /**
+   * Set on save. Shown in your computer's time zone; the calendar uses the session's own.
+   */
+  startsAt?: string | null;
+  /**
+   * Set on save. Shown in your computer's time zone; the calendar uses the session's own.
+   */
+  endsAt?: string | null;
+  /**
+   * Copied on save, so the session stays readable if the cruise changes or is removed.
+   */
+  cruiseCopy?: {
+    ship?: string | null;
+    cruiseLine?: string | null;
+    startDate?: string | null;
+    endDate?: string | null;
+    startPort?: string | null;
+    arrival?: string | null;
+    departure?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Trainers available in the Training Schedule. Admins only.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trainers".
+ */
+export interface Trainer {
+  id: number;
+  firstName: string;
+  lastName: string;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Time zone of each start port, used by the Training Schedule. The port must be spelled exactly as in the Cruise Fleet Schedule.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "port-time-zones".
+ */
+export interface PortTimeZone {
+  id: number;
+  /**
+   * Exactly as in the Cruise Fleet Schedule, for example "Miami, Florida".
+   */
+  port: string;
+  /**
+   * For example "America/New_York". Search "IANA time zone" plus the city.
+   */
+  timeZone: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -667,6 +758,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'cruise-sailings';
         value: number | CruiseSailing;
+      } | null)
+    | ({
+        relationTo: 'training-sessions';
+        value: number | TrainingSession;
+      } | null)
+    | ({
+        relationTo: 'trainers';
+        value: number | Trainer;
+      } | null)
+    | ({
+        relationTo: 'port-time-zones';
+        value: number | PortTimeZone;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -936,6 +1039,57 @@ export interface CruiseSailingsSelect<T extends boolean = true> {
   source?: T;
   arrival?: T;
   departure?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-sessions_select".
+ */
+export interface TrainingSessionsSelect<T extends boolean = true> {
+  title?: T;
+  cruise?: T;
+  trainer?: T;
+  type?: T;
+  date?: T;
+  startTime?: T;
+  timeZone?: T;
+  durationHours?: T;
+  endDate?: T;
+  startsAt?: T;
+  endsAt?: T;
+  cruiseCopy?:
+    | T
+    | {
+        ship?: T;
+        cruiseLine?: T;
+        startDate?: T;
+        endDate?: T;
+        startPort?: T;
+        arrival?: T;
+        departure?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trainers_select".
+ */
+export interface TrainersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "port-time-zones_select".
+ */
+export interface PortTimeZonesSelect<T extends boolean = true> {
+  port?: T;
+  timeZone?: T;
   updatedAt?: T;
   createdAt?: T;
 }

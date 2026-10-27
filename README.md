@@ -1,6 +1,6 @@
 # MONIP Group website
 
-Next.js 16 + Payload CMS 3 (Postgres). Runs locally for now; deployment to Vercel is prepared but on hold.
+Next.js 16 + Payload CMS 3 (Postgres). A temporary, non-indexed deployment runs at https://monip-group.vercel.app; there is no custom domain yet.
 See `REQUIREMENTS.md`, `PLAN.md` (decisions, progress, next steps), and `Editor_guide_for_MONIP.md` (for content editors).
 
 ## Local setup
@@ -27,7 +27,7 @@ pnpm seed                   # optional: placeholder products, services, and page
 |---|---|
 | `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript |
 | `pnpm test` | Unit tests (Vitest) |
-| `pnpm test:e2e` | Browser and accessibility tests (Playwright + axe) against a production build on port 3100; runs alongside `pnpm dev`; uses the local DB and expects the seeded placeholders (the chat is mocked); creates and then deletes `e2e-admin@example.com` and `e2e-editor@example.com` |
+| `pnpm test:e2e` | Browser and accessibility tests (Playwright + axe) against a production build on port 3100; runs alongside `pnpm dev`; uses the local DB and expects the seeded placeholders (the chat is mocked); creates and then deletes `e2e-admin@example.com` and `e2e-editor@example.com` (or a per-spec set, e.g. `e2e-training-admin@example.com`) |
 | `pnpm seed` | Placeholder content; skips anything that already exists |
 | `pnpm import:sailings "<file.xlsx>"` | Import the workbook's Sailings sheet into the admin-only Cruise Fleet Schedule, as the admin **Import Excel** button does (use the script for workbooks over its 4 MB limit); updates matching sailings (Ship + Start date), adds new ones, keeps the rest, and lists rejected rows |
 | `pnpm generate:types` / `generate:importmap` | Regenerate Payload types / admin import map |

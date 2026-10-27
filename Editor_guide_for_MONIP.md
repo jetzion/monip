@@ -123,6 +123,42 @@ Until the email service is set up, notification emails are not delivered: check 
 - **Add or update sailings in bulk:** click **Download Excel Template**, fill in one row per sailing without renaming the sheet or columns (dates as 2026-10-03, times as 06:00), then click **Import Excel** and choose the file. A summary shows how many sailings were added, updated, unchanged, or rejected, with the row number and reason for each rejected row. Files must be .xlsx and at most 4 MB (the template holds about 25,000 sailings in under 2 MB). If anything goes wrong while saving, nothing is changed.
 - **Updating the data:** an import matches sailings by Ship and Start date. It updates sailings that changed, adds new ones, and keeps sailings that are not in the file. Rows with a missing ship, cruise line, or start date are reported and skipped.
 
+## Training Schedule (admins only)
+
+**Training Schedule**, directly below Cruise Fleet Schedule, is where admins schedule product training for cruise personnel. Each session has one cruise, one trainer, and a training type. Only admins can see it; it never appears on the website or in the chat.
+
+**Before you start**
+
+- **Trainers:** click **Manage trainers** (or open **Trainers** in the menu) to add, edit, or remove trainers; each needs a first and last name. A trainer with scheduled sessions cannot be removed until those sessions are moved to another trainer or deleted.
+- **Port time zones:** departure-day and onboarding sessions use the time zone of the cruise's start port. **Port time zones** lists each start port, spelled exactly as in the Cruise Fleet Schedule, with its time zone (for example "America/New_York"). It was filled in for every port in the schedule; when an import brings a new port, add it here. If a port is missing, the form says which one to add.
+
+**Schedule a session** with the form at the top of the page:
+
+1. Choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Each list narrows to the choices above it. Choosing a ship fills in its cruise line, and its port when it sails from only one. **Cruise dates** lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
+2. Choose the **Trainer**.
+3. Choose the **Training type**:
+   - **Online training:** pick the date, start time, time zone, and duration (2, 4, or 8 hours).
+   - **Departure day training:** runs on the cruise's start date, from its arrival to its departure time, in the port's time zone. You cannot change these times. Not available for cruises without both times.
+   - **Onboarding training:** runs every day from the cruise's start date to its end date. You can choose an earlier or later end date, but not one before the start.
+4. Check the line next to **Add to Calendar**: it shows the session as it will be saved, or what is still missing. The button works only when everything is filled in correctly.
+5. Click **Add to Calendar**. A confirmation appears and the form clears. If it cannot be saved, the reason appears below and your choices are kept.
+
+**Conflicts:** a trainer cannot have two sessions that overlap, counting time zones (09:00 in London is 04:00 in New York). Onboarding blocks whole days. Back-to-back sessions are fine: one may start when another ends. A clash is refused with the session it clashes with.
+
+**The calendar**
+
+- Shows one month; use the **Previous month**, **This month**, and **Next month** buttons. Each session shows its start time (or "All day"), type, trainer, and ship, colored by type. Onboarding appears on every day it covers.
+- Times are shown in each session's own time zone, which the details name.
+- **Filter** by Trainer, Cruise, and Training type; **Clear filters** shows everything again.
+- **Click a session** to see its full details, with **Edit**, **Delete** (asks first), and **Close**. Editing opens the session's own page; saving checks for conflicts again.
+- On a phone, the calendar becomes a list of the days that have sessions.
+
+**When a cruise changes:** if a sailing's dates, times, port, or ship change after training is scheduled (for example through an Excel import), or the sailing is deleted, the session is not changed. Instead a "Cruise changed" box at the top lists every session to review, the session shows **Review** in the calendar, and its details list what changed (for example "Departure: 16:00 → 18:00"). Then either:
+
+- click **Update to current cruise details** to move the session to the cruise's new dates and times (conflicts are checked again);
+- **Edit** it, for example to choose another cruise when the original was removed; or
+- **Delete** it.
+
 ## Website chat
 
 The chat assistant, David, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, the client list, and the offices. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to David's name. Conversations are not saved.
@@ -149,5 +185,10 @@ Publish only accurate, approved information; anything on the site is a public cl
 | A page or menu link is missing | Pages, Services, and their links appear only once something is published there. |
 | Live Preview shows "Log in to the admin" | Your session expired. Log in again, then reopen the preview. |
 | A product page shows "Page not found" | The product is unpublished, or its slug changed. |
-| Cannot see Inquiries or Users | Those are admin-only. Ask an admin. |
+| Cannot see Inquiries, Users, Cruise Fleet Schedule, or Training Schedule | Those are admin-only. Ask an admin. |
+| "This trainer is already booked" | The trainer has a session that overlaps. Choose another trainer or time, or change the other session first. |
+| "No time zone for start port …" | Add the port under **Port time zones**, spelled exactly as shown, then try again. |
+| Departure day training is not available | The cruise has no arrival or departure time in the Cruise Fleet Schedule. Add the times to the sailing, or choose another training type. |
+| A trainer cannot be deleted | They still have scheduled sessions. Move those sessions to another trainer or delete them first. |
+| "Cruise changed — review" | The cruise was changed or removed after the session was scheduled. Open the session from the box and update, edit, or delete it. |
 | A "<No Name>" item appears in a list | Opening **Create New** saves an empty draft straight away. If you left without filling it in, open it and delete it. Empty drafts never appear on the site. |
