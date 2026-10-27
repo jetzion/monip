@@ -262,10 +262,16 @@ If credentials, content, access, or a business decision is missing:
     do both). Spec files run in parallel workers, so each spec that needs
     these accounts sets `E2E_USER_SET=<name>` for its own
     `e2e-<name>-admin@example.com` (the Training Schedule spec uses
-    `training`). Deleting them leaves their `payload_preferences` rows;
-    remove rows no longer linked to an existing user.
+    `training`, the training report spec `report`). Deleting them leaves
+    their `payload_preferences` rows; remove rows no longer linked to an
+    existing user.
 -   In development, `payload run` scripts sync the schema before running,
     so hand-made constraints vanish; use `NODE_ENV=production` to avoid it.
 -   Cruise sailings and the Training Schedule (sessions, trainers, port
-    time zones) are commercially sensitive: keep them admin-only and
-    out of public pages, search, the sitemap, and the chat.
+    time zones, the training report and its PDF) are commercially
+    sensitive: keep them admin-only and out of public pages, search, the
+    sitemap, and the chat.
+-   Custom admin root views (such as `/admin/training-report`, registered
+    in `payload.config.ts` under `admin.components.views`) get no admin
+    layout or access check from Payload: wrap them in `DefaultTemplate`
+    and check the admin role in the view.

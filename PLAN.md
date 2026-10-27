@@ -50,6 +50,8 @@ requirements.
     chat, called only from the server route `POST /api/chat`, and for the
     admin "Write description with AI" button (`POST /api/products/describe`,
     logged-in editors only).
+-   **@react-pdf/renderer** for server-built PDFs (the admin training
+    report).
 
 ### Architectural principles
 
@@ -92,9 +94,9 @@ Current structure (no `src/` directory):
 ├── access/  fields/  hooks/    # access rules, slug field, revalidation hooks
 ├── components/                 # layout, home, products, stories, forms, content, media, preview, chat, ui;
 │                               # admin/ holds custom admin views (Categories tree, AI description button,
-│                               # Cruise Fleet Schedule filters and import, Training Schedule form and calendar)
+│                               # Cruise Fleet Schedule filters and import, Training Schedule form, calendar, and report)
 ├── lib/                        # queries/, validation/, inquiries/, chat/, describe/ (AI product description),
-│                               # sailings/ (Cruise Fleet Schedule), training/ (Training Schedule), site, seo, preview helpers
+│                               # sailings/ (Cruise Fleet Schedule), training/ (Training Schedule and report PDF), site, seo, preview helpers
 ├── migrations/                 # Payload migrations (generated)
 ├── scripts/                    # seed.ts (dev-only placeholders), import-sailings.ts, e2e-users.ts (e2e admin/editor accounts)
 ├── docs/briefs/                # original feature requests (history only)
@@ -651,7 +653,7 @@ Update this section as decisions are confirmed.
 | Product card images | Whole image shown (`object-contain`), not cropped, so samples are not misrepresented (2026-10-25) | Confirmed |
 | AI product description | Admin button drafts Description from images and data via OpenRouter; free vision models first, then `OPENROUTER_MODEL`; fills the form only, editor reviews and saves (2026-10-25) | Confirmed |
 | Cruise Fleet Schedule | Internal admin-only tool for cruise sailings (Payload collection, Excel template and import); never public, in search, the sitemap, or the chat. Approved 2026-10-26; details in section 16 | Confirmed |
-| Training Schedule | Internal admin-only tool to schedule product training on cruises (trainers, port time zones, sessions with conflict checks, monthly calendar); never public, in search, the sitemap, or the chat. Approved 2026-10-27; details in section 17 | Confirmed |
+| Training Schedule | Internal admin-only tool to schedule product training on cruises (trainers, port time zones, sessions with conflict checks, monthly calendar); never public, in search, the sitemap, or the chat. Approved 2026-10-27; training report with PDF download added the same day; details in section 17 | Confirmed |
 | Admin favicon | Red tile with the white M (`public/admin-favicon.png`, `admin.meta.icons`) instead of the Payload icon (2026-10-26) | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
@@ -730,7 +732,7 @@ Update this section as decisions are confirmed.
 - [ ] Success Stories: real stories from MONIP (one labelled placeholder story is published locally)
 - [x] Cruise Fleet Schedule (admin only): collection and migration `20261026_152914_cruise_sailings`, 25,896 sailings imported, six filters, Excel template download and Import Excel, unit and e2e tests, editor guide (section 16)
 - [x] Training Schedule (admin only): trainers, port time zones (150 ports pre-filled), training sessions with conflict checks, scheduling form, monthly calendar, "Cruise changed — review"; migrations `20261027_205726_trainers_and_port_time_zones` and `20261027_214735_training_sessions`; deployed 2026-10-27 (section 17)
-- [x] Training report (admin only): one trainer or all over a month range, grouped by trainer or by date, PDF download (section 17)
+- [x] Training report (admin only): one trainer or all over a month range, grouped by trainer or by date, PDF download; deployed 2026-10-27 (section 17)
 
 ## 13. Next Steps
 
@@ -765,12 +767,19 @@ Update this section as decisions are confirmed.
 -   Cruise Fleet Schedule: the real start ports for the two sailings
     recorded as `?` in the workbook (Celebrity Reflection 2025-07-26,
     Iona 2025-10-23).
+-   Training report totals: keep counting whole sessions (onboarding from
+    28 Dec to 5 Jan counts all its days in a January report), or count
+    only the days inside the chosen months.
 
 **Deployment follow-ups**
 
 -   Connect GitHub to the MONIP Vercel account so pushes to `main`
     deploy automatically (until then, deploy with
     `vercel deploy --prod --scope monip`).
+-   Training report on production: the page loads and the PDF endpoint
+    refuses anonymous requests (401); an admin still needs to open the
+    report and download a PDF once (verified locally on a production
+    build).
 -   Production is now the source of truth for content; do not copy the
     local database over it again.
 -   2026-10-27: production's `payload_migrations` id sequence was behind
@@ -952,4 +961,4 @@ and is shown on a monthly calendar. Full brief and confirmed decisions:
 - [x] Monthly calendar (custom list view `components/admin/TrainingListView.tsx`, `lib/training/calendar.ts`): Monday-first month grid, Previous month / This month / Next month buttons (Payload's primary button, as Add to Calendar, rendered as links; equal width, sharing the row on phones; no limit either way; the month title has a fixed minimum width so they never shift), sessions on their days in their own time zone (onboarding on every day it covers), Trainer / Cruise / Training type filters, details with Edit (Payload edit view; conflicts rechecked) and Delete; month, filters, and selection in the URL; a list of days on narrow screens. Session title set on save. 7 e2e tests
 - [x] "Cruise changed — review" (`lib/training/review.ts`): each session's cruise copy is compared with the live sailing; a banner lists flagged sessions in any month, calendar entries show "Review", and the details list each change with **Update to current cruise details** (an unchanged PATCH, so the hook recalculates times and rechecks conflicts; Payload's Save is disabled on an unchanged form). 8 e2e tests
 - [x] Tests and documentation: 145 unit and 8 Training Schedule e2e tests; editor guide section and troubleshooting rows; full e2e run 79 passed (4 known catalog failures)
-- [x] Training report (`lib/training/report.ts` rules, `report-data.ts` query, `report-pdf.tsx`, `report-endpoint.ts`; `components/admin/TrainingReport*.tsx`): page with Trainer, From, To, and Layout choices stored in the URL, tables that scroll sideways on phones, Download PDF. 18 unit and 7 e2e tests (`tests/e2e/training-report.spec.ts`, its own `e2e-report-*` accounts)
+- [x] Training report (`lib/training/report.ts` rules, `report-data.ts` query, `report-pdf.tsx`, `report-endpoint.ts`; `components/admin/TrainingReport*.tsx`): page with Trainer, From, To, and Layout choices stored in the URL, tables that scroll sideways on phones, Download PDF. 18 unit and 7 e2e tests (`tests/e2e/training-report.spec.ts`, its own `e2e-report-*` accounts). Deployed 2026-10-27
