@@ -159,6 +159,14 @@ Until the email service is set up, notification emails are not delivered: check 
 - **Edit** it, for example to choose another cruise when the original was removed; or
 - **Delete** it.
 
+**Training report:** click **Training report** below the page title (or go to `/admin/training-report`).
+
+1. Choose a **Trainer**, or leave it on **All trainers**.
+2. Choose the **From** and **To** months. A session is included when any of its days falls in those months, so onboarding that starts in the previous month still appears.
+3. Choose the **Layout**: **Group by trainer** (a section per trainer, alphabetical by last name, each with its own totals) or **List by date** (one list with a Trainer column).
+4. The report updates as you choose. Each line shows the dates, time, time zone, training type, cruise line, ship, start port, and cruise dates; totals count sessions, hours of online and departure-day training, and days of onboarding (whole sessions).
+5. Click **Download PDF** for the same report as a PDF file (US Letter, landscape), marked confidential.
+
 ## Website chat
 
 The chat assistant, David, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, the client list, and the offices. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to David's name. Conversations are not saved.

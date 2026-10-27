@@ -455,6 +455,7 @@ html {
     height: 110px;
     padding: 4px;
     vertical-align: top;
+    overflow-wrap: anywhere;
     border: 1px solid var(--theme-elevation-150);
   }
 
@@ -659,4 +660,59 @@ html {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+// Training report: options, tables per trainer or by date, PDF download.
+.training-report__heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px 16px;
+  margin-bottom: 16px;
+
+  h2,
+  p,
+  .btn {
+    margin: 0;
+  }
+}
+
+.training-report__group h3 {
+  margin: 24px 0 8px;
+}
+
+.training-report__table {
+  overflow-x: auto;
+
+  // Fixed columns line up across trainer sections; narrow screens scroll sideways.
+  table {
+    width: 100%;
+    min-width: 960px;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--theme-elevation-150);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  th {
+    background: var(--theme-elevation-50);
+    white-space: nowrap;
+  }
+}
+
+.training-report__totals {
+  margin: 8px 0 0;
+  font-weight: 600;
+}
+
+.training-report__error {
+  color: var(--theme-error-500);
 }

@@ -77,8 +77,8 @@ accessibility, performance, and lead generation.
     2026-10-23; see PLAN.md.)
 -   Internal admin tools. (An admin-only Cruise Fleet Schedule with
     Excel import was approved on 2026-10-26; see PLAN.md section 16.
-    An admin-only Training Schedule was approved on 2026-10-27; see
-    PLAN.md section 17.)
+    An admin-only Training Schedule was approved on 2026-10-27, and its
+    PDF training report on 2026-10-27; see PLAN.md section 17.)
 
 These may be added later after requirements and budget are confirmed.
 

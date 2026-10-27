@@ -44,6 +44,14 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      views: {
+        trainingReport: {
+          Component: "/components/admin/TrainingReportView#TrainingReportView",
+          path: "/training-report",
+        },
+      },
+    },
     meta: {
       icons: [{ rel: "icon", type: "image/png", sizes: "48x48", url: "/admin-favicon.png" }],
     },

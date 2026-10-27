@@ -1,4 +1,5 @@
 import { Gutter } from "@payloadcms/ui";
+import Link from "next/link";
 import type { ListViewServerProps, Where } from "payload";
 
 import { calendarHref, gridRange, localDay, monthGrid, monthOf, readParams, type CalendarSession } from "@/lib/training/calendar";
@@ -111,6 +112,9 @@ export async function TrainingListView({ payload, user, searchParams, collection
         <header className="training-schedule__header">
           <h1>{collectionConfig.labels.plural as string}</h1>
           <p>{collectionConfig.admin.description as string}</p>
+          <p>
+            <Link href={`${payload.config.routes.admin}/training-report`}>Training report</Link> (PDF download)
+          </p>
         </header>
 
         <TrainingFormClient

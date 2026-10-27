@@ -2,6 +2,7 @@ import type { CollectionConfig, Condition } from "payload";
 
 import { isAdmin } from "../access/roles";
 import { scheduleSession } from "../lib/training/hooks";
+import { reportEndpoint } from "../lib/training/report-endpoint";
 import { DURATIONS, TRAINING_TYPES } from "../lib/training/schedule";
 
 const dayOnly = { date: { pickerAppearance: "dayOnly" as const, displayFormat: "d MMM yyyy" } };
@@ -30,6 +31,7 @@ export const TrainingSessions: CollectionConfig = {
     },
   },
   defaultSort: "startsAt",
+  endpoints: [reportEndpoint],
   access: {
     read: isAdmin,
     create: isAdmin,
