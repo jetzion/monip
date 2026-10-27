@@ -1,3 +1,4 @@
+import { Button } from "@payloadcms/ui";
 import Link from "next/link";
 
 import {
@@ -12,7 +13,6 @@ import {
 import { describeSession, TRAINING_TYPES } from "@/lib/training/schedule";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const BUTTON = "btn btn--style-secondary btn--size-medium";
 const SHORT_TYPE = { online: "Online", departureDay: "Departure day", onboarding: "Onboarding" } as const;
 
 const dayNumber = (day: string) => Number(day.slice(8, 10));
@@ -39,17 +39,17 @@ export function TrainingCalendar({ month, today, days, sessions, params }: Props
     <>
       <div className="training-calendar__bar">
         <h2 id="training-calendar-title">{monthTitle(month)}</h2>
-        {/* Links styled as buttons: they change the URL, so they stay links. */}
+        {/* Payload's primary button, as Add to Calendar, rendered as a link because it changes the URL. */}
         <nav aria-label="Change month" className="training-calendar__nav">
-          <Link className={BUTTON} href={calendarHref(params, { calMonth: shiftMonth(month, -1), calSession: undefined })}>
+          <Button el="link" buttonStyle="primary" size="medium" to={calendarHref(params, { calMonth: shiftMonth(month, -1), calSession: undefined })}>
             Previous month
-          </Link>
-          <Link className={BUTTON} href={calendarHref(params, { calMonth: today.slice(0, 7), calSession: undefined })}>
+          </Button>
+          <Button el="link" buttonStyle="primary" size="medium" to={calendarHref(params, { calMonth: today.slice(0, 7), calSession: undefined })}>
             This month
-          </Link>
-          <Link className={BUTTON} href={calendarHref(params, { calMonth: shiftMonth(month, 1), calSession: undefined })}>
+          </Button>
+          <Button el="link" buttonStyle="primary" size="medium" to={calendarHref(params, { calMonth: shiftMonth(month, 1), calSession: undefined })}>
             Next month
-          </Link>
+          </Button>
         </nav>
         <p className="training-calendar__count">
           {sessions.length} {sessions.length === 1 ? "session" : "sessions"} shown

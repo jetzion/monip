@@ -419,13 +419,19 @@ html {
   }
 }
 
+// Three equal columns, each as wide as the widest label ("Previous month").
 .training-calendar__nav {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 
+  // Centered both ways, so labels stay balanced when one wraps on a phone.
   .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0;
+    text-align: center;
   }
 }
 
