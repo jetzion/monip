@@ -226,7 +226,16 @@ If credentials, content, access, or a business decision is missing:
 -   Current state, decisions, and next steps live in `PLAN.md`
     (sections 10, 12, 13). A temporary deployment runs at
     https://monip-group.vercel.app (Vercel team `monip`); no custom
-    domain or DNS changes without authorization.
+    domain or DNS changes without authorization. GitHub is not connected
+    yet: deploy with `vercel deploy --prod --scope monip`, only when
+    asked. Production is the source of truth for content; never copy the
+    local database over it.
+-   If a deploy's migrations fail with "Value must be unique" on
+    `payload_migrations`, check that table's id sequence first (it was
+    behind its rows on 2026-10-27).
+-   Collection hooks throw public `APIError`s with an explicit name:
+    production bundling breaks `instanceof ValidationError` and empties
+    class names.
 -   Public queries use Payload's Local API with `overrideAccess: false`
     (the Local API skips access control by default).
 -   Restart `pnpm dev` after changing `payload.config.ts` or collections;

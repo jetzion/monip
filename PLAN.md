@@ -2,7 +2,7 @@
 
 **Document:** `PLAN.md`\
 **Status:** In progress --- core site built and tested; temporary
-deployment at https://monip-group.vercel.app (last updated 2026-10-26)\
+deployment at https://monip-group.vercel.app (last updated 2026-10-27)\
 **Companion documents:** `REQUIREMENTS.md`, `CLAUDE.md`, `README.md`,
 `Editor_guide_for_MONIP.md`
 
@@ -86,14 +86,17 @@ Current structure (no `src/` directory):
 │   ├── global-not-found.tsx    # 404 for unmatched URLs
 │   ├── sitemap.ts
 │   └── robots.ts
-├── collections/                # Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries
+├── collections/                # Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries;
+│                               # admin only: CruiseSailings, Trainers, PortTimeZones, TrainingSessions
 ├── globals/                    # Home (homepage copy)
 ├── access/  fields/  hooks/    # access rules, slug field, revalidation hooks
 ├── components/                 # layout, home, products, stories, forms, content, media, preview, chat, ui;
-│                               # admin/ holds custom admin views (Categories tree, AI description button)
-├── lib/                        # queries/, validation/, inquiries/, chat/, describe/ (AI product description), site, seo, preview helpers
+│                               # admin/ holds custom admin views (Categories tree, AI description button,
+│                               # Cruise Fleet Schedule filters and import, Training Schedule form and calendar)
+├── lib/                        # queries/, validation/, inquiries/, chat/, describe/ (AI product description),
+│                               # sailings/ (Cruise Fleet Schedule), training/ (Training Schedule), site, seo, preview helpers
 ├── migrations/                 # Payload migrations (generated)
-├── scripts/seed.ts             # dev-only placeholder content
+├── scripts/                    # seed.ts (dev-only placeholders), import-sailings.ts, e2e-users.ts (e2e admin/editor accounts)
 ├── docs/briefs/                # original feature requests (history only)
 ├── tests/e2e/                  # Playwright; unit tests sit next to lib/ files
 ├── payload.config.ts
@@ -104,9 +107,10 @@ Current structure (no `src/` directory):
 ## 4. Data Model
 
 Built: Product, Product Category, Service, Client, Office, Success Story,
-Page, Home (global), Inquiry, Users, Media. Not built yet: Site Settings
-(waiting for approved content). Success Stories replaced the planned
-Case Study model (2026-10-24).
+Page, Home (global), Inquiry, Users, Media. Admin only: Cruise Sailing
+(section 16), Trainer, Port Time Zone, and Training Session (section
+17). Not built yet: Site Settings (waiting for approved content).
+Success Stories replaced the planned Case Study model (2026-10-24).
 
 ### Product
 
@@ -507,7 +511,9 @@ accounts use their own (`E2E_USER_SET`, see CLAUDE.md).
     combined with AND and cleared, Ship list narrowed by cruise line,
     empty state, template download with the 13 headers, Import Excel
     (summary, rejected rows, list refresh; the test sailing is deleted)
-    and its refusal of non-.xlsx files.
+    and its refusal of non-.xlsx files, the "Hide Ports in order and
+    Source" and "Hide sailings without arrival and departure times"
+    checkboxes.
 -   Training Schedule (its own `e2e-training-*` accounts, trainers with a
     per-run suffix, and a temporary sailing, all deleted afterwards):
     admin-only API; Add to Calendar disabled until complete; departure-day
@@ -638,6 +644,8 @@ Update this section as decisions are confirmed.
 | Product card images | Whole image shown (`object-contain`), not cropped, so samples are not misrepresented (2026-10-25) | Confirmed |
 | AI product description | Admin button drafts Description from images and data via OpenRouter; free vision models first, then `OPENROUTER_MODEL`; fills the form only, editor reviews and saves (2026-10-25) | Confirmed |
 | Cruise Fleet Schedule | Internal admin-only tool for cruise sailings (Payload collection, Excel template and import); never public, in search, the sitemap, or the chat. Approved 2026-10-26; details in section 16 | Confirmed |
+| Training Schedule | Internal admin-only tool to schedule product training on cruises (trainers, port time zones, sessions with conflict checks, monthly calendar); never public, in search, the sitemap, or the chat. Approved 2026-10-27; details in section 17 | Confirmed |
+| Admin favicon | Red tile with the white M (`public/admin-favicon.png`, `admin.meta.icons`) instead of the Payload icon (2026-10-26) | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
@@ -688,7 +696,7 @@ Update this section as decisions are confirmed.
 - [x] Legacy URL redirects: `/project-5` to `/about` (the old site has no other pages)
 - [ ] Default social share image (needs approved brand asset)
 - [x] Deploy readiness (code): initial migration, deploy:build in vercel.json, Vercel Blob (client uploads), Resend adapter, env fail-fast checks, README
-- [ ] Create Neon DB, Vercel Blob store, Vercel project, env vars (needs account owner decision)
+- [x] Create Neon DB, Vercel Blob store, Vercel project, env vars (temporary deployment at https://monip-group.vercel.app, not indexed, 2026-10-26)
 - [ ] Rate limiting (launch blocker; Vercel Firewall rule once the project exists)
 - [x] Accessibility audit (axe, WCAG 2.2 AA) on all public pages, form errors, mobile menu: 0 violations
 - [x] Lighthouse (mobile, local prod build): performance 96-97, accessibility/best practices/SEO 100, CLS 0
@@ -895,7 +903,7 @@ import, filters, template, endpoints), `components/admin/Sailing*.tsx`,
 - [x] "Hide Ports in order and Source" checkbox in the filter bar, ticked by default (both columns are left out of `defaultColumns`): hides both columns through Payload's column state (same as the Columns menu; remembered per admin)
 - [x] "Hide sailings without arrival and departure times" checkbox, ticked by default: the collection's `baseFilter` keeps only sailings with both times (3,263 of 25,896 on 2026-10-27). The choice is an admin preference (`cruise-sailings-times-only`, "hide"/"show"; Payload cannot store a `false` preference). The API and Excel import are not filtered
 - [x] Blank Excel template download (`GET /api/cruise-sailings/template`, admins only; round trip through the importer tested)
-- [x] Tests and documentation (7 e2e tests; README, editor guide)
+- [x] Tests and documentation (9 e2e tests; README, editor guide)
 - [x] Admin Import Excel button (shared import logic with the script; rollback re-verified)
 
 ## 17. Training Schedule
