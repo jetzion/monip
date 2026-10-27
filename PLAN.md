@@ -757,6 +757,12 @@ Update this section as decisions are confirmed.
     `vercel deploy --prod --scope monip`).
 -   Production is now the source of truth for content; do not copy the
     local database over it again.
+-   2026-10-27: production's `payload_migrations` id sequence was behind
+    its rows (counter at 2, ids up to 14), so the first deploy with new
+    migrations failed and was rolled back. The sequence was moved forward
+    to 14 (every other table's sequence was checked and correct) and the
+    deploy then succeeded. If a deploy fails with "Value must be unique"
+    on `payload_migrations`, check that sequence first.
 -   `INQUIRY_NOTIFY_EMAIL` is not set on Vercel: inquiries are saved
     with `emailStatus: failed` until it and Resend are configured.
 -   Resend account with a verified sending domain.
