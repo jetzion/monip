@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { SectionHeading } from "@/components/content/SectionHeading";
 import { HeroVideo } from "@/components/home/HeroVideo";
@@ -68,6 +69,7 @@ export default async function HomePage() {
           </ButtonLink>
         </div>
       </section>
+      <ChatInvitation page="home" />
     </>
   );
 }

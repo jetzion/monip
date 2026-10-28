@@ -2,6 +2,7 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -69,6 +70,7 @@ export default async function ServicesPage() {
           </ButtonLink>
         </div>
       </div>
+      <ChatInvitation page="services" />
     </>
   );
 }

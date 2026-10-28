@@ -12,6 +12,8 @@
   --color-azure: var(--azure);
   --color-tint: var(--tint);
   --color-on-dark-muted: var(--on-dark-muted);
+  --color-highlight: var(--highlight);
+  --color-highlight-hover: var(--highlight-hover);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -75,6 +77,9 @@
   --navy: #141b3a;
   --azure: #1767ad;
   --tint: #f3f5fb;
+  /* Warm accent outside the logo palette, only where something must stand out (chat invitation). */
+  --highlight: #f5a524;
+  --highlight-hover: #fbbf4a;
   --on-dark-muted: #c7d2f2;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);

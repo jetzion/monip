@@ -69,3 +69,9 @@ export const revalidateHome: GlobalAfterChangeHook = ({ doc, previousDoc, req })
   if (!skip(req) && affectsPublicSite(doc, previousDoc)) revalidatePath("/");
   return doc;
 };
+
+/** Chat invitation settings appear on most pages, so refresh them all. */
+export const revalidateSiteGlobal: GlobalAfterChangeHook = ({ doc, req }) => {
+  if (!skip(req)) revalidatePath("/", "layout");
+  return doc;
+};

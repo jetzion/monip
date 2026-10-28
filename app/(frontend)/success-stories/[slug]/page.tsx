@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { pillClassName } from "@/components/ui/pill";
@@ -135,6 +136,7 @@ export default async function StoryPage({ params }: PageProps<"/success-stories/
           </ButtonLink>
         </div>
       </div>
+      <ChatInvitation page="story" pick={story.invitationQuestion} />
     </>
   );
 }

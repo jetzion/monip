@@ -643,7 +643,7 @@ Update this section as decisions are confirmed.
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
 | Website chat | OpenRouter via `POST /api/chat` (non-streaming JSON). Assistant is named "David" (shown on every reply); friendly greeting without "virtual assistant", but it never claims to be human and says it is an AI if asked; the long AI notice was removed 2026-10-23 and replaced by a small "AI" tag next to David's name on every reply (bot-disclosure laws). Answers only from published CMS content; never prices, lead times, MOQs, certifications; points to the contact form. `provider.data_collection: "deny"`; in-memory rate limit (10/min/IP); nothing stored. Approved 2026-10-23 | Confirmed |
 | Jurisdiction | US | Confirmed |
-| Analytics provider | Not selected (Vercel Web Analytics suggested, cookieless) | Requires decision |
+| Analytics provider | Vercel Web Analytics (cookieless), approved 2026-10-28; Pro plan custom events used for the chat invitation | Confirmed (enable in the Vercel project) |
 | Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
 | Sustainability page | Removed 2026-10-23 at the owner's request; /sustainability now returns 404. The product "Sustainable" label is kept | Confirmed |
 | Navigation | Home, Products, Services, Clients, Success Stories, About (Success Stories once published, 2026-10-24); footer adds Contact and Privacy policy | Confirmed |
@@ -656,6 +656,7 @@ Update this section as decisions are confirmed.
 | Training Schedule | Internal admin-only tool to schedule product training on cruises (trainers, port time zones, sessions with conflict checks, monthly calendar); never public, in search, the sitemap, or the chat. Approved 2026-10-27; training report with PDF download added the same day; details in section 17 | Confirmed |
 | Admin favicon | Red tile with the white M (`public/admin-favicon.png`, `admin.meta.icons`) instead of the Payload icon (2026-10-26) | Confirmed |
 | Admin branding | Full MONIP logo on login, forgot-password, and first-user pages; "M" mark (`public/monip-mark.png`, cropped from the logo) in the breadcrumb; indigo primary buttons, top stripe, tinted sidebar, dashboard card accents, light and dark themes (`components/admin/AdminLogo.tsx`, `AdminIcon.tsx`, `custom.scss`, 2026-10-28) | Confirmed |
+| Chat invitation | Timed question beside "Chat with us": 5 s delay, 10 s display, amber, on up to N page views per tab session (admin sets 1 to 10), AI-picked per page from CMS questions, admin-only switch, Web Analytics events. Requirements: `monip-chat-invitation-requirements.md`; details in section 18 (2026-10-28) | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
@@ -718,11 +719,11 @@ Update this section as decisions are confirmed.
 - [x] Clients list: logo thumbnails (whole logo, `app/(payload)/custom.scss`) and drag-and-drop ordering (Payload `orderable`; migrations add `_order` with the old order, then drop `sort_order`)
 - [ ] Chat: set `OPENROUTER_MODEL` and verify real replies
 - [x] Privacy policy page from `PRIVACY-POLICY.md` (CMS page, footer link)
-- [ ] Privacy policy: add the privacy contact email and a section on the website chat (messages sent to an AI provider)
+- [ ] Privacy policy: add the privacy contact email, a section on the website chat (messages sent to an AI provider), and a line on Vercel Web Analytics (cookieless, anonymous visit and chat-invitation counts)
 - [ ] Fix Placeholder Products 4 and 5: their category "Rings" is now a subcategory (set Category to Cavell Jewelry, Subcategory to Rings)
 - [ ] Separate seeded database for e2e tests (catalog filter test currently fails on real content)
 - [ ] Site Settings global for logo, contact details, footer (needs MONIP content)
-- [ ] Analytics (needs provider decision)
+- [ ] Analytics: Vercel Web Analytics added to the site (section 18); enable it in the Vercel project
 - [ ] Final QA with real content, deployment, editor training, handover
 - [x] Success Stories: collection and migration (`20261024_123343_success_stories`, verified against a fresh database), list page, detail page, navigation, sitemap, unit and e2e tests, editor guide
 - [x] Success Stories: headline and intro from `PLAN.md` set on the page (2026-10-24)
@@ -756,15 +757,15 @@ Update this section as decisions are confirmed.
 -   Approved homepage headline, brand assets (logo, colors, fonts), and a
     default social share image.
 -   Real products, categories, and services to replace every placeholder.
--   Privacy policy: the privacy contact email, and approval of a short
-    section on the website chat (messages go to OpenRouter and a model
-    provider).
+-   Privacy policy: the privacy contact email, and approval of short
+    sections on the website chat (messages go to OpenRouter and a model
+    provider) and on Vercel Web Analytics (cookieless visit counts).
 -   Contact details (phone, email, address) for the site and forms.
 -   Confirmation that each client on the Our clients page is still
     approved to be shown.
 -   Inquiry notification recipient, and whether editors should see
     inquiries.
--   Analytics: approve a provider (Vercel Web Analytics suggested) or none.
+-   Analytics: enable Web Analytics in the Vercel project (Analytics tab); the site code is ready (section 18).
 -   Cruise Fleet Schedule: the real start ports for the two sailings
     recorded as `?` in the workbook (Celebrity Reflection 2025-07-26,
     Iona 2025-10-23).
@@ -963,3 +964,17 @@ and is shown on a monthly calendar. Full brief and confirmed decisions:
 - [x] "Cruise changed — review" (`lib/training/review.ts`): each session's cruise copy is compared with the live sailing; a banner lists flagged sessions in any month, calendar entries show "Review", and the details list each change with **Update to current cruise details** (an unchanged PATCH, so the hook recalculates times and rechecks conflicts; Payload's Save is disabled on an unchanged form). 8 e2e tests
 - [x] Tests and documentation: 145 unit and 8 Training Schedule e2e tests; editor guide section and troubleshooting rows; full e2e run 79 passed (4 known catalog failures)
 - [x] Training report (`lib/training/report.ts` rules, `report-data.ts` query, `report-pdf.tsx`, `report-endpoint.ts`; `components/admin/TrainingReport*.tsx`): page with Trainer, From, To, and Layout choices stored in the URL, tables that scroll sideways on phones, Download PDF. 18 unit and 7 e2e tests (`tests/e2e/training-report.spec.ts`, its own `e2e-report-*` accounts). Deployed 2026-10-27
+
+## 18. Chat Invitation
+
+A timed question beside the "Chat with us" button. Requirements and
+decisions: `monip-chat-invitation-requirements.md` (approved 2026-10-28).
+
+### Steps
+- [x] 1. "Chat invitation" global (`globals/ChatInvitation.ts`): on/off switch (admins only, enforced on the field; off by default) and a question list per page type (Home, Products list, Product detail, Services, Success Stories list, Success Story detail, About, Clients). Public read. Migration `20261028_144457_chat_invitation`, verified against a fresh database
+- [x] 2. AI pick (`lib/invitation/pick.ts`, `hooks.ts`): fixed pages are picked when the global is saved (only lists that changed), Products and Success Stories on publish only (autosaved drafts never call the AI; re-publishing without a change to name/title, summary, or category/industry reuses the pick). The AI replies with a question number; anything else, a missing `OPENROUTER_MODEL`, or a 10-second timeout falls back to the first question. Picks are read-only in the admin (`picks` group, `invitationQuestion` sidebar field). Migration `20261028_145254_chat_invitation_picks`, verified against a fresh database. Products published before this change have no pick until republished; step 3 shows the first question for them, and for any pick no longer in the list
+- [x] 3. Bubble (`components/chat/InvitationBubble.tsx`, server wrapper `ChatInvitation.tsx`, `lib/invitation/question.ts`, `session.ts`): each eligible page renders `<ChatInvitation page=... />` (detail pages pass their saved pick); Contact, Privacy, and 404 never do, and preview hides it. Shown after 5 s of visible tab time, for 6 s (paused while hovered or focused), 300 ms fade (none with reduced motion), inside a `role="status"` region, no focus move. A `sessionStorage` flag limits it to once per tab session, set when shown or when the chat opens. Bubble and chat talk through two window events (`monip:open-chat`, `monip:chat-opened`). Saving the global revalidates every page. Checked in the browser against the dev server (timing, navigation, hover, click, chat-first, excluded pages, hidden tab, phone width, reduced motion); e2e tests come in step 5
+- [x] 4. Vercel Web Analytics (`@vercel/analytics` 2.0.1): `<Analytics />` in the frontend layout only (not the admin, not preview); custom events "Chat invitation shown" and "Chat invitation clicked" with `page` and `question` (no visitor data). In development events are logged to the console, not sent. Still needed: enable Web Analytics in the Vercel project (Analytics tab), and mention it in the privacy policy
+- [x] 5. Tests: 11 unit tests (`lib/invitation/pick.test.ts`, `question.test.ts`) and 11 e2e tests (`tests/e2e/chat-invitation.spec.ts`, its own `e2e-invite-*` accounts): 5 s delay and 6 s display on a paused clock (advanced in 250 ms steps so React renders between timers), once per visit, restart after early navigation, hover pause, click opens the chat, chat-first cancels, hidden tab, Contact and pages without questions, product question, Web Analytics events (read from `window.vaq`, since the analytics script is not served locally), phone layout, axe with the bubble showing, admin-only switch. The spec switches the invitation on for its run and restores the previous settings afterwards. Full run 2026-10-28: 93 passed, 5 failed (the 4 known catalog-filters failures, and the Training Schedule calendar test, which now also finds a real onboarding session on 29 Oct 2026)
+- [x] 6. Editor guide section "Chat invitation" (questions, how the AI chooses, admin-only switch, results in Vercel Analytics), roles table, two troubleshooting rows; README note; privacy policy item now includes Web Analytics
+- [x] 7. Changes after review (2026-10-28): 10 s display; amber bubble (`--highlight` #f5a524, navy text 8.3:1) instead of indigo; admin-only **Times shown per visit** (1 to 10, default 1; migration `20261028_164728_chat_invitation_times_per_visit`, verified against a fresh database). The tab session now counts shows (`monip-chat-invitation-shown`) and records chat opened separately. from 640 px wide the bubble sits beside the chat button (bottom-aligned, `sm:right-[11.5rem]`) so it stays clear of the hero video pause button; phones keep it above. e2e spec now 14 tests, including the bubble colour, the laptop layout, and times-per-visit validation. Deployed 2026-10-28 (the first attempt hung on a stray dev-push row in production `payload_migrations`, deleted in Neon; see CLAUDE.md). Live: switched on, 24 questions, 1 time per visit

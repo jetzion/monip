@@ -113,9 +113,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     home: Home;
+    'chat-invitation': ChatInvitation;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
+    'chat-invitation': ChatInvitationSelect<false> | ChatInvitationSelect<true>;
   };
   locale: null;
   widgets: {
@@ -252,6 +254,10 @@ export interface Product {
    */
   publishedAt?: string | null;
   /**
+   * Chosen by AI from the Chat invitation questions when this page is published.
+   */
+  invitationQuestion?: string | null;
+  /**
    * One or two sentences shown on product cards.
    */
   summary: string;
@@ -386,6 +392,10 @@ export interface SuccessStory {
    * Optional. Shown on the story card and page.
    */
   publicationDate?: string | null;
+  /**
+   * Chosen by AI from the Chat invitation questions when this page is published.
+   */
+  invitationQuestion?: string | null;
   /**
    * Two or three sentences shown on the story card and under the title.
    */
@@ -887,6 +897,7 @@ export interface ProductsSelect<T extends boolean = true> {
   slug?: T;
   featured?: T;
   publishedAt?: T;
+  invitationQuestion?: T;
   summary?: T;
   description?: T;
   primaryImage?: T;
@@ -939,6 +950,7 @@ export interface SuccessStoriesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   publicationDate?: T;
+  invitationQuestion?: T;
   summary?: T;
   featuredImage?: T;
   body?: T;
@@ -1161,6 +1173,89 @@ export interface Home {
   createdAt?: string | null;
 }
 /**
+ * A short question shown beside the "Chat with us" button for 10 seconds. Never shown on Contact, Privacy, or the 404 page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-invitation".
+ */
+export interface ChatInvitation {
+  id: number;
+  /**
+   * Only admins can switch this on or off.
+   */
+  enabled?: boolean | null;
+  /**
+   * How many pages in one browser tab show the invitation (1 to 10), at most once per page. It stops once the visitor opens the chat. Only admins can change this.
+   */
+  timesPerVisit?: number | null;
+  /**
+   * Add a few short questions for each page. AI picks the one that fits each page best. Pages with no questions show no invitation.
+   */
+  questions?: {
+    home?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+    products?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+    product?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+    services?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+    stories?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+    story?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+    about?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+    clients?:
+      | {
+          question: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  /**
+   * Picked when this page is saved. Product and Success Story pages show their own pick, chosen when each is published.
+   */
+  picks?: {
+    home?: string | null;
+    products?: string | null;
+    services?: string | null;
+    stories?: string | null;
+    about?: string | null;
+    clients?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
@@ -1179,6 +1274,79 @@ export interface HomeSelect<T extends boolean = true> {
         buttonLabel?: T;
       };
   _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-invitation_select".
+ */
+export interface ChatInvitationSelect<T extends boolean = true> {
+  enabled?: T;
+  timesPerVisit?: T;
+  questions?:
+    | T
+    | {
+        home?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+        products?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+        product?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+        services?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+        stories?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+        story?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+        about?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+        clients?:
+          | T
+          | {
+              question?: T;
+              id?: T;
+            };
+      };
+  picks?:
+    | T
+    | {
+        home?: T;
+        products?: T;
+        services?: T;
+        stories?: T;
+        about?: T;
+        clients?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

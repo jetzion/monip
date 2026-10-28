@@ -20,6 +20,7 @@ type Options = {
   maxTokens?: number;
   /** OpenRouter model ids tried in order (at most 3); defaults to OPENROUTER_MODEL. */
   models?: string[];
+  timeoutMs?: number;
 };
 
 /**
@@ -27,7 +28,7 @@ type Options = {
  * Server-only: reads OPENROUTER_API_KEY and OPENROUTER_MODEL. Failures are
  * reduced to a reason code so no upstream detail reaches the browser.
  */
-export async function completeChat({ system, messages, siteUrl, maxTokens = MAX_REPLY_TOKENS, models }: Options): Promise<ChatCompletion> {
+export async function completeChat({ system, messages, siteUrl, maxTokens = MAX_REPLY_TOKENS, models, timeoutMs = TIMEOUT_MS }: Options): Promise<ChatCompletion> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   const envModel = process.env.OPENROUTER_MODEL;
   const ids = models ?? (envModel ? [envModel] : []);
@@ -50,7 +51,7 @@ export async function completeChat({ system, messages, siteUrl, maxTokens = MAX_
         // Route only to providers that do not store or train on prompts.
         provider: { data_collection: "deny" },
       }),
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (error) {
     console.error("OpenRouter request failed:", error instanceof Error ? error.name : "unknown");

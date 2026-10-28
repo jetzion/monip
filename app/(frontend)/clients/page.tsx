@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/content/PageHeader";
+import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { CmsImage } from "@/components/media/CmsImage";
 import { contentPageMetadata, requirePage } from "@/lib/content-page";
 import { populated } from "@/lib/payload";
@@ -46,6 +47,7 @@ export default async function ClientsPage() {
           </ul>
         </div>
       )}
+      <ChatInvitation page="clients" />
     </>
   );
 }

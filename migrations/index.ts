@@ -14,6 +14,9 @@ import * as migration_20261024_140836_products_page from './20261024_140836_prod
 import * as migration_20261026_152914_cruise_sailings from './20261026_152914_cruise_sailings';
 import * as migration_20261027_205726_trainers_and_port_time_zones from './20261027_205726_trainers_and_port_time_zones';
 import * as migration_20261027_214735_training_sessions from './20261027_214735_training_sessions';
+import * as migration_20261028_144457_chat_invitation from './20261028_144457_chat_invitation';
+import * as migration_20261028_145254_chat_invitation_picks from './20261028_145254_chat_invitation_picks';
+import * as migration_20261028_164728_chat_invitation_times_per_visit from './20261028_164728_chat_invitation_times_per_visit';
 
 export const migrations = [
   {
@@ -94,6 +97,21 @@ export const migrations = [
   {
     up: migration_20261027_214735_training_sessions.up,
     down: migration_20261027_214735_training_sessions.down,
-    name: '20261027_214735_training_sessions'
+    name: '20261027_214735_training_sessions',
+  },
+  {
+    up: migration_20261028_144457_chat_invitation.up,
+    down: migration_20261028_144457_chat_invitation.down,
+    name: '20261028_144457_chat_invitation',
+  },
+  {
+    up: migration_20261028_145254_chat_invitation_picks.up,
+    down: migration_20261028_145254_chat_invitation_picks.down,
+    name: '20261028_145254_chat_invitation_picks',
+  },
+  {
+    up: migration_20261028_164728_chat_invitation_times_per_visit.up,
+    down: migration_20261028_164728_chat_invitation_times_per_visit.down,
+    name: '20261028_164728_chat_invitation_times_per_visit'
   },
 ];

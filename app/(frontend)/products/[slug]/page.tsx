@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { SpecSheet } from "@/components/products/SpecSheet";
@@ -148,6 +149,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
           </ButtonLink>
         </div>
       </div>
+      <ChatInvitation page="product" pick={product.invitationQuestion} />
     </>
   );
 }

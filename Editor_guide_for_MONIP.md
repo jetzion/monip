@@ -12,8 +12,8 @@ While the site is in development, the admin is at http://localhost:3000/admin on
 
 | Role | Can do | Cannot do |
 | --- | --- | --- |
-| Admin | Everything editors can, plus manage users and read website inquiries | — |
-| Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, success stories, offices, pages, the Home page text, and images | See other users, change roles, or read inquiries |
+| Admin | Everything editors can, plus manage users, read website inquiries, and switch the chat invitation on or off | — |
+| Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, success stories, offices, pages, the Home page text, chat invitation questions, and images | See other users, change roles, read inquiries, or switch the chat invitation on or off |
 
 You can change your own name and password from your account page. Only an admin can change someone's role.
 
@@ -171,6 +171,30 @@ Until the email service is set up, notification emails are not delivered: check 
 
 The chat assistant, David, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, the client list, and the offices. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to David's name. Conversations are not saved.
 
+## Chat invitation
+
+The chat invitation is a short question that appears above the "Chat with us" button, for example "Need help finding a product?". Clicking it opens the chat. Visitors never have to close it.
+
+**When visitors see it.** After 5 seconds on a page, for 10 seconds, then it fades away. It stays while the visitor points at it. It is amber so it stands out from the blue chat button. Each visitor sees it on as many pages per visit (a browser tab) as **Times shown per visit** allows, at most once per page, and never after they have opened the chat. It appears on Home, Products, product pages, Services, Success Stories, story pages, About, and Clients; never on Contact or Privacy.
+
+**Writing the questions.** Open **Chat invitation** under Globals. Each page has its own list of questions; add a few short questions (80 characters at most) and click **Save**.
+
+- Keep them short, friendly, and about the visitor's business, for example "Have a sourcing or merchandising question?".
+- Product detail and Success Story detail questions apply to every product or story page, so keep them general enough for all of them.
+- A page with no questions shows no invitation.
+
+**How a question is chosen.** AI picks the question that fits each page best, from that page's list:
+
+- For Home, Products, Services, Success Stories, About, and Clients, it picks when you save the Chat invitation page. The choices appear under **Questions chosen by AI**.
+- For each product and success story, it picks when you publish that item. The choice appears in the sidebar as **Chat invitation question**.
+- If the AI is unavailable, or an item has not been published since the questions changed, the first question in the list is used. To have the AI choose again for a product or story, publish it again.
+
+**Switching it on or off.** Only admins can tick or untick **Show the chat invitation** at the top of the page, then click **Save**. Editors can change the questions but not the switch.
+
+**How often.** Only admins can set **Times shown per visit**, from 1 to 10 (1 at first). With 3, a visitor sees the invitation on up to three pages in the same tab. Keep it low: a question on every page soon becomes annoying.
+
+**Results.** Once Web Analytics is turned on for the website, each time the invitation is shown or clicked is counted, with the page and the question. See the Events section of the Analytics tab in the Vercel dashboard to compare which questions visitors click most.
+
 ## Content rules
 
 Publish only accurate, approved information; anything on the site is a public claim by MONIP.
@@ -200,3 +224,5 @@ Publish only accurate, approved information; anything on the site is a public cl
 | A trainer cannot be deleted | They still have scheduled sessions. Move those sessions to another trainer or delete them first. |
 | "Cruise changed — review" | The cruise was changed or removed after the session was scheduled. Open the session from the box and update, edit, or delete it. |
 | A "<No Name>" item appears in a list | Opening **Create New** saves an empty draft straight away. If you left without filling it in, open it and delete it. Empty drafts never appear on the site. |
+| The chat invitation does not appear | Check that **Show the chat invitation** is ticked and the page has questions. Each visitor sees it only on as many pages as **Times shown per visit** allows: to see it again, open the site in a new tab and wait 5 seconds without opening the chat. It never appears on Contact or Privacy. |
+| A product shows the first question, not the best one | The AI chooses when the product is published. Publish it again. If it still shows the first question, the AI was unavailable; try again later. |

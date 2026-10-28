@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { splitContactLinks } from "@/lib/chat/contact-links";
 import type { ChatMessage } from "@/lib/chat/validate";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
+import { CHAT_OPENED_EVENT, OPEN_CHAT_EVENT, markChatOpened } from "@/lib/invitation/session";
 
 /** Display name of the assistant; also set in the system prompt (lib/chat/knowledge.ts). */
 const ASSISTANT_NAME = "David";
@@ -29,6 +30,19 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const opened = useRef(false);
+
+  // The chat invitation opens the chat; once open, the invitation is not shown again this visit.
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener(OPEN_CHAT_EVENT, show);
+    return () => window.removeEventListener(OPEN_CHAT_EVENT, show);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    markChatOpened();
+    window.dispatchEvent(new Event(CHAT_OPENED_EVENT));
+  }, [open]);
 
   // Focus the input on open; return focus to the toggle after closing (it is
   // hidden on phones while the full-screen panel is open).

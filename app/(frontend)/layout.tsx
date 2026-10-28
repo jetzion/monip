@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 
@@ -45,7 +46,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
-        {!preview && <ChatWidget />}
+        {!preview && (
+          <>
+            <ChatWidget />
+            <Analytics />
+          </>
+        )}
       </body>
     </html>
   );

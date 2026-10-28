@@ -95,6 +95,7 @@ export async function getProductBySlug(slug: string, access: ContentAccess = pub
       labels: true,
       specifications: true,
       seo: true,
+      invitationQuestion: true,
     },
     populate,
   });

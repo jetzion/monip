@@ -1,7 +1,9 @@
 import type { CollectionBeforeChangeHook, CollectionConfig, Where } from "payload";
 
 import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { invitationQuestionField } from "../fields/invitationQuestion";
 import { slugField } from "../fields/slug";
+import { pickProductQuestion } from "../lib/invitation/hooks";
 import { describeEndpoint } from "../lib/describe/endpoint";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 import { revalidateDeletedProduct, revalidateProduct } from "../hooks/revalidate";
@@ -40,7 +42,7 @@ export const Products: CollectionConfig = {
     delete: isLoggedIn,
   },
   hooks: {
-    beforeChange: [setPublishedAt],
+    beforeChange: [setPublishedAt, pickProductQuestion],
     afterChange: [revalidateProduct],
     afterDelete: [revalidateDeletedProduct],
   },
@@ -71,6 +73,7 @@ export const Products: CollectionConfig = {
         description: "Set automatically on first publish.",
       },
     },
+    invitationQuestionField,
     {
       type: "tabs",
       tabs: [

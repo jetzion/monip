@@ -1,8 +1,10 @@
 import type { CollectionConfig } from "payload";
 
 import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { invitationQuestionField } from "../fields/invitationQuestion";
 import { slugField } from "../fields/slug";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
+import { pickStoryQuestion } from "../lib/invitation/hooks";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 
 export const SuccessStories: CollectionConfig = {
@@ -27,6 +29,7 @@ export const SuccessStories: CollectionConfig = {
   },
   // Stories change the navigation (shown only when one is published), so refresh every page.
   hooks: {
+    beforeChange: [pickStoryQuestion],
     afterChange: [revalidateSite],
     afterDelete: [revalidateSiteOnDelete],
   },
@@ -47,6 +50,7 @@ export const SuccessStories: CollectionConfig = {
         description: "Optional. Shown on the story card and page.",
       },
     },
+    invitationQuestionField,
     {
       type: "tabs",
       tabs: [

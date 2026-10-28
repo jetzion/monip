@@ -233,6 +233,12 @@ If credentials, content, access, or a business decision is missing:
 -   If a deploy's migrations fail with "Value must be unique" on
     `payload_migrations`, check that table's id sequence first (it was
     behind its rows on 2026-10-27).
+-   If a deploy hangs at "It looks like you've run Payload in dev mode",
+    `payload_migrations` holds a `batch = -1` row: something ran `pnpm dev`
+    against that database (on 2026-10-28, a `.env.local` filled by
+    `vercel env pull`). Check the schema matches, then delete that row in
+    the Neon SQL editor and redeploy. Never pull production env vars into
+    the project.
 -   Collection hooks throw public `APIError`s with an explicit name:
     production bundling breaks `instanceof ValidationError` and empties
     class names.
@@ -262,7 +268,8 @@ If credentials, content, access, or a business decision is missing:
     do both). Spec files run in parallel workers, so each spec that needs
     these accounts sets `E2E_USER_SET=<name>` for its own
     `e2e-<name>-admin@example.com` (the Training Schedule spec uses
-    `training`, the training report spec `report`). Deleting them leaves
+    `training`, the training report spec `report`, the chat invitation spec
+    `invite`). Deleting them leaves
     their `payload_preferences` rows; remove rows no longer linked to an
     existing user.
 -   In development, `payload run` scripts sync the schema before running,

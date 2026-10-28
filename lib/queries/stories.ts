@@ -36,7 +36,7 @@ export async function getStoryBySlug(slug: string, access: ContentAccess = publi
     depth: 1,
     limit: 1,
     where: { slug: { equals: slug } },
-    select: { ...cardFields, body: true, gallery: true, seo: true },
+    select: { ...cardFields, body: true, gallery: true, seo: true, invitationQuestion: true },
     populate,
   });
   return docs[0] ?? null;

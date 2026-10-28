@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CatalogFilters } from "@/components/products/CatalogFilters";
 import { ProductCard } from "@/components/products/ProductCard";
@@ -95,6 +96,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
           </ul>
         )}
       </div>
+      <ChatInvitation page="products" />
     </>
   );
 }

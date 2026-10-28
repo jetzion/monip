@@ -18,6 +18,7 @@ pnpm seed                   # optional: placeholder products, services, and page
 - The first account created at `/admin` becomes an admin.
 - Without `RESEND_API_KEY`, emails are printed to the `pnpm dev` console.
 - The website chat ("Chat with us") needs `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` in `.env`; without them it shows "not available".
+- The chat invitation (admin: **Chat invitation**) is off until an admin switches it on. Without OpenRouter its AI pick falls back to the first question. Vercel Web Analytics only sends data on Vercel; locally it logs to the browser console.
 - Restart `pnpm dev` after changing `payload.config.ts` or a collection; Payload reads its config at startup.
 - Live Preview (eye icon in the admin) needs `SITE_URL` to match the address the site is served from.
 

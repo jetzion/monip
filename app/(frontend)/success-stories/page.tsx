@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/content/PageHeader";
+import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { StoryCard } from "@/components/stories/StoryCard";
 import { contentPageMetadata, requirePage } from "@/lib/content-page";
 import { contentAccess } from "@/lib/queries/access";
@@ -42,6 +43,7 @@ export default async function SuccessStoriesPage() {
           </ul>
         )}
       </div>
+      <ChatInvitation page="stories" />
     </>
   );
 }
