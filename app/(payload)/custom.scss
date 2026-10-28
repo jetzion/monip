@@ -9,6 +9,93 @@ html {
   font-size: 14px;
 }
 
+// MONIP brand colors (from the logo, matching the public site's palette).
+:root {
+  --monip-indigo: #3d4ea0;
+  --monip-indigo-hover: #2f3d82;
+  --monip-azure: #1767ad;
+  --monip-tint: #f3f5fb;
+  --monip-accent-text: var(--monip-indigo);
+}
+
+html[data-theme="dark"] {
+  --monip-tint: #161b33;
+  --monip-accent-text: #9fb0ec;
+}
+
+// Primary buttons in brand indigo instead of Payload's near-black.
+.btn--style-primary:not(.btn--disabled) {
+  --bg-color: var(--monip-indigo);
+  --hover-bg: var(--monip-indigo-hover);
+  --color: #fff;
+}
+
+// A brand stripe across the top of every admin page.
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: 3px;
+  z-index: calc(var(--z-modal) + 1);
+  background: linear-gradient(90deg, var(--monip-indigo), var(--monip-azure));
+}
+
+// Left navigation: tinted panel, indigo group headings and active marker.
+.nav {
+  background: var(--monip-tint);
+}
+
+.nav .nav-group__toggle {
+  color: var(--monip-accent-text);
+  font-weight: 600;
+}
+
+.nav .nav__link.active,
+.nav .nav__link:has(.nav__link-indicator) {
+  color: var(--monip-accent-text);
+}
+
+.nav__link-indicator {
+  background: var(--monip-indigo);
+}
+
+// Dashboard cards: indigo left edge, tinted on hover.
+.card {
+  box-shadow: inset 4px 0 0 var(--monip-indigo);
+}
+
+.card:hover {
+  border-color: var(--monip-indigo);
+  background: var(--monip-tint);
+}
+
+.collections__label {
+  color: var(--monip-accent-text);
+}
+
+// Breadcrumb home link shows the "M" mark at its natural width.
+.step-nav__home {
+  width: auto;
+}
+
+.monip-admin-icon {
+  display: block;
+  width: auto;
+  height: 18px;
+}
+
+// Login, forgot-password, and first-user pages: logo on a soft brand backdrop.
+.template-minimal {
+  background-image:
+    radial-gradient(circle at 15% 10%, rgb(61 78 160 / 0.14), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgb(23 103 173 / 0.12), transparent 45%);
+}
+
+.monip-admin-logo {
+  width: 180px;
+  height: auto;
+}
+
 // List tables: more room between columns; dates stay on one line.
 .table th,
 .table td {

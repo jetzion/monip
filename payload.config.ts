@@ -45,6 +45,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
+      graphics: {
+        Logo: "/components/admin/AdminLogo#AdminLogo",
+        Icon: "/components/admin/AdminIcon#AdminIcon",
+      },
       views: {
         trainingReport: {
           Component: "/components/admin/TrainingReportView#TrainingReportView",
@@ -53,6 +57,7 @@ export default buildConfig({
       },
     },
     meta: {
+      titleSuffix: " - MONIP Admin",
       icons: [{ rel: "icon", type: "image/png", sizes: "48x48", url: "/admin-favicon.png" }],
     },
     livePreview: {
