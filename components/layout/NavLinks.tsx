@@ -35,7 +35,7 @@ export function NavLinks({ items, onNavigate, variant }: Props) {
                   : "block border-l-4 py-3 pl-3 font-medium",
                 active
                   ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground",
+                  : "border-transparent text-muted-foreground hover:border-primary/30",
               )}
             >
               {item.label}

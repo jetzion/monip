@@ -142,11 +142,64 @@
   html {
     @apply font-sans;
   }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background-color: rgb(61 78 160 / 0.2);
+  }
 }
 /* Wide Archivo setting for headlines and the wordmark. */
 @utility font-display {
   font-variation-settings: "wdth" 118;
   letter-spacing: -0.015em;
+}
+
+/* Page transitions (app/(frontend)/template.tsx): old page fades out quickly, new page fades in and settles. */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-old(.page-exit) {
+  animation: 140ms ease-in both page-fade reverse;
+}
+::view-transition-new(.page-enter) {
+  animation: 320ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms both page-fade;
+}
+@keyframes page-fade {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* The header stays put while content changes underneath it. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }
 
 /* Card depth: clearly visible against the tinted page background. */

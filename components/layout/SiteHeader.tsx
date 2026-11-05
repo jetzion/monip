@@ -8,7 +8,7 @@ import { SiteLogo } from "./SiteLogo";
 export async function SiteHeader() {
   const { main } = await getNavigation();
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-white shadow-sm">
+    <header className="sticky top-0 z-50 border-b border-border bg-white/85 shadow-sm backdrop-blur-md backdrop-saturate-150 [view-transition-name:site-header]">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-8 px-4 sm:px-6">
         <SiteLogo />
         <div className="hidden items-center gap-8 lg:flex">

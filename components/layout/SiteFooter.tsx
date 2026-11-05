@@ -14,7 +14,7 @@ export async function SiteFooter() {
           <ul className="flex flex-wrap gap-6 text-sm">
             {footer.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="text-muted-foreground hover:text-foreground">
+                <Link href={item.href} className="text-muted-foreground transition-colors hover:text-foreground">
                   {item.label}
                 </Link>
               </li>
