@@ -181,8 +181,8 @@
   }
 }
 
-/* Product photo morphs from its catalog card to the detail page (ProductImageTransition). */
-::view-transition-group(.product-morph) {
+/* Card photo morphs into the detail page photo (components/media/ImageMorph.tsx). */
+::view-transition-group(.image-morph) {
   animation-duration: 700ms;
   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
 }

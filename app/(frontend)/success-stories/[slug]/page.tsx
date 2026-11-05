@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
+import { ImageMorph } from "@/components/media/ImageMorph";
 import { pillClassName } from "@/components/ui/pill";
 import { ButtonLink } from "@/components/ui/button-link";
 import { populated } from "@/lib/payload";
@@ -109,9 +110,11 @@ export default async function StoryPage({ params }: PageProps<"/success-stories/
       </PageHeader>
 
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
-          <CmsImage image={story.featuredImage} sizes="(min-width: 896px) 860px, 100vw" className="h-auto w-full" eager />
-        </div>
+        <ImageMorph name={`story-image-${story.slug}`}>
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
+            <CmsImage image={story.featuredImage} sizes="(min-width: 896px) 860px, 100vw" className="h-auto w-full" eager />
+          </div>
+        </ImageMorph>
 
         {story.body && (
           <div className="mt-10">

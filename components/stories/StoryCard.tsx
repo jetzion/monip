@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { CmsImage } from "@/components/media/CmsImage";
+import { ImageMorph } from "@/components/media/ImageMorph";
 import { formatStoryDate, visibleCustomer } from "@/lib/stories";
 import type { SuccessStory } from "@/payload-types";
 
@@ -17,14 +18,16 @@ export function StoryCard({ story, eager }: Props) {
   const date = formatStoryDate(story.publicationDate);
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition duration-200 hover:border-primary/50 hover:shadow-card-hover motion-safe:hover:-translate-y-1 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2">
-      <div className="aspect-[4/3] overflow-hidden border-b border-border bg-tint">
-        <CmsImage
-          image={story.featuredImage}
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          eager={eager}
-          className="h-full w-full object-cover transition duration-300 motion-safe:group-hover:scale-[1.02]"
-        />
-      </div>
+      <ImageMorph name={`story-image-${story.slug}`}>
+        <div className="aspect-[4/3] overflow-hidden border-b border-border bg-tint">
+          <CmsImage
+            image={story.featuredImage}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            eager={eager}
+            className="h-full w-full object-cover transition duration-300 motion-safe:group-hover:scale-[1.02]"
+          />
+        </div>
+      </ImageMorph>
       <div className="flex flex-1 flex-col gap-2 p-5">
         {story.industry && (
           <p className="self-start rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-primary">
