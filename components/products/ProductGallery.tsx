@@ -2,7 +2,8 @@
 
 import { cn } from "cn";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 import { ImageMorph } from "@/components/media/ImageMorph";
 
@@ -10,19 +11,46 @@ export type GalleryImage = { url: string; alt: string; width: number; height: nu
 
 type Props = { images: GalleryImage[]; morphName: string };
 
+/** View transition name that moves from the clicked thumbnail to the preview. */
+const PICK = "gallery-pick";
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 /**
- * Large preview with a row of thumbnails below. Clicking a thumbnail shows it
- * in the preview; the selected thumbnail is outlined and its name underlined.
+ * Large preview with a row of thumbnails below. Clicking a thumbnail morphs
+ * it into the preview; the selected thumbnail is outlined and its name underlined.
  */
 export function ProductGallery({ images, morphName }: Props) {
   const [selected, setSelected] = useState(0);
+  const previewRef = useRef<HTMLDivElement>(null);
   const current = images[selected];
   if (!current) return null;
+
+  /** Shares one transition name between the thumbnail (before) and the preview (after). */
+  const select = (index: number, thumb: HTMLElement) => {
+    const preview = previewRef.current;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (index === selected || !preview || reduced || !document.startViewTransition) {
+      setSelected(index);
+      return;
+    }
+    thumb.style.viewTransitionName = PICK;
+    const transition = document.startViewTransition(async () => {
+      thumb.style.viewTransitionName = "";
+      flushSync(() => setSelected(index));
+      preview.style.viewTransitionName = PICK;
+      // Wait for the large image so the morph lands on the new picture.
+      await Promise.race([preview.querySelector("img")?.decode(), wait(1500)]).catch(() => {});
+    });
+    void transition.finished.finally(() => {
+      preview.style.viewTransitionName = "";
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
       <ImageMorph name={morphName}>
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
+        <div ref={previewRef} className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
           <Image
             src={current.url}
             alt={current.alt}
@@ -42,7 +70,7 @@ export function ProductGallery({ images, morphName }: Props) {
               <li key={index}>
                 <button
                   type="button"
-                  onClick={() => setSelected(index)}
+                  onClick={(event) => select(index, event.currentTarget.firstElementChild as HTMLElement)}
                   aria-pressed={active}
                   aria-label={`Show image: ${image.name || image.alt}`}
                   className="group flex w-full cursor-pointer flex-col gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"

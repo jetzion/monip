@@ -222,6 +222,13 @@
   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* Clicked gallery thumbnail moves and grows into the preview (components/products/ProductGallery.tsx). */
+::view-transition-group(gallery-pick) {
+  animation-duration: 550ms;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 10;
+}
+
 /* Desktop nav: the active underline glides between links on navigation; others draw an underline on hover. */
 .nav-indicator {
   position: absolute;
