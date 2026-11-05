@@ -239,6 +239,10 @@ If credentials, content, access, or a business decision is missing:
     `vercel env pull`). Check the schema matches, then delete that row in
     the Neon SQL editor and redeploy. Never pull production env vars into
     the project.
+-   Turbopack's cache can build stale `globals.css` (TSX changes still
+    land). After a CSS change, grep the built CSS for the new rule: locally,
+    move `.next/cache/turbopack` aside and rebuild; on Vercel, redeploy with
+    `vercel deploy --prod --force --scope monip` (skips the build cache).
 -   Collection hooks throw public `APIError`s with an explicit name:
     production bundling breaks `instanceof ValidationError` and empties
     class names.
