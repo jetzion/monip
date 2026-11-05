@@ -5,6 +5,18 @@ import { expect, test, type Page } from "@playwright/test";
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 async function expectNoViolations(page: Page) {
+  // Let entrance animations (menu, chat panel) finish so axe checks final colours; endless and
+  // scroll-linked ones (aurora, header) never finish, so they are skipped.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .every(
+        (a) =>
+          a.playState !== "running" ||
+          a.timeline !== document.timeline ||
+          a.effect?.getTiming().iterations === Infinity,
+      ),
+  );
   const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
   const summary = violations.map((v) => ({
     id: v.id,

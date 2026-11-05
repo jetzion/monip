@@ -68,11 +68,11 @@ export function InvitationBubble({ page, question, maxShows }: { page: Invitatio
   const shown = phase === "visible" || phase === "fading";
 
   return (
-    // Phones: above the chat button. Wider screens: beside it (11.5rem = 1rem margin + 158px button + gap),
+    // Phones: above the chat button. Wider screens: beside it (12.25rem = 1rem margin + 168px button + gap),
     // so it stays clear of controls near the bottom of the page, such as the hero video's pause button.
     <div
       role="status"
-      className="pointer-events-none fixed bottom-[5.25rem] right-4 z-50 max-w-[calc(100vw-2rem)] sm:bottom-4 sm:right-[11.5rem] sm:max-w-xs"
+      className="pointer-events-none fixed bottom-[5.25rem] right-4 z-50 max-w-[calc(100vw-2rem)] sm:bottom-4 sm:right-[12.25rem] sm:max-w-xs"
     >
       {shown && (
         <button

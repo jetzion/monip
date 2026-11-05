@@ -143,9 +143,10 @@ test.describe("timing", () => {
   });
 
   test("product pages show a product question", async ({ page }) => {
+    // Open the product page directly: a click starts a page view transition, which the paused clock freezes.
     await page.goto("/products");
-    await page.locator('main a[href^="/products/"]').first().click();
-    await page.waitForURL("**/products/*");
+    const href = await page.locator('main a[href^="/products/"]').first().getAttribute("href");
+    await page.goto(href!);
     await advance(page, 5_250);
     await expect(bubble(page)).toHaveText(QUESTIONS.product);
   });

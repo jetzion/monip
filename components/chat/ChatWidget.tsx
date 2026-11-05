@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "cn";
-import { MessageCircle, RotateCcw, Send, X } from "lucide-react";
+import { RotateCcw, Send, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -9,6 +9,8 @@ import { splitContactLinks } from "@/lib/chat/contact-links";
 import type { ChatMessage } from "@/lib/chat/validate";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
 import { CHAT_OPENED_EVENT, OPEN_CHAT_EVENT, markChatOpened } from "@/lib/invitation/session";
+
+import { AssistantAvatar } from "./AssistantAvatar";
 
 /** Display name of the assistant; also set in the system prompt (lib/chat/knowledge.ts). */
 const ASSISTANT_NAME = "David";
@@ -97,10 +99,14 @@ export function ChatWidget() {
           id="chat-panel"
           aria-label="Chat with us"
           onKeyDown={(event) => event.key === "Escape" && close()}
-          className="fixed inset-0 z-[60] flex flex-col bg-white sm:inset-auto sm:bottom-24 sm:right-4 sm:h-[min(600px,calc(100dvh-8rem))] sm:w-[380px] sm:overflow-hidden sm:rounded-2xl sm:border sm:border-border sm:shadow-card-hover"
+          className="fixed inset-0 z-[60] flex flex-col bg-white duration-300 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 sm:inset-auto sm:bottom-24 sm:right-4 sm:h-[min(600px,calc(100dvh-8rem))] sm:w-[380px] sm:overflow-hidden sm:rounded-2xl sm:border sm:border-border sm:shadow-card-hover"
         >
-          <header className="flex items-center gap-2 bg-navy px-4 py-3 text-white">
-            <h2 className="font-display flex-1 text-lg font-semibold">Chat with us</h2>
+          <header className="header-band flex items-center gap-3 px-4 py-3 text-white">
+            <AssistantAvatar className="size-10 shrink-0 rounded-full ring-2 ring-white/30" />
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-lg font-semibold leading-tight">Chat with us</h2>
+              <p className="text-xs text-on-dark-muted">{ASSISTANT_NAME}, MONIP&apos;s AI assistant</p>
+            </div>
             <button type="button" onClick={restart} className={iconButton} title="New conversation">
               <RotateCcw aria-hidden="true" className="size-4" />
               <span className="sr-only">New conversation</span>
@@ -111,7 +117,7 @@ export function ChatWidget() {
             </button>
           </header>
 
-          <div role="log" aria-live="polite" aria-label="Conversation" className="flex flex-1 flex-col gap-3 overflow-y-auto bg-tint p-4">
+          <div role="log" aria-live="polite" aria-label="Conversation" className="flex flex-1 flex-col gap-3 overflow-y-auto bg-linear-to-b from-tint to-accent p-4">
             <Bubble role="assistant">{WELCOME}</Bubble>
             {messages.map((message, index) => (
               <Bubble key={index} role={message.role}>
@@ -120,8 +126,15 @@ export function ChatWidget() {
             ))}
             {pending && (
               <Bubble role="assistant">
-                <span className="text-muted-foreground">
-                  Typing<span className="animate-pulse">...</span>
+                <span className="sr-only">Typing</span>
+                <span aria-hidden="true" className="inline-flex h-5 items-center gap-1">
+                  {[0, 150, 300].map((delay) => (
+                    <span
+                      key={delay}
+                      className="size-1.5 rounded-full bg-primary/60 motion-safe:animate-bounce"
+                      style={{ animationDelay: `${delay}ms` }}
+                    />
+                  ))}
                 </span>
               </Bubble>
             )}
@@ -161,12 +174,12 @@ export function ChatWidget() {
                   }
                 }}
                 placeholder="Type a message"
-                className="max-h-32 min-h-11 flex-1 resize-none rounded-lg border border-input px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border border-input bg-white px-3 py-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               />
               <button
                 type="submit"
                 disabled={pending || !draft.trim()}
-                className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
               >
                 <Send aria-hidden="true" className="size-4" />
                 <span className="sr-only">Send message</span>
@@ -183,8 +196,8 @@ export function ChatWidget() {
         aria-controls="chat-panel"
         onClick={() => (open ? close() : setOpen(true))}
         className={cn(
-          "fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2 rounded-full bg-primary font-semibold text-primary-foreground shadow-card-hover transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50",
-          open ? "hidden w-14 sm:inline-flex" : "inline-flex px-5",
+          "fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2.5 rounded-full bg-primary font-semibold text-primary-foreground shadow-card-hover transition duration-200 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 motion-safe:hover:-translate-y-0.5",
+          open ? "hidden w-14 sm:inline-flex" : "inline-flex pl-2 pr-5",
         )}
       >
         {open ? (
@@ -194,7 +207,7 @@ export function ChatWidget() {
           </>
         ) : (
           <>
-            <MessageCircle aria-hidden="true" className="size-5" />
+            <AssistantAvatar className="size-10 rounded-full ring-2 ring-white/40" />
             Chat with us
           </>
         )}
@@ -219,13 +232,14 @@ function ReplyText({ text, onNavigate }: { text: string; onNavigate: () => void 
   );
 }
 
-const bubble = "whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed";
+const bubble =
+  "whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed duration-300 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1";
 
-/** A message. Assistant replies carry David's avatar and name. */
+/** A message. Assistant replies carry David's face and name. */
 function Bubble({ role, children }: { role: ChatMessage["role"]; children: React.ReactNode }) {
   if (role === "user") {
     return (
-      <p className={cn(bubble, "max-w-[85%] self-end bg-primary text-primary-foreground")}>
+      <p className={cn(bubble, "max-w-[85%] self-end rounded-br-md bg-linear-to-br from-primary to-azure text-primary-foreground shadow-sm")}>
         <span className="sr-only">You: </span>
         {children}
       </p>
@@ -233,18 +247,13 @@ function Bubble({ role, children }: { role: ChatMessage["role"]; children: React
   }
   return (
     <div className="flex max-w-[90%] items-start gap-2 self-start">
-      <span
-        aria-hidden="true"
-        className="mt-5 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-navy text-sm font-semibold text-white"
-      >
-        {ASSISTANT_NAME[0]}
-      </span>
+      <AssistantAvatar className="mt-5 size-8 shrink-0 rounded-full shadow-sm" />
       <div className="flex min-w-0 flex-col gap-1">
         <span aria-hidden="true" className="flex items-center gap-1.5 text-xs font-semibold text-navy">
           {ASSISTANT_NAME}
-          <span className="rounded bg-accent px-1.5 py-px text-[0.625rem] font-semibold tracking-wide text-primary">AI</span>
+          <span className="rounded bg-white px-1.5 py-px text-[0.625rem] font-semibold tracking-wide text-primary shadow-sm">AI</span>
         </span>
-        <p className={cn(bubble, "bg-white text-foreground shadow-sm")}>
+        <p className={cn(bubble, "rounded-tl-md border border-border bg-card text-foreground shadow-card")}>
           <span className="sr-only">{ASSISTANT_NAME} (AI): </span>
           {children}
         </p>
