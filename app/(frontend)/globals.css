@@ -139,6 +139,41 @@
     @apply bg-background text-foreground;
     line-height: 1.6;
   }
+  /* Pastel "aurora" backdrop: two fixed layers of colour streams that drift slowly, so cards appear to float. */
+  body {
+    background-color: #e8f0fb;
+  }
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: -12%;
+    z-index: -1;
+    pointer-events: none;
+    will-change: transform;
+  }
+  body::before {
+    background-image:
+      radial-gradient(max(24vw, 10rem) 85% at 8% 0%, rgb(120 182 242), transparent 75%),
+      radial-gradient(max(22vw, 9rem) 85% at 38% 0%, rgb(146 170 246), transparent 75%),
+      radial-gradient(max(22vw, 9rem) 80% at 68% 0%, rgb(160 220 236), transparent 75%),
+      radial-gradient(max(27vw, 11rem) 90% at 96% 0%, rgb(132 178 246), transparent 75%);
+    animation: aurora-a 32s ease-in-out infinite alternate;
+  }
+  body::after {
+    background-image:
+      linear-gradient(to bottom, transparent 40%, #e8f0fb 92%),
+      radial-gradient(max(22vw, 9rem) 80% at 22% 0%, rgb(178 214 250 / 0.9), transparent 75%),
+      radial-gradient(max(24vw, 10rem) 90% at 52% 0%, rgb(222 212 250 / 0.95), transparent 75%),
+      radial-gradient(max(22vw, 9rem) 80% at 80% 0%, rgb(140 204 246 / 0.9), transparent 75%);
+    animation: aurora-b 40s ease-in-out infinite alternate;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+      animation: none;
+    }
+  }
   html {
     @apply font-sans;
   }
@@ -205,6 +240,23 @@
   ::view-transition-group(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
+  }
+}
+
+@keyframes aurora-a {
+  from {
+    transform: translate3d(-5%, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(5%, 3%, 0) scale(1.08);
+  }
+}
+@keyframes aurora-b {
+  from {
+    transform: translate3d(6%, 2%, 0) scaleY(1.06);
+  }
+  to {
+    transform: translate3d(-6%, -2%, 0) scaleY(0.94);
   }
 }
 
