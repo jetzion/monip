@@ -718,7 +718,7 @@ Update this section as decisions are confirmed.
 - [x] Duplicate products in the CMS (copy is a draft named "(copy)", unique "-copy" slug, not featured; slug rule also applies to services and categories)
 - [x] Offices on the About page: world map with pins and list (Offices collection; 5 offices from monip-group.com)
 - [x] Clients list: logo thumbnails (whole logo, `app/(payload)/custom.scss`) and drag-and-drop ordering (Payload `orderable`; migrations add `_order` with the old order, then drop `sort_order`)
-- [ ] Chat: set `OPENROUTER_MODEL` and verify real replies
+- [ ] Chat: `OPENROUTER_MODEL` is set (`anthropic/claude-haiku-5.5`, local and production); verify real replies stay within the rules
 - [x] Privacy policy page from `PRIVACY-POLICY.md` (CMS page, footer link)
 - [ ] Privacy policy: add the privacy contact email, a section on the website chat (messages sent to an AI provider), and a line on Vercel Web Analytics (cookieless, anonymous visit and chat-invitation counts)
 - [ ] Fix Placeholder Products 4 and 5: their category "Rings" is now a subcategory (set Category to Cavell Jewelry, Subcategory to Rings)
@@ -744,13 +744,18 @@ Update this section as decisions are confirmed.
 1.  Give e2e tests their own database, created from migrations and
     seeded before each run, so content edits stop breaking tests and
     test inquiries stay out of the real Inquiries list.
-2.  Set `OPENROUTER_MODEL` (suggested: `anthropic/claude-haiku-5.5`) and
-    check real chat replies stay within the rules.
-3.  Code review of the whole codebase before content work begins.
-4.  Optional: drag-and-drop ordering for Offices and Services (they
+2.  Check real chat replies stay within the rules (`OPENROUTER_MODEL` is
+    `anthropic/claude-haiku-5.5`, set locally and on production).
+3.  Chat invitation content: replace the duplicate Success Stories list
+    question ("Have a project like these in mind?" is entered twice on
+    production); optionally republish products and success stories so
+    each gets its own AI-picked question (they show the first question
+    until then).
+4.  Code review of the whole codebase before content work begins.
+5.  Optional: drag-and-drop ordering for Offices and Services (they
     still use a Sort order number); clickable product links in chat
     replies; related products on product pages.
-5.  Optional: Cruise Fleet Schedule bulk delete (search old sailings,
+6.  Optional: Cruise Fleet Schedule bulk delete (search old sailings,
     select several, delete).
 
 **Needs input from MONIP**
@@ -791,6 +796,17 @@ Update this section as decisions are confirmed.
     to 14 (every other table's sequence was checked and correct) and the
     deploy then succeeded. If a deploy fails with "Value must be unique"
     on `payload_migrations`, check that sequence first.
+-   2026-10-28: a deploy hung on Payload's "run Payload in dev mode"
+    prompt because production's `payload_migrations` had a `batch = -1`
+    row. `vercel env pull` had written production variables into
+    `.env.local`, and the running `pnpm dev` pushed its schema to
+    production (the schema matched, so nothing else changed; content
+    counts were unchanged). The row was deleted in the Neon SQL editor and
+    the deploy succeeded. Never pull production variables into the
+    project.
+-   Chat invitation is live (switched on, 24 questions, 1 time per
+    visit). Enable Web Analytics in the Vercel project to record its
+    shown and clicked events.
 -   `INQUIRY_NOTIFY_EMAIL` is not set on Vercel: inquiries are saved
     with `emailStatus: failed` until it and Resend are configured.
 -   Resend account with a verified sending domain.
@@ -829,6 +845,15 @@ Update this section as decisions are confirmed.
     schema by hand.
 -   The developer machine runs Node 24.21.0, slightly below Payload's
     stated minimum (24.22.1); everything works, but upgrading is advised.
+-   Chat invitation: product and success story questions are picked only
+    on publish, so changing the Product detail or Success Story detail
+    questions does not re-pick existing items (they fall back to the
+    first question until republished). On wider screens the bubble's
+    offset assumes the 158px "Chat with us" button (`sm:right-[11.5rem]`);
+    the laptop e2e test catches overlap if the button changes.
+-   `pnpm-lock.yaml` resolves two copies of sharp's libvips (1.3.3 and
+    1.3.4); production servers log a duplicate-class warning. Harmless so
+    far; dedupe when upgrading sharp.
 
 ## 15. Success Stories page
 

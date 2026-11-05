@@ -1,6 +1,6 @@
 # Requirements: Timed AI Chat Invitation for MONIP Group
 
-Status: implemented 2026-10-28 (PLAN.md section 18). Off until an admin switches it on.
+Status: live since 2026-10-28 (PLAN.md section 18): switched on, 24 questions, 1 time per visit.
 
 ## Goal
 

@@ -1,12 +1,12 @@
 # MONIP Website Editor Guide
 
-Oct 24, 2026 · @Jack
+Oct 28, 2026 · @Jack
 
 ## Getting started
 
 All website content is managed in the admin, a password-protected area of the site. You never need to edit code.
 
-While the site is in development, the admin is at http://localhost:3000/admin on the developer's computer. The live address will be added here after launch.
+The admin is at https://monip-group.vercel.app/admin, a temporary address until the site moves to its own domain. Content entered there is what visitors see. (The developer also has a separate copy at http://localhost:3000/admin for testing; changes there do not reach the website.)
 
 **Accounts.** The first account created becomes an admin. Admins add everyone else under **Users**, and choose a role for each person.
 
