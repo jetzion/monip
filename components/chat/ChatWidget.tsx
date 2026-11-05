@@ -5,18 +5,16 @@ import { RotateCcw, Send, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { splitContactLinks } from "@/lib/chat/contact-links";
+import { pickGreeting } from "@/lib/chat/greetings";
 import type { ChatMessage } from "@/lib/chat/validate";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
 import { CHAT_OPENED_EVENT, OPEN_CHAT_EVENT, markChatOpened } from "@/lib/invitation/session";
 
 import { AssistantAvatar } from "./AssistantAvatar";
+import { TypedReply } from "./TypedReply";
 
 /** Display name of the assistant; also set in the system prompt (lib/chat/knowledge.ts). */
 const ASSISTANT_NAME = "David";
-
-const WELCOME =
-  "Hi, I'm David from MONIP Group. Welcome! How can I help you today? I'm happy to tell you about our services, product samples, or how we work.";
 
 /**
  * Floating chat button and panel. The conversation lives in memory: it
@@ -28,6 +26,10 @@ export function ChatWidget() {
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [greeting, setGreeting] = useState(pickGreeting);
+  // Index of the message David is typing; -1 is the greeting.
+  const [typing, setTyping] = useState<number | null>(-1);
+  const [conversation, setConversation] = useState(0);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -54,9 +56,11 @@ export function ChatWidget() {
     opened.current ||= open;
   }, [open]);
 
-  useEffect(() => {
+  const scrollToEnd = () => {
     endRef.current?.scrollIntoView({ block: "end" });
-  }, [messages, pending, error, open]);
+  };
+
+  useEffect(scrollToEnd, [messages, pending, error, open]);
 
   const close = () => setOpen(false);
 
@@ -75,7 +79,10 @@ export function ChatWidget() {
         body: JSON.stringify({ messages: history }),
       });
       const data = (await response.json()) as { reply?: string; error?: string };
-      if (data.reply) setMessages([...history, { role: "assistant", content: data.reply }]);
+      if (data.reply) {
+        setMessages([...history, { role: "assistant", content: data.reply }]);
+        setTyping(history.length);
+      }
       else setError(data.error ?? "Something went wrong. Please try again.");
     } catch {
       setError("Could not reach the chat service. Check your connection and try again.");
@@ -85,8 +92,21 @@ export function ChatWidget() {
     }
   };
 
+  const reply = (text: string, index: number) => (
+    <TypedReply
+      text={text}
+      animate={typing === index}
+      onTyped={() => setTyping(null)}
+      onLetter={scrollToEnd}
+      onNavigate={close}
+    />
+  );
+
   const restart = () => {
     setMessages([]);
+    setGreeting(pickGreeting());
+    setTyping(-1);
+    setConversation(conversation + 1);
     setError(null);
     setDraft("");
     inputRef.current?.focus();
@@ -117,11 +137,13 @@ export function ChatWidget() {
             </button>
           </header>
 
-          <div role="log" aria-live="polite" aria-label="Conversation" className="flex flex-1 flex-col gap-3 overflow-y-auto bg-linear-to-b from-tint to-accent p-4">
-            <Bubble role="assistant">{WELCOME}</Bubble>
+          <div role="log" aria-live="polite" aria-busy={typing !== null} aria-label="Conversation" className="flex flex-1 flex-col gap-3 overflow-y-auto bg-linear-to-b from-tint to-accent p-4">
+            <Bubble key={`greeting-${conversation}`} role="assistant">
+              {reply(greeting, -1)}
+            </Bubble>
             {messages.map((message, index) => (
               <Bubble key={index} role={message.role}>
-                {message.role === "assistant" ? <ReplyText text={message.content} onNavigate={close} /> : message.content}
+                {message.role === "assistant" ? reply(message.content, index) : message.content}
               </Bubble>
             ))}
             {pending && (
@@ -219,19 +241,6 @@ export function ChatWidget() {
 const iconButton =
   "inline-flex size-9 items-center justify-center rounded-lg text-white/90 hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white";
 
-/** Assistant text with contact-page URLs shown as a "Contact us" link. */
-function ReplyText({ text, onNavigate }: { text: string; onNavigate: () => void }) {
-  return splitContactLinks(text).map((part, index) =>
-    part.type === "text" ? (
-      part.text
-    ) : (
-      <Link key={index} href="/contact" onClick={onNavigate} className="font-medium text-primary underline underline-offset-4">
-        Contact us
-      </Link>
-    ),
-  );
-}
-
 const bubble =
   "whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed duration-300 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1";
 
@@ -251,10 +260,9 @@ function Bubble({ role, children }: { role: ChatMessage["role"]; children: React
       <div className="flex min-w-0 flex-col gap-1">
         <span aria-hidden="true" className="flex items-center gap-1.5 text-xs font-semibold text-navy">
           {ASSISTANT_NAME}
-          <span className="rounded bg-white px-1.5 py-px text-[0.625rem] font-semibold tracking-wide text-primary shadow-sm">AI</span>
         </span>
         <p className={cn(bubble, "rounded-tl-md border border-border bg-card text-foreground shadow-card")}>
-          <span className="sr-only">{ASSISTANT_NAME} (AI): </span>
+          <span className="sr-only">{ASSISTANT_NAME}: </span>
           {children}
         </p>
       </div>

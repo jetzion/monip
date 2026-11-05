@@ -24,8 +24,8 @@ test("visitor chats and the conversation keeps context", async ({ page }) => {
   await input.press("Enter");
   await expect(panel(page).getByText("What does MONIP do?")).toBeVisible();
   await expect(panel(page).getByText("Reply 1")).toBeVisible();
-  // The welcome and the reply are both labelled with the assistant name and an AI tag.
-  await expect(panel(page).getByText(/^David\s*AI$/)).toHaveCount(2);
+  // The welcome and the reply are both labelled with the assistant name.
+  await expect(panel(page).getByText(/^David$/)).toHaveCount(2);
 
   await input.fill("Tell me more");
   await input.press("Enter");
@@ -102,4 +102,18 @@ test("chat endpoint rejects client system messages and malformed bodies", async 
   expect(system.status()).toBe(400);
   const malformed = await request.post("/api/chat", { data: "not json", headers: { "Content-Type": "application/json" } });
   expect(malformed.status()).toBe(400);
+});
+
+test("David types his reply out, then the conversation is no longer busy", async ({ page }) => {
+  const text = "Thanks for asking! We source custom merchandise from concept to delivery.";
+  await mockChat(page, () => ({ reply: text }));
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Chat with us" }).click();
+  const log = panel(page).getByRole("log");
+  await page.getByLabel("Your message").fill("What do you do?");
+  await page.getByLabel("Your message").press("Enter");
+  await expect(log).toHaveAttribute("aria-busy", "true");
+  await expect(panel(page).getByText(text)).toBeVisible();
+  await expect(log).toHaveAttribute("aria-busy", "false");
 });
