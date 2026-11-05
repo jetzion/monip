@@ -185,6 +185,10 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
+  /**
+   * Optional. Shown under the thumbnail in a product gallery, e.g. "Emerald".
+   */
+  imageName?: string | null;
   prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
@@ -854,6 +858,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  imageName?: T;
   prefix?: T;
   _objectKey?: T;
   updatedAt?: T;

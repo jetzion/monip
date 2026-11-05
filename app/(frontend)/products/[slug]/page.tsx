@@ -5,8 +5,7 @@ import { notFound } from "next/navigation";
 
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
-import { CmsImage } from "@/components/media/CmsImage";
-import { ImageMorph } from "@/components/media/ImageMorph";
+import { type GalleryImage, ProductGallery } from "@/components/products/ProductGallery";
 import { SpecSheet } from "@/components/products/SpecSheet";
 import { ButtonLink } from "@/components/ui/button-link";
 import { pillClassName } from "@/components/ui/pill";
@@ -63,6 +62,18 @@ function breadcrumbJsonLd(name: string, slug: string) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
+type MediaRef = number | Media | null | undefined;
+
+/** The primary image followed by the gallery, as plain data for the client gallery. */
+function galleryImages(primary: MediaRef, gallery: MediaRef[] | null | undefined): GalleryImage[] {
+  return [primary, ...(gallery ?? [])].flatMap((ref) => {
+    const media = populated<Media>(ref);
+    if (!media?.url) return [];
+    const { url, alt, width, height, imageName } = media;
+    return [{ url, alt, width: width ?? 1200, height: height ?? 900, name: imageName ?? null }];
+  });
+}
+
 export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
   const product = await getProductBySlug(slug, await contentAccess());
@@ -115,27 +126,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
       </PageHeader>
 
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
-        <div className="flex flex-col gap-4">
-          <ImageMorph name={`product-image-${product.slug}`}>
-            <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
-              <CmsImage
-                image={product.primaryImage}
-                sizes="(min-width: 1024px) 55vw, 100vw"
-                className="h-auto w-full"
-                eager
-              />
-            </div>
-          </ImageMorph>
-          {product.gallery && product.gallery.length > 0 && (
-            <ul className="grid grid-cols-3 gap-4 sm:grid-cols-4">
-              {product.gallery.map((image, index) => (
-                <li key={index} className="overflow-hidden rounded-lg border border-border bg-card shadow-card">
-                  <CmsImage image={image} sizes="(min-width: 640px) 15vw, 33vw" className="h-auto w-full" />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <ProductGallery images={galleryImages(product.primaryImage, product.gallery)} morphName={`product-image-${product.slug}`} />
 
         <div className="flex flex-col gap-6">
           {product.description && (

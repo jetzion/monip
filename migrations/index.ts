@@ -17,6 +17,7 @@ import * as migration_20261027_214735_training_sessions from './20261027_214735_
 import * as migration_20261028_144457_chat_invitation from './20261028_144457_chat_invitation';
 import * as migration_20261028_145254_chat_invitation_picks from './20261028_145254_chat_invitation_picks';
 import * as migration_20261028_164728_chat_invitation_times_per_visit from './20261028_164728_chat_invitation_times_per_visit';
+import * as migration_20261105_195838_media_image_name from './20261105_195838_media_image_name';
 
 export const migrations = [
   {
@@ -112,6 +113,11 @@ export const migrations = [
   {
     up: migration_20261028_164728_chat_invitation_times_per_visit.up,
     down: migration_20261028_164728_chat_invitation_times_per_visit.down,
-    name: '20261028_164728_chat_invitation_times_per_visit'
+    name: '20261028_164728_chat_invitation_times_per_visit',
+  },
+  {
+    up: migration_20261105_195838_media_image_name.up,
+    down: migration_20261105_195838_media_image_name.down,
+    name: '20261105_195838_media_image_name'
   },
 ];
