@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
+import { ProductImageTransition } from "@/components/products/ProductImageTransition";
 import { SpecSheet } from "@/components/products/SpecSheet";
 import { ButtonLink } from "@/components/ui/button-link";
 import { pillClassName } from "@/components/ui/pill";
@@ -115,14 +116,16 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
         <div className="flex flex-col gap-4">
-          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
-            <CmsImage
-              image={product.primaryImage}
-              sizes="(min-width: 1024px) 55vw, 100vw"
-              className="h-auto w-full"
-              eager
-            />
-          </div>
+          <ProductImageTransition slug={product.slug}>
+            <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
+              <CmsImage
+                image={product.primaryImage}
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                className="h-auto w-full"
+                eager
+              />
+            </div>
+          </ProductImageTransition>
           {product.gallery && product.gallery.length > 0 && (
             <ul className="grid grid-cols-3 gap-4 sm:grid-cols-4">
               {product.gallery.map((image, index) => (

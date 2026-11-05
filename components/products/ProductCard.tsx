@@ -4,6 +4,8 @@ import { CmsImage } from "@/components/media/CmsImage";
 import { populated } from "@/lib/payload";
 import type { Category, Product } from "@/payload-types";
 
+import { ProductImageTransition } from "./ProductImageTransition";
+
 type Props = {
   product: Pick<Product, "name" | "slug" | "summary" | "primaryImage" | "category">;
   eager?: boolean;
@@ -13,14 +15,16 @@ export function ProductCard({ product, eager }: Props) {
   const category = populated<Category>(product.category);
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition duration-200 hover:border-primary/50 hover:shadow-card-hover motion-safe:hover:-translate-y-1 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2">
-      <div className="aspect-[4/3] overflow-hidden border-b border-border bg-tint">
-        <CmsImage
-          image={product.primaryImage}
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          eager={eager}
-          className="h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-[1.02]"
-        />
-      </div>
+      <ProductImageTransition slug={product.slug}>
+        <div className="aspect-[4/3] overflow-hidden border-b border-border bg-tint">
+          <CmsImage
+            image={product.primaryImage}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            eager={eager}
+            className="h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-[1.02]"
+          />
+        </div>
+      </ProductImageTransition>
       <div className="flex flex-1 flex-col gap-2 p-5">
         {category && (
           <p className="self-start rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-primary">

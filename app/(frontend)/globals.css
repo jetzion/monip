@@ -165,10 +165,10 @@
   pointer-events: none;
 }
 ::view-transition-old(.page-exit) {
-  animation: 140ms ease-in both page-fade reverse;
+  animation: 250ms ease-out both page-fade reverse;
 }
 ::view-transition-new(.page-enter) {
-  animation: 320ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms both page-fade;
+  animation: 450ms ease-in-out 150ms both page-fade;
 }
 @keyframes page-fade {
   from {
@@ -179,6 +179,12 @@
     opacity: 1;
     translate: 0 0;
   }
+}
+
+/* Product photo morphs from its catalog card to the detail page (ProductImageTransition). */
+::view-transition-group(.product-morph) {
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* The header stays put while content changes underneath it. */
