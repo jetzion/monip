@@ -137,9 +137,9 @@ Until the email service is set up, notification emails are not delivered: check 
 - **Trainers:** click **Manage trainers** (or open **Trainers** in the menu) to add, edit, or remove trainers; each needs a first and last name. A trainer with scheduled sessions cannot be removed until those sessions are moved to another trainer or deleted.
 - **Port time zones:** departure-day and onboarding sessions use the time zone of the cruise's start port. **Port time zones** lists each start port, spelled exactly as in the Cruise Fleet Schedule, with its time zone (for example "America/New_York"). It was filled in for every port in the schedule; when an import brings a new port, add it here. If a port is missing, the form says which one to add.
 
-**Schedule a session** with the form at the top of the page:
+**Schedule a session** with the **Schedule training** form at the top of the page (its title reminds you to select Cruise line or Port first):
 
-1. Choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Fill in the first three in any order, for example Port first, then Cruise line, then Ship: each list shows only what fits the others, and a list left with one option fills itself in (choosing a ship fills in its cruise line, and its port when it sails from only one). To pick something a list no longer shows, clear one of the other choices with its **x**. **Cruise dates** lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
+1. Choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Fill in the first three in any order, for example Port first, then Cruise line, then Ship: each list shows only what fits the others, and a list left with one option fills itself in (choosing a ship fills in its cruise line, and its port when it sails from only one). To pick something a list no longer shows, clear one of the other choices with its **x**. **Cruise dates** stays greyed out until a ship and port are chosen, then lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
 2. Choose the **Trainer**.
 3. Choose the **Training type**:
    - **Online training:** pick the date, start time, time zone, and duration (2, 4, or 8 hours).
