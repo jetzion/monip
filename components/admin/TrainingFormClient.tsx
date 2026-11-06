@@ -67,7 +67,9 @@ export function TrainingFormClient({ trainers, portZones, combos, today }: Props
   return (
     <section className="training-form" aria-labelledby="training-form-title">
       <div className="training-form__header">
-        <h2 id="training-form-title">Schedule training (select Cruise line or Port first)</h2>
+        <h2 id="training-form-title">
+          Schedule training <span className="training-form__hint">(select Cruise line or Port first)</span>
+        </h2>
         <p>
           <Link href="/admin/collections/trainers">Manage trainers</Link> ·{" "}
           <Link href="/admin/collections/port-time-zones">Port time zones</Link>

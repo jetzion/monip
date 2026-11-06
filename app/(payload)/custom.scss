@@ -386,6 +386,12 @@ body::before {
   }
 }
 
+.training-form__hint {
+  font-size: 0.55em;
+  font-weight: 400;
+  color: var(--theme-elevation-500);
+}
+
 .training-form__fields {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
