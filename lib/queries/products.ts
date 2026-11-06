@@ -49,7 +49,8 @@ export async function getPublishedProducts(filters: ProductFilters = {}) {
     ...publicAccess,
     depth: 1,
     limit: 100,
-    sort: "name",
+    // Grouped by category in the editors' category order, then by name.
+    sort: ["category.sortOrder", "category.title", "name"],
     where: filterWhere(filters),
     select: { name: true, slug: true, summary: true, primaryImage: true, category: true },
     populate,

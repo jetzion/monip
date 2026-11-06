@@ -30,14 +30,14 @@ export function ProductCard({ product, eager }: Props) {
             {category.title}
           </p>
         )}
-        <h2 className="text-lg font-semibold leading-snug text-navy">
+        <h3 className="text-lg font-semibold leading-snug text-navy">
           <Link
             href={`/products/${product.slug}`}
             className="after:absolute after:inset-0 focus-visible:outline-none group-hover:text-primary"
           >
             {product.name}
           </Link>
-        </h2>
+        </h3>
         <p className="text-sm leading-relaxed text-muted-foreground">{product.summary}</p>
       </div>
     </article>

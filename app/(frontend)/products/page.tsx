@@ -3,13 +3,16 @@ import Link from "next/link";
 
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
+import { SectionHeading } from "@/components/content/SectionHeading";
 import { CatalogFilters } from "@/components/products/CatalogFilters";
 import { ProductCard } from "@/components/products/ProductCard";
 import { catalogHref, parseCatalogParams } from "@/lib/catalog-params";
 import { contentAccess } from "@/lib/queries/access";
 import { getCategories } from "@/lib/queries/categories";
 import { getPage } from "@/lib/queries/content";
+import { populated } from "@/lib/payload";
 import { getPublishedProducts } from "@/lib/queries/products";
+import type { Category } from "@/payload-types";
 
 export async function generateMetadata({ searchParams }: PageProps<"/products">): Promise<Metadata> {
   const { q, category } = parseCatalogParams(await searchParams);
@@ -87,13 +90,27 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
             </p>
           </div>
         ) : (
-          <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {products.map((product, index) => (
-              <li key={product.slug} className="flex">
-                <ProductCard product={product} eager={index < 3} />
-              </li>
+          <div className="mt-8 flex flex-col gap-14">
+            {groupByCategory(products).map((group) => (
+              <section key={group.id} aria-labelledby={`category-${group.id}`}>
+                <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 border-b border-border pb-4">
+                  <SectionHeading id={`category-${group.id}`} className="text-2xl sm:text-3xl">
+                    {group.title}
+                  </SectionHeading>
+                  <p className="text-sm text-muted-foreground">
+                    {group.products.length} {group.products.length === 1 ? "product" : "products"}
+                  </p>
+                </div>
+                <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.products.map((product, index) => (
+                    <li key={product.slug} className="flex">
+                      <ProductCard product={product} eager={group.start + index < 3} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
             ))}
-          </ul>
+          </div>
         )}
       </div>
       <ChatInvitation page="products" />
@@ -107,4 +124,18 @@ function resultSummary(count: number, q: string, categoryTitle?: string) {
   if (categoryTitle) parts.push(`in ${categoryTitle}`);
   if (q) parts.push(`matching "${q}"`);
   return parts.join(" ");
+}
+
+type CatalogProduct = Awaited<ReturnType<typeof getPublishedProducts>>[number];
+
+/** Splits products (already sorted by category) into one group per category. */
+function groupByCategory(products: CatalogProduct[]) {
+  const groups: { id: number; title: string; start: number; products: CatalogProduct[] }[] = [];
+  products.forEach((product, index) => {
+    const category = populated<Category>(product.category);
+    const id = category?.id ?? 0;
+    if (groups.at(-1)?.id !== id) groups.push({ id, title: category?.title ?? "Other", start: index, products: [] });
+    groups.at(-1)!.products.push(product);
+  });
+  return groups;
 }
