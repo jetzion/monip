@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { changeChoice, cruiseDatesLabel, cruiseDatesUrl, cruiseLinesOf, noChoice, portsOf, shipsOf, type CruiseCombo } from "./cruise-choice";
+import { changeChoice, cruiseDatesLabel, cruiseDatesUrl, noChoice, optionsFor, type CruiseCombo } from "./cruise-choice";
 
 const combos: CruiseCombo[] = [
   { cruiseLine: "Carnival", ship: "Carnival Conquest", port: "Miami, Florida" },
@@ -9,13 +9,32 @@ const combos: CruiseCombo[] = [
   { cruiseLine: "Norwegian", ship: "Norwegian Joy", port: "Miami, Florida" },
 ];
 
-describe("options", () => {
-  it("narrows ships to the line and ports to the ship", () => {
-    expect(cruiseLinesOf(combos)).toEqual(["Carnival", "Norwegian"]);
-    expect(shipsOf(combos, "Carnival")).toEqual(["Carnival Conquest", "Carnival Glory"]);
-    expect(shipsOf(combos, "")).toHaveLength(3);
-    expect(portsOf(combos, { ...noChoice, ship: "Carnival Glory" })).toEqual(["Miami, Florida", "Port Canaveral, Florida"]);
-    expect(portsOf(combos, { ...noChoice, cruiseLine: "Norwegian" })).toEqual(["Miami, Florida"]);
+describe("optionsFor", () => {
+  it("lists everything when nothing is chosen", () => {
+    expect(optionsFor(combos, noChoice, "cruiseLine")).toEqual(["Carnival", "Norwegian"]);
+    expect(optionsFor(combos, noChoice, "ship")).toHaveLength(3);
+    expect(optionsFor(combos, noChoice, "port")).toEqual(["Miami, Florida", "Port Canaveral, Florida"]);
+  });
+
+  it("narrows by line and ship, as before", () => {
+    expect(optionsFor(combos, { ...noChoice, cruiseLine: "Carnival" }, "ship")).toEqual(["Carnival Conquest", "Carnival Glory"]);
+    expect(optionsFor(combos, { ...noChoice, ship: "Carnival Glory" }, "port")).toEqual(["Miami, Florida", "Port Canaveral, Florida"]);
+    expect(optionsFor(combos, { ...noChoice, cruiseLine: "Norwegian" }, "port")).toEqual(["Miami, Florida"]);
+  });
+
+  it("narrows lines and ships by a port chosen first", () => {
+    const miami = { ...noChoice, port: "Miami, Florida" };
+    expect(optionsFor(combos, miami, "cruiseLine")).toEqual(["Carnival", "Norwegian"]);
+    expect(optionsFor(combos, miami, "ship")).toEqual(["Carnival Conquest", "Carnival Glory", "Norwegian Joy"]);
+    const canaveral = { ...noChoice, port: "Port Canaveral, Florida" };
+    expect(optionsFor(combos, canaveral, "cruiseLine")).toEqual(["Carnival"]);
+    expect(optionsFor(combos, { ...miami, cruiseLine: "Carnival" }, "ship")).toEqual(["Carnival Conquest", "Carnival Glory"]);
+  });
+
+  it("ignores the field's own choice so it can be changed", () => {
+    const glory = { cruiseLine: "Carnival", ship: "Carnival Glory", port: "Miami, Florida" };
+    expect(optionsFor(combos, glory, "port")).toEqual(["Miami, Florida", "Port Canaveral, Florida"]);
+    expect(optionsFor(combos, glory, "ship")).toEqual(["Carnival Conquest", "Carnival Glory"]);
   });
 });
 
@@ -34,11 +53,36 @@ describe("changeChoice", () => {
     expect(changeChoice(combos, glory, "ship", "Carnival Conquest").port).toBe("Miami, Florida");
   });
 
-  it("clears choices that no longer fit", () => {
+  it("supports Port, then Cruise line, then Ship", () => {
+    const miami = changeChoice(combos, noChoice, "port", "Miami, Florida");
+    expect(miami).toEqual({ cruiseLine: "", ship: "", port: "Miami, Florida" });
+    const carnival = changeChoice(combos, miami, "cruiseLine", "Carnival");
+    expect(carnival).toEqual({ cruiseLine: "Carnival", ship: "", port: "Miami, Florida" });
+    expect(changeChoice(combos, carnival, "ship", "Carnival Glory")).toEqual({
+      cruiseLine: "Carnival",
+      ship: "Carnival Glory",
+      port: "Miami, Florida",
+    });
+  });
+
+  it("fills in what a port leaves no choice about", () => {
+    expect(changeChoice(combos, noChoice, "port", "Port Canaveral, Florida")).toEqual({
+      cruiseLine: "Carnival",
+      ship: "Carnival Glory",
+      port: "Port Canaveral, Florida",
+    });
+    const miami = { ...noChoice, port: "Miami, Florida" };
+    expect(changeChoice(combos, miami, "cruiseLine", "Norwegian")).toEqual({
+      cruiseLine: "Norwegian",
+      ship: "Norwegian Joy",
+      port: "Miami, Florida",
+    });
+  });
+
+  it("clears only the cleared dropdown", () => {
     const joy = { cruiseLine: "Norwegian", ship: "Norwegian Joy", port: "Miami, Florida" };
-    expect(changeChoice(combos, joy, "cruiseLine", "Carnival")).toEqual({ cruiseLine: "Carnival", ship: "", port: "" });
-    expect(changeChoice(combos, joy, "cruiseLine", "")).toEqual(noChoice);
-    expect(changeChoice(combos, joy, "ship", "")).toEqual({ cruiseLine: "Norwegian", ship: "", port: "" });
+    expect(changeChoice(combos, joy, "cruiseLine", "")).toEqual({ ...joy, cruiseLine: "" });
+    expect(changeChoice(combos, joy, "ship", "")).toEqual({ ...joy, ship: "" });
     expect(changeChoice(combos, joy, "port", "")).toEqual({ ...joy, port: "" });
   });
 });

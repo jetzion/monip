@@ -122,6 +122,24 @@ test("Add to Calendar stays disabled until the form is complete", async ({ page 
   await expect(page.getByText("Choose a date.")).toBeVisible();
 });
 
+test("a cruise can be chosen Port first, then Cruise line, then Ship", async ({ page }) => {
+  await logIn(page);
+  const field = (id: string) => page.locator(".training-form__field").filter({ has: page.locator(`#${id}`) });
+  const pick = async (id: string, text: string) => {
+    await page.locator(`#${id}`).click();
+    await page.locator(`#${id}`).fill(text);
+    await page.locator(".rs__option").filter({ hasText: text }).first().click();
+  };
+  await pick("training-port", "Miami, Florida");
+  await pick("training-cruiseLine", cruise.cruiseLine);
+  await pick("training-ship", cruise.ship);
+  // The port chosen first is kept, and the ship's sailings from it load.
+  await expect(field("training-port")).toContainText("Miami, Florida");
+  await expect(field("training-cruiseLine")).toContainText(cruise.cruiseLine);
+  await pick("training-dates", cruiseDatesLabel(cruise).split(" – ")[0]);
+  await expect(page.getByText("Choose a cruise.")).toHaveCount(0);
+});
+
 test("a departure-day session is added, then a clash is refused and the form kept", async ({ page, request }) => {
   await logIn(page);
   await chooseCruise(page);
@@ -164,8 +182,9 @@ test("an online session uses the chosen date, time, zone, and duration", async (
   expect(online).toMatchObject({ timeZone: "Europe/Rome", startsAt: "2030-01-03T08:00:00.000Z" });
 });
 
+/** This run's calendar entries only: real sessions in the shared database may fall on the same day. */
 const entry = (page: Page, day: string, type: string) =>
-  page.locator(`td:has(time[datetime="${day}"]) .training-calendar__entry--${type}`);
+  page.locator(`td:has(time[datetime="${day}"]) .training-calendar__entry--${type}`).filter({ hasText: RUN });
 
 test("the calendar shows sessions by day, filters them, and opens their details", async ({ page, request }) => {
   const headers = await auth(request);

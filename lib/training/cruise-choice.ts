@@ -8,39 +8,39 @@ export type CruiseChoice = { cruiseLine: string; ship: string; port: string };
 
 export const noChoice: CruiseChoice = { cruiseLine: "", ship: "", port: "" };
 
+const FIELDS = ["cruiseLine", "ship", "port"] as const satisfies (keyof CruiseChoice)[];
+
 const unique = (values: string[]) => [...new Set(values)].sort((a, b) => a.localeCompare(b));
 
-export const cruiseLinesOf = (combos: CruiseCombo[]) => unique(combos.map((combo) => combo.cruiseLine));
-
-/** Ships of the chosen cruise line, or every ship. */
-export const shipsOf = (combos: CruiseCombo[], cruiseLine: string) =>
-  unique(combos.filter((combo) => !cruiseLine || combo.cruiseLine === cruiseLine).map((combo) => combo.ship));
-
-/** Start ports of the chosen ship, or of the chosen cruise line, or every port. */
-export const portsOf = (combos: CruiseCombo[], choice: CruiseChoice) =>
-  unique(
-    combos
-      .filter((combo) => (!choice.ship || combo.ship === choice.ship) && (!choice.cruiseLine || combo.cruiseLine === choice.cruiseLine))
-      .map((combo) => combo.port),
-  );
+/**
+ * Options for one dropdown: the values that fit every other choice, so the
+ * dropdowns can be filled in any order (for example Port first).
+ */
+export function optionsFor(combos: CruiseCombo[], choice: CruiseChoice, field: keyof CruiseChoice): string[] {
+  const fits = (combo: CruiseCombo) => FIELDS.every((other) => other === field || !choice[other] || combo[other] === choice[other]);
+  return unique(combos.filter(fits).map((combo) => combo[field]));
+}
 
 /**
- * Applies one dropdown change. Choosing a ship sets its cruise line, and its
- * port when it sails from only one; later choices that no longer fit are cleared.
+ * Applies one dropdown change. Options always fit the other choices, so
+ * nothing needs clearing; after a choice, any empty dropdown left with a
+ * single option is filled in (a ship sets its cruise line, for example).
  */
 export function changeChoice(combos: CruiseCombo[], choice: CruiseChoice, field: keyof CruiseChoice, value: string): CruiseChoice {
-  if (field === "cruiseLine") {
-    const keepShip = value && shipsOf(combos, value).includes(choice.ship);
-    return keepShip ? { ...choice, cruiseLine: value } : { cruiseLine: value, ship: "", port: "" };
+  const next = { ...choice, [field]: value };
+  if (!value) return next;
+  let filled = true;
+  while (filled) {
+    filled = false;
+    for (const other of FIELDS) {
+      const options = next[other] ? [] : optionsFor(combos, next, other);
+      if (options.length === 1) {
+        next[other] = options[0];
+        filled = true;
+      }
+    }
   }
-  if (field === "ship") {
-    if (!value) return { ...choice, ship: "", port: "" };
-    const cruiseLine = combos.find((combo) => combo.ship === value)?.cruiseLine ?? choice.cruiseLine;
-    const ports = portsOf(combos, { cruiseLine, ship: value, port: "" });
-    const port = ports.length === 1 ? ports[0] : ports.includes(choice.port) ? choice.port : "";
-    return { cruiseLine, ship: value, port };
-  }
-  return { ...choice, port: value };
+  return next;
 }
 
 /** REST URL for a ship's sailings from a port, starting on or after a day. */

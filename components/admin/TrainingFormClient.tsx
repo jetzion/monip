@@ -9,10 +9,8 @@ import {
   changeChoice,
   cruiseDatesLabel,
   cruiseDatesUrl,
-  cruiseLinesOf,
   noChoice,
-  portsOf,
-  shipsOf,
+  optionsFor,
   type CruiseChoice,
   type CruiseCombo,
 } from "@/lib/training/cruise-choice";
@@ -202,9 +200,9 @@ type PickerProps = {
 };
 
 /**
- * Cruise line, Ship, Port, and Cruise dates dropdowns. Each list narrows to
- * the choices above it; Cruise dates lists the ship's upcoming sailings from
- * the port, loaded through the REST API.
+ * Cruise line, Ship, Port, and Cruise dates dropdowns. The first three can be
+ * filled in any order, and each lists only what fits the others. Cruise dates
+ * lists the ship's upcoming sailings from the port, loaded through the REST API.
  */
 function CruisePicker({ combos, today, cruise, onChange }: PickerProps) {
   const [choice, setChoice] = useState<CruiseChoice>(noChoice);
@@ -234,11 +232,13 @@ function CruisePicker({ combos, today, cruise, onChange }: PickerProps) {
     void loadSailings(next);
   };
 
-  const dropdowns: { field: keyof CruiseChoice; label: string; options: Option[] }[] = [
-    { field: "cruiseLine", label: "Cruise line", options: toOptions(cruiseLinesOf(combos)) },
-    { field: "ship", label: "Ship", options: toOptions(shipsOf(combos, choice.cruiseLine)) },
-    { field: "port", label: "Port", options: toOptions(portsOf(combos, choice)) },
-  ];
+  const dropdowns = (
+    [
+      ["cruiseLine", "Cruise line"],
+      ["ship", "Ship"],
+      ["port", "Port"],
+    ] as const
+  ).map(([field, label]) => ({ field, label, options: toOptions(optionsFor(combos, choice, field)) }));
   const dateOptions = sailings.map((sailing) => ({ label: cruiseDatesLabel(sailing), value: String(sailing.id) }));
   const ready = Boolean(choice.ship && choice.port);
 
