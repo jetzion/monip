@@ -67,7 +67,7 @@ export function TrainingFormClient({ trainers, portZones, combos, today }: Props
   return (
     <section className="training-form" aria-labelledby="training-form-title">
       <div className="training-form__header">
-        <h2 id="training-form-title">Schedule training</h2>
+        <h2 id="training-form-title">Schedule training (select Cruise line or Port first)</h2>
         <p>
           <Link href="/admin/collections/trainers">Manage trainers</Link> ·{" "}
           <Link href="/admin/collections/port-time-zones">Port time zones</Link>
@@ -269,7 +269,7 @@ function CruisePicker({ combos, today, cruise, onChange }: PickerProps) {
           isClearable
           disabled={!ready}
           isLoading={loading}
-          placeholder={ready ? "Choose" : "Choose a ship and port first"}
+          placeholder="Choose"
           options={dateOptions}
           value={cruise ? { label: cruiseDatesLabel(cruise), value: String(cruise.id) } : undefined}
           noOptionsMessage={() => "No upcoming sailings."}
