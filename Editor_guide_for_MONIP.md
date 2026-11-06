@@ -34,7 +34,7 @@ A product needs a name, a summary, a main image, and a category before it can be
 - **Description**: the full text. Use headings and lists from the toolbar or by typing "/".
 - **Write description with AI**: drafts the Description from the photos and details entered so far. It replaces the current Description but saves nothing; read it, correct anything inaccurate, then save. The button is greyed out until you add a photo or some details.
 - **Primary image** (required): the main photo on cards and the product page.
-- **Gallery**: extra photos, shown in the order you drag them into.
+- **Gallery**: extra photos, shown in the order you drag them into. On the product page the primary image and the gallery appear as thumbnails under the large photo; visitors click a thumbnail to show it large.
 
 **Details tab**
 
@@ -53,9 +53,14 @@ A product needs a name, a summary, a main image, and a category before it can be
 | Summary | Product cards, top of the product page |
 | Materials, customization, industries, specifications | The Specifications list on the product page |
 | Tags | Not shown; used by the catalog search |
-| Category and subcategory | Card label, Specifications list, catalog filters |
+| Category and subcategory | Card label, the catalog's category sections, Specifications list, catalog filters |
+| Image name (on each image) | Under the image's thumbnail on the product page |
 
 **Images.** Every image needs alt text, a short description of what it shows for people using screen readers, such as "Stainless steel travel mug with black lid". Landscape photos work best: product cards crop images to a 4:3 shape. You can upload from the image field (**Create New**) or in **Media**.
+
+**Image name** (optional, on each image in **Media**): a short name such as "Emerald", shown under the image's thumbnail on the product page; the selected thumbnail's name is underlined. The name belongs to the image, so it shows on every product that uses it.
+
+**Uploading the same file twice** never replaces the first copy: the new one is saved as, for example, "photo-1.jpg", then "photo-2.jpg". To reuse a photo that is already uploaded, choose it from the existing images instead (**Choose from existing** in the image field).
 
 **Changing the slug after publishing breaks existing links** to that product, including links already shared or indexed by search engines. Ask the developer to add a redirect if a slug must change.
 
@@ -83,7 +88,7 @@ Nothing reaches visitors until you click **Publish changes**. Edits save automat
 
 Services and pages use the same draft, preview, and publish steps as products. Categories have no drafts: changes go live as soon as you save.
 
-**Categories.** Each category has a title, an optional description and image, and a **Sort order** (lower numbers appear first in the catalog filters). Set a **Parent** to make it a subcategory; there are two levels at most. The Categories list shows each top-level category with its subcategories indented underneath; click the arrow to hide or show them, and click a name to edit it. Searching or filtering switches back to a plain table. A product's **Category** must be a top-level category, so giving a category a parent breaks every product that uses it as its Category: those products cannot be saved until you set their Category to the new parent and their Subcategory to the moved category. Before deleting a category, move its products to another one, or those products cannot be saved until a new category is chosen.
+**Categories.** Each category has a title, an optional description and image, and a **Sort order** (lower numbers appear first in the catalog filters and in the catalog, which lists products in one section per category; categories with the same number are alphabetical). Set a **Parent** to make it a subcategory; there are two levels at most. The Categories list shows each top-level category with its subcategories indented underneath; click the arrow to hide or show them, and click a name to edit it. Searching or filtering switches back to a plain table. A product's **Category** must be a top-level category, so giving a category a parent breaks every product that uses it as its Category: those products cannot be saved until you set their Category to the new parent and their Subcategory to the moved category. Before deleting a category, move its products to another one, or those products cannot be saved until a new category is chosen.
 
 **Services.** Each service is a section on the Services page, ordered by **Sort order**, with a required **Summary** plus optional body text and image. The Services page and its menu link appear once at least one service is published.
 
@@ -134,7 +139,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 **Schedule a session** with the form at the top of the page:
 
-1. Choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Each list narrows to the choices above it. Choosing a ship fills in its cruise line, and its port when it sails from only one. **Cruise dates** lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
+1. Choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Fill in the first three in any order, for example Port first, then Cruise line, then Ship: each list shows only what fits the others, and a list left with one option fills itself in (choosing a ship fills in its cruise line, and its port when it sails from only one). To pick something a list no longer shows, clear one of the other choices with its **x**. **Cruise dates** lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
 2. Choose the **Trainer**.
 3. Choose the **Training type**:
    - **Online training:** pick the date, start time, time zone, and duration (2, 4, or 8 hours).
@@ -169,7 +174,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 ## Website chat
 
-The chat assistant, David, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, the client list, and the offices. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. Each reply is marked "AI" next to David's name. Conversations are not saved.
+The chat assistant, David, opens from the "Chat with us" button at the bottom right of every page. It answers visitor questions using only published content: products, services, the About page, the client list, and the offices. Keeping that content accurate keeps the chat accurate. It does not quote prices, lead times, or minimums; it sends visitors to the contact form instead. Contact-form suggestions appear as a "Contact us" link. The chat header says David is MONIP's AI assistant. He opens with a short greeting that varies from visit to visit, types his replies out letter by letter, and keeps early answers to a sentence or two. His tone is warm, direct, and enthusiastic; if a visitor sounds frustrated or confused, he acknowledges it, gives a simpler answer, and offers the contact form. Conversations are not saved.
 
 ## Chat invitation
 

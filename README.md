@@ -39,7 +39,11 @@ pnpm seed                   # optional: placeholder products, services, and page
 
 In development Payload syncs the schema automatically. After changing a collection, run `pnpm payload migrate:create <name>` and commit the file in `migrations/`. Deployments run pending migrations before building (`deploy:build`, set in `vercel.json`).
 
-## Deploying to Vercel (when approved)
+## Deploying to Vercel
+
+The live deployment is updated manually with `vercel deploy --prod --force --scope monip`. The code is on GitHub (`jetzion/monip`), but pushes do not deploy until the Vercel project is connected to it (see `PLAN.md` section 13). Preview deployments currently share the production database.
+
+Setting up a new environment:
 
 1. Create a Neon Postgres database and a Vercel Blob store, and connect both to the Vercel project.
 2. Set environment variables for Production (and Preview, with a separate database):

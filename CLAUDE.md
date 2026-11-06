@@ -226,10 +226,13 @@ If credentials, content, access, or a business decision is missing:
 -   Current state, decisions, and next steps live in `PLAN.md`
     (sections 10, 12, 13). A temporary deployment runs at
     https://monip-group.vercel.app (Vercel team `monip`); no custom
-    domain or DNS changes without authorization. GitHub is not connected
-    yet: deploy with `vercel deploy --prod --scope monip`, only when
-    asked. Production is the source of truth for content; never copy the
-    local database over it.
+    domain or DNS changes without authorization. Code is pushed to GitHub
+    (`origin`, `jetzion/monip`), but Vercel is not connected to it, so a
+    push does not deploy: deploy with `vercel deploy --prod --force
+    --scope monip`, only when asked. Preview and Production share
+    `DATABASE_URL` and builds run `payload migrate`, so a preview build
+    would migrate the production database. Production is the source of
+    truth for content; never copy the local database over it.
 -   If a deploy's migrations fail with "Value must be unique" on
     `payload_migrations`, check that table's id sequence first (it was
     behind its rows on 2026-10-27).
@@ -241,8 +244,14 @@ If credentials, content, access, or a business decision is missing:
     the project.
 -   Turbopack's cache can build stale `globals.css` (TSX changes still
     land). After a CSS change, grep the built CSS for the new rule: locally,
-    move `.next/cache/turbopack` aside and rebuild; on Vercel, redeploy with
+    move `.next/cache/turbopack` aside and rebuild; `pnpm dev` has the same
+    problem (stop it, move `.next/cache/turbopack` and
+    `.next/dev/cache/turbopack` aside, restart); on Vercel, redeploy with
     `vercel deploy --prod --force --scope monip` (skips the build cache).
+-   Do not pass an expression-bodied arrow that returns `scrollIntoView()`
+    to `useEffect`: current Chrome returns a Promise from it, React calls
+    that as the cleanup, and the page crashes ("destroy is not a
+    function"). Use a block body.
 -   Collection hooks throw public `APIError`s with an explicit name:
     production bundling breaks `instanceof ValidationError` and empties
     class names.

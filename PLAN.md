@@ -121,7 +121,11 @@ Success Stories replaced the planned Case Study model (2026-10-24).
 -   `summary` --- required for cards and previews.
 -   `description` --- rich text or structured content.
 -   `primaryImage` --- required for publication.
--   `gallery` --- ordered list of uploads; alt text lives on each Media item.
+-   `gallery` --- ordered list of uploads; alt text and the optional
+    `imageName` (shown under the thumbnail) live on each Media item.
+    The product page shows the primary image and the gallery as
+    thumbnails under a large preview; clicking one morphs it into the
+    preview.
 -   `category` --- required reference to a category.
 -   `subcategory` --- optional reference to a category whose parent is
     the selected category.
@@ -149,7 +153,9 @@ lead-time information unless MONIP explicitly approves it.
 
 -   `title`, `slug`, `description`, `image` (optional), `parent`
     (optional reference; set for subcategories), `sortOrder`,
-    `seo.title`, `seo.description`.
+    `seo.title`, `seo.description`. The catalog lists products in one
+    section per category, ordered by `sortOrder`, then title; products
+    within a section by name.
 
 ### Service
 
@@ -463,13 +469,13 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 163 tests)
+### Unit tests (`pnpm test`, Vitest, 181 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
 safety, the publish-state rule for revalidation, and chat request
 validation, rate limiting, OpenRouter error mapping (mocked fetch; the
-API key is never logged), "Contact us" link rendering, office map
+API key is never logged), "Contact us" link rendering, David's greetings, office map
 pin positions (cropped view) and label placement, and success story
 customer-name approval and date formatting, and grouping categories
 under their parent for the admin Categories list, and the AI product
@@ -479,12 +485,12 @@ parsing and dates at 12:00 UTC, filter queries and month ranges, the Ship
 list per cruise line, and the template round trip through the importer),
 and the Training Schedule (time zone conversion including daylight-saving
 gaps and overlaps, session times per training type, the form check and
-request body, the cruise dropdowns narrowing and clearing, the month
+request body, the cruise dropdowns narrowing in any order and filling single options, the month
 grid and session placement, calendar URLs, and cruise change detection),
 and the training report (URL parameters, month overlap in each session's
 time zone, rows, totals, grouping, month choices).
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 90 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 106 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -505,7 +511,8 @@ accounts use their own (`E2E_USER_SET`, see CLAUDE.md).
     unknown stories, sitemap entries.
 -   Website chat with a mocked `/api/chat`: context, Shift+Enter, state
     across pages, errors, Escape and focus, "Contact us" links, David's
-    AI label; endpoint rejects system messages and malformed bodies.
+    name on replies, replies typed out (`aria-busy` until done); endpoint
+    rejects system messages and malformed bodies.
 -   robots.txt, sitemap, canonical and social metadata, legacy
     `/project-5` redirect.
 -   Preview route refusals (no session, unsafe paths); AI description
@@ -520,7 +527,7 @@ accounts use their own (`E2E_USER_SET`, see CLAUDE.md).
     checkboxes.
 -   Training Schedule (its own `e2e-training-*` accounts, trainers with a
     per-run suffix, and a temporary sailing, all deleted afterwards):
-    admin-only API; Add to Calendar disabled until complete; departure-day
+    admin-only API; Add to Calendar disabled until complete; cruise chosen Port first; departure-day
     and online sessions saved with the right times; a clash refused with
     the form kept; calendar placement, filters, details, and month
     navigation; an edit that clashes refused; delete; a changed or removed
@@ -637,11 +644,11 @@ Update this section as decisions are confirmed.
 | Text pages | `pages` collection with fixed keys (about, products, clients, success-stories, privacy) instead of globals | Confirmed |
 | Case studies | Replaced by Success Stories (2026-10-24) | Confirmed |
 | Task briefs | Original feature requests kept as history in `docs/briefs/`; this plan records what was decided | Confirmed |
-| Deployment | Temporary: https://monip-group.vercel.app on MONIP's Vercel team `monip` (Pro), Neon `monip-db` (free, iad1), public Blob store `monip-media`. Content copied from local on 2026-10-26 (schema from migrations, data only; inquiries and sessions excluded). Custom domain and DNS later | Confirmed 2026-10-26 |
+| Deployment | Temporary: https://monip-group.vercel.app on MONIP's Vercel team `monip` (Pro), Neon `monip-db` (free, iad1), public Blob store `monip-media`. Content copied from local on 2026-10-26 (schema from migrations, data only; inquiries and sessions excluded). Custom domain and DNS later. Code is pushed to GitHub `jetzion/monip` (`origin`), but Vercel is not connected to it yet, so deploys are manual (`vercel deploy --prod --force --scope monip`) | Confirmed 2026-10-26 |
 | Editor guide | `Editor_guide_for_MONIP.md` (exported from the shared editor guide doc) | Confirmed |
 | Homepage hero video | `public/hero/decoration.mp4`: 14 s montage of decoration techniques (2.0 MB, muted loop, poster for reduced motion, pause button). Pexels License clips (free commercial use, no attribution required): 28050441 embroidery machine, 34888657 screen printing (first seconds), 34240702 laser engraving (cropped to exclude a maker URL and engraved name), 5963499 leather hot-stamping. Old site videos are Wix library stock and not reusable | Confirmed (replace with MONIP footage if available) |
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
-| Website chat | OpenRouter via `POST /api/chat` (non-streaming JSON). Assistant is named "David" (shown on every reply); friendly greeting without "virtual assistant", but it never claims to be human and says it is an AI if asked; the long AI notice was removed 2026-10-23 and replaced by a small "AI" tag next to David's name on every reply (bot-disclosure laws). Answers only from published CMS content; never prices, lead times, MOQs, certifications; points to the contact form. `provider.data_collection: "deny"`; in-memory rate limit (10/min/IP); nothing stored. Approved 2026-10-23 | Confirmed |
+| Website chat | OpenRouter via `POST /api/chat` (non-streaming JSON). Assistant is named "David" (shown on every reply); friendly greeting without "virtual assistant", but it never claims to be human and says it is an AI if asked; the long AI notice was removed 2026-10-23 and replaced by a small "AI" tag next to David's name on every reply; that tag was removed at the owner's request on 2026-11-05, and the chat header ("David, MONIP's AI assistant") remains the disclosure (bot-disclosure laws, EU AI Act Art. 50). Personality (2026-11-05): warm, direct, enthusiastic voice; one or two sentences early in a conversation; recognizes frustration, confusion, or negative tone and responds calmly with a simpler answer and the contact form; one of five short greetings per conversation (`lib/chat/greetings.ts`); greeting and replies typed out letter by letter at 30 ms (`components/chat/TypedReply.tsx`; instant under reduced motion). A keyboard click sound was tried and removed the same day. Answers only from published CMS content; never prices, lead times, MOQs, certifications; points to the contact form. `provider.data_collection: "deny"`; in-memory rate limit (10/min/IP); nothing stored. Approved 2026-10-23 | Confirmed |
 | Jurisdiction | US | Confirmed |
 | Analytics provider | Vercel Web Analytics (cookieless), approved 2026-10-28; Pro plan custom events used for the chat invitation | Confirmed (enable in the Vercel project) |
 | Current site URL | www.monip-group.com: a single-page site plus /project-5 (sustainability mission) | Confirmed |
@@ -657,7 +664,9 @@ Update this section as decisions are confirmed.
 | Admin favicon | Red tile with the white M (`public/admin-favicon.png`, `admin.meta.icons`) instead of the Payload icon (2026-10-26) | Confirmed |
 | Admin branding | Full MONIP logo on login, forgot-password, and first-user pages; "M" mark (`public/monip-mark.png`, cropped from the logo) in the breadcrumb; indigo primary buttons, top stripe, tinted sidebar, dashboard card accents, light and dark themes (`components/admin/AdminLogo.tsx`, `AdminIcon.tsx`, `custom.scss`, 2026-10-28) | Confirmed |
 | Chat invitation | Timed question beside "Chat with us": 5 s delay, 10 s display, amber, on up to N page views per tab session (admin sets 1 to 10), AI-picked per page from CMS questions, admin-only switch, Web Analytics events. Requirements: `monip-chat-invitation-requirements.md`; details in section 18 (2026-10-28) | Confirmed |
-| Page transitions | React `<ViewTransition>` in `app/(frontend)/template.tsx` (re-exported by `products/` and `success-stories/` so detail pages fade too): old page fades out in 250 ms, new page fades in and rises 8 px over 450 ms. Product and success story card photos morph into their detail page photo over 700 ms (`components/media/ImageMorph.tsx`). Header stays put (`view-transition-name: site-header`); none under reduced motion; browser Back and catalog filtering swap instantly. Also frosted sticky header, nav hover hint, balanced headings, brand text selection. Page body sits on a pastel "aurora" backdrop (two fixed `body::before/::after` gradient layers drifting over 32 s and 40 s; still under reduced motion) so cards appear to float. Navigation: active underline glides between links (`nav-indicator` view transition), hover underline draws from the centre, header slims 80 to 64 px over the first 140 px of scroll (CSS scroll-driven, skipped where unsupported), mobile menu drops open with staggered links and retracts on close. Chat restyled to match: header band, card-style replies, gradient user messages, typing dots; David shown with an illustrated face (`components/chat/AssistantAvatar.tsx`, chosen over a photo so the AI is not mistaken for a real employee; "AI" label kept) (2026-11-05) | Confirmed |
+| Page transitions | React `<ViewTransition>` in `app/(frontend)/template.tsx` (re-exported by `products/` and `success-stories/` so detail pages fade too): old page fades out in 250 ms, new page fades in and rises 8 px over 450 ms. Product and success story card photos morph into their detail page photo over 700 ms (`components/media/ImageMorph.tsx`). Header stays put (`view-transition-name: site-header`); none under reduced motion; browser Back and catalog filtering swap instantly. Also frosted sticky header, nav hover hint, balanced headings, brand text selection. Page body sits on a pastel "aurora" backdrop (two fixed `body::before/::after` gradient layers drifting over 32 s and 40 s; still under reduced motion) so cards appear to float. Navigation: active underline glides between links (`nav-indicator` view transition), hover underline draws from the centre, header slims 80 to 64 px over the first 140 px of scroll (CSS scroll-driven, skipped where unsupported), mobile menu drops open with staggered links and retracts on close. Chat restyled to match: header band, card-style replies, gradient user messages, typing dots; David shown with an illustrated face (`components/chat/AssistantAvatar.tsx`, chosen over a photo so the AI is not mistaken for a real employee) (2026-11-05) | Confirmed |
+| Product gallery | Primary image plus gallery as thumbnails under a large preview; clicking a thumbnail morphs it (moves and enlarges, 550 ms view transition `gallery-pick`) into the preview; selected thumbnail outlined, its optional Media **Image name** underlined (migration `20261105_195838_media_image_name`). Instant swap under reduced motion or without the View Transitions API (2026-11-05) | Confirmed |
+| Catalog order | Products grouped in one section per category (heading and count), ordered by category Sort order, then title, then product name; also for search results. Product card titles are `h3` under the section `h2` (2026-11-05) | Confirmed |
 | Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
@@ -736,6 +745,9 @@ Update this section as decisions are confirmed.
 - [x] Cruise Fleet Schedule (admin only): collection and migration `20261026_152914_cruise_sailings`, 25,896 sailings imported, six filters, Excel template download and Import Excel, unit and e2e tests, editor guide (section 16)
 - [x] Training Schedule (admin only): trainers, port time zones (150 ports pre-filled), training sessions with conflict checks, scheduling form, monthly calendar, "Cruise changed — review"; migrations `20261027_205726_trainers_and_port_time_zones` and `20261027_214735_training_sessions`; deployed 2026-10-27 (section 17)
 - [x] Training report (admin only): one trainer or all over a month range, grouped by trainer or by date, PDF download; deployed 2026-10-27 (section 17)
+- [x] Chat personality: no "AI" tag on replies, varied short greetings, replies typed out, warm and direct voice, frustration handling; deployed 2026-11-05
+- [x] Product gallery: Media **Image name** under thumbnails, click a thumbnail to show it large with a morph animation; deployed 2026-11-05
+- [x] Catalog grouped by category (sections ordered by category Sort order); deployed 2026-11-05
 
 ## 13. Next Steps
 
@@ -745,7 +757,9 @@ Update this section as decisions are confirmed.
     seeded before each run, so content edits stop breaking tests and
     test inquiries stay out of the real Inquiries list.
 2.  Check real chat replies stay within the rules (`OPENROUTER_MODEL` is
-    `anthropic/claude-haiku-5.5`, set locally and on production).
+    `anthropic/claude-haiku-5.5`, set locally and on production), and
+    that David's new voice, short early replies, and frustration
+    handling (2026-11-05) work as intended with the live model.
 3.  Chat invitation content: replace the duplicate Success Stories list
     question ("Have a project like these in mind?" is entered twice on
     production); optionally republish products and success stories so
@@ -783,7 +797,23 @@ Update this section as decisions are confirmed.
 
 -   Connect GitHub to the MONIP Vercel account so pushes to `main`
     deploy automatically (until then, deploy with
-    `vercel deploy --prod --scope monip`).
+    `vercel deploy --prod --force --scope monip`). `vercel git connect`
+    failed on 2026-11-05: the Vercel account (`admin-74816549`) needs a
+    GitHub Login Connection first (vercel.com/account/authentication),
+    then rerun `vercel git connect https://github.com/jetzion/monip.git
+    --scope monip --yes`. Decide first whether to limit auto-deploys to
+    `main`: `DATABASE_URL` is shared by Production and Preview, and every
+    build runs `payload migrate`, so a pushed branch would migrate the
+    production database.
+-   2026-11-05: Cruise Fleet Schedule port "Miami, FL" renamed to
+    "Miami, Florida" in start port, end port, ports in order, and
+    training session cruise copies, and the "Miami, FL" Port time zone
+    removed (local by script, production by the user in the Neon SQL
+    editor). The importer does not rename it: a workbook that still says
+    "Miami, FL" brings that spelling back for the sailings it updates.
+-   Media cleanup on production: IDs 77, 78, and 79 ("155 E E_-1/-2/-4.jpg")
+    are duplicate uploads of ID 76 (Emerald); delete them once no product
+    uses them.
 -   Training report on production: the page loads and the PDF endpoint
     refuses anonymous requests (401); an admin still needs to open the
     report and download a PDF once (verified locally on a production
@@ -851,6 +881,8 @@ Update this section as decisions are confirmed.
     first question until republished). On wider screens the bubble's
     offset assumes the 158px "Chat with us" button (`sm:right-[11.5rem]`);
     the laptop e2e test catches overlap if the button changes.
+-   The thumbnail morph uses the View Transitions API; browsers without
+    it (older Firefox) swap the preview instantly.
 -   `pnpm-lock.yaml` resolves two copies of sharp's libvips (1.3.3 and
     1.3.4); production servers log a duplicate-class warning. Harmless so
     far; dedupe when upgrading sharp.
@@ -985,7 +1017,7 @@ and is shown on a monthly calendar. Full brief and confirmed decisions:
 ### Steps
 - [x] Trainers and Port time zones collections, migration `20261027_205726_trainers_and_port_time_zones` (pre-fills 150 start ports; the `?` port is skipped; verified against a fresh database)
 - [x] Training sessions collection, migration `20261027_214735_training_sessions`: times worked out on save (`lib/training/schedule.ts`, `lib/training/time.ts`), conflict check on create and edit, cruise copy, trainers with sessions cannot be deleted (`lib/training/hooks.ts`); verified against a fresh database
-- [x] Scheduling form above the calendar (`components/admin/TrainingFormClient.tsx`, `lib/training/form.ts`): cruise chosen with four dropdowns (Cruise line, Ship, Port, Cruise dates; line/ship/port combinations of upcoming sailings from one `SELECT DISTINCT` in `lib/training/cruise-options.ts`, dates through REST; each list narrows to the choices above it), trainer dropdown, type-specific fields, live preview using the server's rules, Add to Calendar enabled only when valid; errors keep the form values. Hook errors are public `APIError`s with an explicit name (production bundling breaks `instanceof ValidationError` and empties class names). 4 e2e tests
+- [x] Scheduling form above the calendar (`components/admin/TrainingFormClient.tsx`, `lib/training/form.ts`): cruise chosen with four dropdowns (Cruise line, Ship, Port, Cruise dates; line/ship/port combinations of upcoming sailings from one `SELECT DISTINCT` in `lib/training/cruise-options.ts`, dates through REST; since 2026-11-05 line, ship, and port can be chosen in any order, each listing only what fits the other two, and a list left with one option fills itself in (`optionsFor` and `changeChoice` in `lib/training/cruise-choice.ts`)), trainer dropdown, type-specific fields, live preview using the server's rules, Add to Calendar enabled only when valid; errors keep the form values. Hook errors are public `APIError`s with an explicit name (production bundling breaks `instanceof ValidationError` and empties class names). 4 e2e tests
 - [x] Monthly calendar (custom list view `components/admin/TrainingListView.tsx`, `lib/training/calendar.ts`): Monday-first month grid, Previous month / This month / Next month buttons (Payload's primary button, as Add to Calendar, rendered as links; equal width, sharing the row on phones; no limit either way; the month title has a fixed minimum width so they never shift), sessions on their days in their own time zone (onboarding on every day it covers), Trainer / Cruise / Training type filters, details with Edit (Payload edit view; conflicts rechecked) and Delete; month, filters, and selection in the URL; a list of days on narrow screens. Session title set on save. 7 e2e tests
 - [x] "Cruise changed — review" (`lib/training/review.ts`): each session's cruise copy is compared with the live sailing; a banner lists flagged sessions in any month, calendar entries show "Review", and the details list each change with **Update to current cruise details** (an unchanged PATCH, so the hook recalculates times and rechecks conflicts; Payload's Save is disabled on an unchanged form). 8 e2e tests
 - [x] Tests and documentation: 145 unit and 8 Training Schedule e2e tests; editor guide section and troubleshooting rows; full e2e run 79 passed (4 known catalog failures)
