@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { SectionHeading } from "@/components/content/SectionHeading";
-import { CatalogFilters } from "@/components/products/CatalogFilters";
+import { CatalogFilters, CatalogSearch } from "@/components/products/CatalogFilters";
 import { ProductCard } from "@/components/products/ProductCard";
 import { catalogHref, parseCatalogParams } from "@/lib/catalog-params";
 import { contentAccess } from "@/lib/queries/access";
@@ -44,26 +44,34 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
 
   return (
     <>
-      <PageHeader title={page?.title ?? "Products"} headline={page?.headline} intro={page?.intro}>
-        <div className="mt-8">
+      <PageHeader
+        title={page?.title ?? "Products"}
+        headline={page?.headline}
+        intro={page?.intro}
+        aside={
           <CatalogFilters
             params={params}
             categories={categories}
             activeParentId={categoryParent ?? category?.id}
           />
-        </div>
-      </PageHeader>
+        }
+      />
 
       <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24">
-        <div className="flex flex-wrap items-baseline justify-between gap-4">
-          <p role="status" className="text-sm text-muted-foreground">
-            {resultSummary(products.length, params.q, category?.title)}
-          </p>
-          {filtered && (
-            <Link href="/products" className="link-accent text-sm">
-              Clear filters
-            </Link>
-          )}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-baseline gap-4">
+            <p role="status" className="text-sm text-muted-foreground">
+              {resultSummary(products.length, params.q, category?.title)}
+            </p>
+            {filtered && (
+              <Link href="/products" className="link-accent text-sm">
+                Clear filters
+              </Link>
+            )}
+          </div>
+          <div className="w-full sm:w-[28rem]">
+            <CatalogSearch params={params} />
+          </div>
         </div>
 
         {products.length === 0 ? (

@@ -1,9 +1,12 @@
+import { cn } from "cn";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { pillClassName } from "@/components/ui/pill";
+import { pillClassName, tagItemClassName } from "@/components/ui/pill";
 import { catalogHref, type CatalogParams } from "@/lib/catalog-params";
+
+import { TagScroller } from "@/components/ui/tag-scroller";
 
 type CategoryOption = { id: number; title: string; slug: string; parent?: unknown };
 type LinkItem = { id?: number; title: string; slug: string };
@@ -25,44 +28,45 @@ export function CatalogFilters({ params, categories, activeParentId }: Props) {
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <form action="/products" method="get" role="search" className="flex max-w-xl gap-2">
-        <label htmlFor="catalog-q" className="sr-only">
-          Search products
-        </label>
-        <Input
-          id="catalog-q"
-          name="q"
-          type="search"
-          defaultValue={params.q}
-          placeholder="Name, material, or keyword"
-          className="h-11 bg-white"
-        />
-        {params.category && <input type="hidden" name="category" value={params.category} />}
-        <Button type="submit" className="h-11 px-5">
-          Search
-        </Button>
-      </form>
-
-      <nav aria-label="Product categories" className="flex flex-col gap-3">
+    <nav aria-label="Product categories" className="flex flex-col gap-3">
+      <CategoryLinks
+        items={[{ title: "All categories", slug: "" }, ...topLevel]}
+        params={params}
+        isActive={(item) => (item.id === undefined ? !params.category : item.id === activeParentId)}
+        label="categories"
+      />
+      {subcategories.length > 0 && (
         <CategoryLinks
-          items={[{ title: "All categories", slug: "" }, ...topLevel]}
+          items={subcategories}
           params={params}
-          isActive={(item) => (item.id === undefined ? !params.category : item.id === activeParentId)}
+          isActive={(item) => item.slug === params.category}
+          label="subcategories"
         />
-        {subcategories.length > 0 && (
-          <div className="border-l-2 border-white/50 pl-3">
-            <span className="sr-only">Subcategories</span>
-            <CategoryLinks
-              items={subcategories}
-              params={params}
-              isActive={(item) => item.slug === params.category}
-              small
-            />
-          </div>
-        )}
-      </nav>
-    </div>
+      )}
+    </nav>
+  );
+}
+
+/** Keyword search; keeps the selected category. */
+export function CatalogSearch({ params }: { params: CatalogParams }) {
+  return (
+    <form action="/products" method="get" role="search" className="flex max-w-xl gap-2">
+      <label htmlFor="catalog-q" className="sr-only">
+        Search products
+      </label>
+      <Input
+        id="catalog-q"
+        name="q"
+        type="search"
+        defaultValue={params.q}
+        placeholder="Name, material, or keyword"
+        className="h-11 bg-white"
+      />
+      {params.category && <input type="hidden" name="category" value={params.category} />}
+      <Button type="submit" className="h-11 px-5">
+        Search
+      </Button>
+    </form>
   );
 }
 
@@ -70,29 +74,30 @@ function CategoryLinks({
   items,
   params,
   isActive,
-  small,
+  label,
 }: {
   items: LinkItem[];
   params: CatalogParams;
   isActive: (item: LinkItem) => boolean;
-  small?: boolean;
+  label: string;
 }) {
   return (
-    <ul className="flex flex-wrap gap-2">
+    <TagScroller count={items.length} label={label}>
       {items.map((item) => {
         const active = isActive(item);
         return (
-          <li key={item.slug || "all"}>
+          <li key={item.slug || "all"} className={tagItemClassName}>
             <Link
               href={catalogHref({ q: params.q, category: item.slug })}
               aria-current={active ? "page" : undefined}
-              className={pillClassName({ active, dark: true, small })}
+              title={item.title}
+              className={cn(pillClassName({ active, dark: true, compact: true }), "w-full justify-center")}
             >
-              {item.title}
+              <span className="truncate">{item.title}</span>
             </Link>
           </li>
         );
       })}
-    </ul>
+    </TagScroller>
   );
 }

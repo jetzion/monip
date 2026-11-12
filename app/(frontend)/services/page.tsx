@@ -1,4 +1,5 @@
 import { RichText } from "@payloadcms/richtext-lexical/react";
+import { cn } from "cn";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -6,7 +7,8 @@ import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { ButtonLink } from "@/components/ui/button-link";
-import { pillClassName } from "@/components/ui/pill";
+import { pillClassName, tagItemClassName } from "@/components/ui/pill";
+import { TagScroller } from "@/components/ui/tag-scroller";
 import { contentAccess } from "@/lib/queries/access";
 import { getPage, getPublishedServices } from "@/lib/queries/content";
 
@@ -27,22 +29,28 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <PageHeader title={page?.title ?? "Services"} headline={page?.headline} intro={page?.intro}>
-        <nav aria-label="Services on this page" className="mt-8">
-          <ul className="flex flex-wrap gap-2">
-            {services.map((service) => (
-              <li key={service.slug}>
-                <a
-                  href={`#${service.slug}`}
-                  className={pillClassName({ dark: true })}
-                >
-                  {service.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </PageHeader>
+      <PageHeader
+        title={page?.title ?? "Services"}
+        headline={page?.headline}
+        intro={page?.intro}
+        aside={
+          <nav aria-label="Services on this page">
+            <TagScroller count={services.length} label="services">
+              {services.map((service) => (
+                <li key={service.slug} className={tagItemClassName}>
+                  <a
+                    href={`#${service.slug}`}
+                    title={service.title}
+                    className={cn(pillClassName({ dark: true, compact: true }), "w-full justify-center")}
+                  >
+                    <span className="truncate">{service.title}</span>
+                  </a>
+                </li>
+              ))}
+            </TagScroller>
+          </nav>
+        }
+      />
 
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="flex flex-col gap-6">
