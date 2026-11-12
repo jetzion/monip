@@ -184,6 +184,9 @@ export interface User {
  */
 export interface Media {
   id: number;
+  /**
+   * Filled in from the file name when you choose a file. Edit it to describe what the image or video shows.
+   */
   alt: string;
   /**
    * Optional. Shown under the thumbnail in a product gallery, e.g. "Emerald".

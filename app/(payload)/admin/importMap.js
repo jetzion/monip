@@ -1,3 +1,4 @@
+import { AltField as AltField_c8023bd6876f2f6eabbe8ee1669f7d06 } from '../../../components/admin/AltField'
 import { CategoryListView as CategoryListView_82b483ff09918e7862fccfb8f41ae622 } from '../../../components/admin/CategoryListView'
 import { DescribeProductButton as DescribeProductButton_d77fb2d212277d9eb398fa125ea2703c } from '../../../components/admin/DescribeProductButton'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -35,6 +36,7 @@ import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/AltField#AltField": AltField_c8023bd6876f2f6eabbe8ee1669f7d06,
   "/components/admin/CategoryListView#CategoryListView": CategoryListView_82b483ff09918e7862fccfb8f41ae622,
   "/components/admin/DescribeProductButton#DescribeProductButton": DescribeProductButton_d77fb2d212277d9eb398fa125ea2703c,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
