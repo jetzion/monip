@@ -1165,6 +1165,36 @@ export interface Home {
      * Link to the About page.
      */
     aboutLinkLabel: string;
+    /**
+     * What plays behind the headline. Text stays on a dark overlay so it remains readable.
+     */
+    background: 'video' | 'images';
+    /**
+     * MP4 video, muted and looped. Keep it short (10 to 20 seconds) and small (under 10 MB). Leave empty to use the built-in decoration video.
+     */
+    video?: (number | null) | Media;
+    /**
+     * Up to 6 JPG or PNG images, shown in this order. Drag to reorder.
+     */
+    slides?:
+      | {
+          image: number | Media;
+          seconds: number;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * How each image replaces the previous one.
+     */
+    transition?: ('fade' | 'zoom' | 'slide') | null;
+    /**
+     * How long each change takes, 0.3 to 3 seconds. Must be shorter than every display time.
+     */
+    transitionSeconds: number;
+    /**
+     * Strength of the dark mask over the images. Lower shows more of the image but makes the white text harder to read; check the result in Live Preview.
+     */
+    overlayOpacity: number;
   };
   closing: {
     heading: string;
@@ -1271,6 +1301,18 @@ export interface HomeSelect<T extends boolean = true> {
         headline?: T;
         intro?: T;
         aboutLinkLabel?: T;
+        background?: T;
+        video?: T;
+        slides?:
+          | T
+          | {
+              image?: T;
+              seconds?: T;
+              id?: T;
+            };
+        transition?: T;
+        transitionSeconds?: T;
+        overlayOpacity?: T;
       };
   closing?:
     | T

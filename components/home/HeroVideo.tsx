@@ -1,21 +1,23 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+import { HeroOverlay, HeroPauseButton, prefersReducedMotion } from "./HeroControls";
+
+type Props = { src: string; poster?: string };
 
 /**
  * Decorative background video for the homepage hero. Plays muted and
  * looped unless the visitor prefers reduced motion; the button lets anyone
  * pause it (WCAG 2.2.2).
  */
-export function HeroVideo() {
+export function HeroVideo({ src, poster }: Props) {
   const video = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!reduceMotion) video.current?.play().catch(() => setPlaying(false));
-  }, []);
+    if (!prefersReducedMotion()) video.current?.play().catch(() => setPlaying(false));
+  }, [src]);
 
   const toggle = () => {
     if (!video.current) return;
@@ -26,9 +28,10 @@ export function HeroVideo() {
   return (
     <>
       <video
+        key={src}
         ref={video}
         className="absolute inset-0 h-full w-full object-cover"
-        poster="/hero/decoration-poster.jpg"
+        poster={poster}
         muted
         loop
         playsInline
@@ -37,20 +40,10 @@ export function HeroVideo() {
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       >
-        <source src="/hero/decoration.mp4" type="video/mp4" />
+        <source src={src} type="video/mp4" />
       </video>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(100deg,rgb(20_27_58/0.94)_0%,rgb(20_27_58/0.82)_45%,rgb(44_58_133/0.55)_100%)]"
-      />
-      <button
-        type="button"
-        onClick={toggle}
-        className="absolute bottom-4 right-4 z-20 inline-flex select-none size-10 items-center justify-center rounded-full border border-white/30 bg-navy/60 text-white backdrop-blur transition-colors hover:bg-navy/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-      >
-        {playing ? <Pause aria-hidden="true" className="size-4" /> : <Play aria-hidden="true" className="size-4" />}
-        <span className="sr-only">{playing ? "Pause background video" : "Play background video"}</span>
-      </button>
+      <HeroOverlay />
+      <HeroPauseButton playing={playing} onToggle={toggle} what="background video" />
     </>
   );
 }

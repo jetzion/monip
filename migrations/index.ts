@@ -18,6 +18,8 @@ import * as migration_20261028_144457_chat_invitation from './20261028_144457_ch
 import * as migration_20261028_145254_chat_invitation_picks from './20261028_145254_chat_invitation_picks';
 import * as migration_20261028_164728_chat_invitation_times_per_visit from './20261028_164728_chat_invitation_times_per_visit';
 import * as migration_20261105_195838_media_image_name from './20261105_195838_media_image_name';
+import * as migration_20261112_173857_hero_background from './20261112_173857_hero_background';
+import * as migration_20261112_180120_hero_mask_and_transition_time from './20261112_180120_hero_mask_and_transition_time';
 
 export const migrations = [
   {
@@ -118,6 +120,16 @@ export const migrations = [
   {
     up: migration_20261105_195838_media_image_name.up,
     down: migration_20261105_195838_media_image_name.down,
-    name: '20261105_195838_media_image_name'
+    name: '20261105_195838_media_image_name',
+  },
+  {
+    up: migration_20261112_173857_hero_background.up,
+    down: migration_20261112_173857_hero_background.down,
+    name: '20261112_173857_hero_background',
+  },
+  {
+    up: migration_20261112_180120_hero_mask_and_transition_time.up,
+    down: migration_20261112_180120_hero_mask_and_transition_time.down,
+    name: '20261112_180120_hero_mask_and_transition_time'
   },
 ];

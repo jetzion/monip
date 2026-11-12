@@ -183,12 +183,12 @@ test.describe("timing", () => {
   test.describe("laptop", () => {
     test.use({ viewport: { width: 1280, height: 720 } });
 
-    test("sits beside the chat button, clear of the hero video controls", async ({ page }) => {
+    test("sits beside the chat button, clear of the hero pause button", async ({ page }) => {
       await page.goto("/");
       await advance(page, 5_250);
       const box = (await bubble(page).boundingBox())!;
       const button = (await page.getByRole("button", { name: "Chat with us" }).boundingBox())!;
-      const pause = (await page.getByRole("button", { name: /background video/ }).boundingBox())!;
+      const pause = (await page.getByRole("button", { name: /background (video|slideshow)/ }).boundingBox())!;
       expect(box.x + box.width).toBeLessThanOrEqual(button.x);
       expect(Math.abs(box.y + box.height - (button.y + button.height))).toBeLessThanOrEqual(1);
       const overlaps = box.x < pause.x + pause.width && pause.x < box.x + box.width && box.y < pause.y + pause.height && pause.y < box.y + box.height;

@@ -388,3 +388,23 @@
     linear-gradient(120deg, #141b3a 0%, #1f2a63 50%, #2c3a85 100%);
   background-size: auto, 22px 22px, auto;
 }
+
+/* Homepage hero slideshow (components/home/HeroSlideshow.tsx). */
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes hero-slide {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes hero-zoom {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 1.12;
+  }
+}

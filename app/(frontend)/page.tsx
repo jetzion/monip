@@ -4,9 +4,11 @@ import Link from "next/link";
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { SectionHeading } from "@/components/content/SectionHeading";
+import { HeroSlideshow } from "@/components/home/HeroSlideshow";
 import { HeroVideo } from "@/components/home/HeroVideo";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ButtonLink } from "@/components/ui/button-link";
+import { heroBackground } from "@/lib/hero";
 import { contentAccess } from "@/lib/queries/access";
 import { getHomeContent } from "@/lib/queries/home";
 import { getFeaturedProducts } from "@/lib/queries/products";
@@ -21,12 +23,24 @@ export default async function HomePage() {
     getHomeContent(await contentAccess()),
     getFeaturedProducts(),
   ]);
+  const background = heroBackground(hero);
 
   return (
     <>
       <PageHeader
         size="hero"
-        background={<HeroVideo />}
+        background={
+          background.kind === "video" ? (
+            <HeroVideo src={background.src} poster={background.poster} />
+          ) : (
+            <HeroSlideshow
+              slides={background.slides}
+              transition={background.transition}
+              transitionSeconds={background.transitionSeconds}
+              overlayOpacity={background.overlayOpacity}
+            />
+          )
+        }
         title={hero.headline}
         intro={hero.intro}
       >
