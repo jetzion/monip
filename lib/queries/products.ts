@@ -14,7 +14,7 @@ export type ContentAccess = typeof publicAccess | Awaited<ReturnType<typeof cont
 
 const populate = {
   // `url` is computed from `filename` on read, so both must be selected.
-  media: { url: true, filename: true, alt: true, width: true, height: true, imageName: true },
+  media: { url: true, filename: true, alt: true, width: true, height: true, imageName: true, contentBox: true },
   categories: { title: true, slug: true },
 } as const;
 

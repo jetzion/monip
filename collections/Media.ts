@@ -1,6 +1,7 @@
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
 import { altFromFilename } from '../lib/media-alt'
+import { measureContentBoxHook } from '../lib/media/measure-hook'
 
 /** Uploads without alt text (e.g. through the API) get it from the file name. */
 const defaultAlt: CollectionBeforeValidateHook = ({ data }) => {
@@ -17,6 +18,7 @@ export const Media: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [defaultAlt],
+    beforeChange: [measureContentBoxHook],
   },
   fields: [
     {
@@ -38,6 +40,18 @@ export const Media: CollectionConfig = {
       admin: {
         description: 'Optional. Shown under the thumbnail in a product gallery, e.g. "Emerald".',
       },
+    },
+    {
+      // Set automatically on upload; used to frame product images. Fractions (0-1) of the image.
+      name: 'contentBox',
+      type: 'group',
+      admin: { hidden: true },
+      fields: [
+        { name: 'left', type: 'number' },
+        { name: 'top', type: 'number' },
+        { name: 'width', type: 'number' },
+        { name: 'height', type: 'number' },
+      ],
     },
   ],
   upload: true,

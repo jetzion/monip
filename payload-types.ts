@@ -192,6 +192,12 @@ export interface Media {
    * Optional. Shown under the thumbnail in a product gallery, e.g. "Emerald".
    */
   imageName?: string | null;
+  contentBox?: {
+    left?: number | null;
+    top?: number | null;
+    width?: number | null;
+    height?: number | null;
+  };
   prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
@@ -862,6 +868,14 @@ export interface UsersSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   imageName?: T;
+  contentBox?:
+    | T
+    | {
+        left?: T;
+        top?: T;
+        width?: T;
+        height?: T;
+      };
   prefix?: T;
   _objectKey?: T;
   updatedAt?: T;

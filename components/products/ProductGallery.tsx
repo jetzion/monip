@@ -1,13 +1,14 @@
 "use client";
 
 import { cn } from "cn";
-import Image from "next/image";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
 import { ImageMorph } from "@/components/media/ImageMorph";
 
-export type GalleryImage = { url: string; alt: string; width: number; height: number; name: string | null };
+import { FramedImage, type FramedImageData } from "./FramedImage";
+
+export type GalleryImage = FramedImageData & { name: string | null };
 
 type Props = { images: GalleryImage[]; morphName: string };
 
@@ -51,15 +52,7 @@ export function ProductGallery({ images, morphName }: Props) {
     <div className="flex flex-col gap-4">
       <ImageMorph name={morphName}>
         <div ref={previewRef} className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
-          <Image
-            src={current.url}
-            alt={current.alt}
-            width={current.width}
-            height={current.height}
-            sizes="(min-width: 1024px) 55vw, 100vw"
-            className="h-auto w-full"
-            loading="eager"
-          />
+          <FramedImage image={current} sizes="(min-width: 1024px) 55vw, 100vw" eager />
         </div>
       </ImageMorph>
       {images.length > 1 && (
@@ -81,14 +74,7 @@ export function ProductGallery({ images, morphName }: Props) {
                       active ? "border-gold ring-2 ring-gold" : "border-border group-hover:border-gold/60",
                     )}
                   >
-                    <Image
-                      src={image.url}
-                      alt=""
-                      width={image.width}
-                      height={image.height}
-                      sizes="(min-width: 640px) 15vw, 33vw"
-                      className="h-auto w-full"
-                    />
+                    <FramedImage image={{ ...image, alt: "" }} sizes="(min-width: 640px) 15vw, 33vw" />
                   </span>
                   {image.name && (
                     <span

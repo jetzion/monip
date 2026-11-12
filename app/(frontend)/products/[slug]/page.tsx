@@ -69,8 +69,8 @@ function galleryImages(primary: MediaRef, gallery: MediaRef[] | null | undefined
   return [primary, ...(gallery ?? [])].flatMap((ref) => {
     const media = populated<Media>(ref);
     if (!media?.url) return [];
-    const { url, alt, width, height, imageName } = media;
-    return [{ url, alt, width: width ?? 1200, height: height ?? 900, name: imageName ?? null }];
+    const { url, alt, width, height, imageName, contentBox } = media;
+    return [{ url, alt, width: width ?? 1200, height: height ?? 900, contentBox, name: imageName ?? null }];
   });
 }
 

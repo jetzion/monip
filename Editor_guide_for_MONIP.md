@@ -35,6 +35,7 @@ A product needs a name, a summary, a main image, and a category before it can be
 - **Write description with AI**: drafts the Description from the photos and details entered so far. It replaces the current Description but saves nothing; read it, correct anything inaccurate, then save. The button is greyed out until you add a photo or some details.
 - **Primary image** (required): the main photo on cards and the product page.
 - **Gallery**: extra photos, shown in the order you drag them into. On the product page the primary image and the gallery appear as thumbnails under the large photo; visitors click a thumbnail to show it large.
+- **Photo framing**: product photos are framed automatically. When a photo is uploaded, the site finds the product inside its white background and zooms it to fill the same 4:3 frame, with the same margin, on cards and the product page. The photo file itself is not changed. For this to work, use a plain white background with nothing else in the photo: a stray line, shadow edge, or watermark counts as part of the product and makes it look smaller. Photos cropped with **Edit Image** show unframed until the image is saved again.
 
 **Details tab**
 
