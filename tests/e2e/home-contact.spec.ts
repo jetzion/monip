@@ -1,11 +1,18 @@
 import { expect, test } from "@playwright/test";
 
-/** Requires seeded placeholder products (pnpm seed); 1, 2, and 4 are featured. */
-test("homepage shows featured products only", async ({ page }) => {
+test("homepage shows the 4 most recently published featured products, four across", async ({ page, request }) => {
+  const response = await request.get("/api/products?where[featured][equals]=true&sort=-publishedAt&limit=4&depth=0");
+  const names = ((await response.json()) as { docs: { name: string }[] }).docs.map((doc) => doc.name);
+  expect(names.length).toBeGreaterThan(0);
+
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
-  const featured = page.getByRole("region", { name: "Featured products" });
-  await expect(featured.getByRole("article")).toHaveCount(3);
-  await expect(featured.getByRole("link", { name: "Placeholder Product 3" })).toHaveCount(0);
+  const cards = page.getByRole("region", { name: "Featured products" }).getByRole("article");
+  await expect(cards.getByRole("heading")).toHaveText(names);
+  if (names.length === 4) {
+    const tops = await cards.evaluateAll((all) => all.map((card) => card.getBoundingClientRect().top));
+    expect(new Set(tops).size).toBe(1);
+  }
 });
 
 test("header call to action opens the contact page", async ({ page }) => {
@@ -19,7 +26,13 @@ test("header call to action opens the contact page", async ({ page }) => {
 test("homepage shows the published CMS copy", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Merchandising and product sourcing for business");
-  await expect(page.getByRole("heading", { level: 2, name: "Have a product or program in mind?" })).toBeVisible();
+});
+
+test("a Discuss a project button under the products opens the contact page", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText("Have a product or program in mind?")).toHaveCount(0);
+  await page.getByRole("main").getByRole("link", { name: "Discuss a project" }).click();
+  await expect(page).toHaveURL(/\/contact$/);
 });
 
 test("hero links to the About page for more detail", async ({ page }) => {
@@ -45,4 +58,18 @@ test("header stays visible after scrolling", async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
   const box = await page.getByRole("banner").boundingBox();
   expect(box?.y).toBe(0);
+});
+
+test("home product and service cards share the name size and show no category tag", async ({ page }) => {
+  await page.goto("/");
+  const nameSize = (region: string) =>
+    page
+      .getByRole("region", { name: region })
+      .getByRole("article")
+      .first()
+      .getByRole("heading")
+      .evaluate((el) => getComputedStyle(el).fontSize);
+  expect(await nameSize("Featured products")).toBe("17px");
+  expect(await nameSize("Our services")).toBe("17px");
+  await expect(page.getByRole("region", { name: "Featured products" }).locator("article p.rounded-full")).toHaveCount(0);
 });

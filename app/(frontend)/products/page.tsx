@@ -28,7 +28,7 @@ export async function generateMetadata({ searchParams }: PageProps<"/products">)
 
 export default async function ProductsPage({ searchParams }: PageProps<"/products">) {
   const params = parseCatalogParams(await searchParams);
-  // Title and intro come from Pages ("Products"); the catalog works without that entry.
+  // Title, headline, and intro come from Pages ("Products"); the catalog works without that entry.
   const [categories, page] = await Promise.all([getCategories(), getPage("products", await contentAccess())]);
   const category = categories.find((item) => item.slug === params.category);
   const categoryParent = typeof category?.parent === "number" ? category.parent : undefined;
@@ -44,7 +44,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
 
   return (
     <>
-      <PageHeader title={page?.title ?? "Products"} intro={page?.intro}>
+      <PageHeader title={page?.title ?? "Products"} headline={page?.headline} intro={page?.intro}>
         <div className="mt-8">
           <CatalogFilters
             params={params}

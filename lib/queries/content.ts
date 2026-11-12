@@ -1,8 +1,29 @@
 import { cache } from "react";
 
 import type { PageKey } from "@/collections/Pages";
+import { inChosenOrder } from "@/lib/featured-services";
 import { getPayloadClient } from "@/lib/payload";
 import { publicAccess, type ContentAccess } from "@/lib/queries/products";
+
+/**
+ * Services for the homepage cards: the chosen ones in their order (published
+ * only), or the first 4 by sort order when none are chosen.
+ */
+export async function getFeaturedServices(ids: number[], access: ContentAccess = publicAccess) {
+  const payload = await getPayloadClient();
+  const { docs } = await payload.find({
+    collection: "services",
+    ...access,
+    depth: 1,
+    limit: 4,
+    sort: ["sortOrder", "title"],
+    where: ids.length > 0 ? { id: { in: ids } } : undefined,
+    select: { title: true, slug: true, summary: true, image: true },
+    // `url` is computed from `filename` on read, so both must be selected.
+    populate: { media: { url: true, filename: true, alt: true, width: true, height: true } },
+  });
+  return ids.length > 0 ? inChosenOrder(docs, ids) : docs;
+}
 
 export async function getPublishedServices(access: ContentAccess = publicAccess) {
   const payload = await getPayloadClient();

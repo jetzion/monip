@@ -8,6 +8,7 @@ import { autosaveDrafts, livePreview } from "../lib/live-preview";
 export const PAGE_KEYS = [
   { label: "About (/about)", value: "about" },
   { label: "Products (/products)", value: "products" },
+  { label: "Services (/services)", value: "services" },
   { label: "Our clients (/clients)", value: "clients" },
   { label: "Success Stories (/success-stories)", value: "success-stories" },
   { label: "Privacy policy (/privacy)", value: "privacy" },
@@ -21,7 +22,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "key", "_status", "updatedAt"],
     description:
-      "About, Products, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published (the Products catalog is always shown; its entry sets the title and intro).",
+      "About, Products, Services, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published (Products and Services work without an entry; when present, it sets their title, headline, and intro).",
     livePreview: livePreview((data) => (typeof data.key === "string" ? `/${data.key}` : null)),
   },
   versions: autosaveDrafts,
@@ -41,8 +42,8 @@ export const Pages: CollectionConfig = {
       name: "headline",
       type: "text",
       admin: {
-        description: "Large heading under the page title, e.g. Turning Ideas Into Results.",
-        condition: (data) => data?.key === "success-stories",
+        description:
+          "Optional large heading, e.g. Turning Ideas Into Results. When set, the title becomes the small label above it.",
       },
     },
     {

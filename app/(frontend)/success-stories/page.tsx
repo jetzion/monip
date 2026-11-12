@@ -7,26 +7,14 @@ import { getPublishedStories } from "@/lib/queries/stories";
 
 export const generateMetadata = () => contentPageMetadata("success-stories");
 
-/**
- * Title, headline, and intro come from Pages ("Success Stories"); cards from
- * the Success stories collection. With a headline, the title becomes the
- * small label above it.
- */
+/** Title, headline, and intro come from Pages ("Success Stories"); cards from the Success stories collection. */
 export default async function SuccessStoriesPage() {
   const access = await contentAccess();
   const [page, stories] = await Promise.all([requirePage("success-stories"), getPublishedStories(access)]);
 
   return (
     <>
-      <PageHeader
-        title={page.headline || page.title}
-        intro={page.intro}
-        eyebrow={
-          page.headline ? (
-            <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-on-dark-muted">{page.title}</p>
-          ) : undefined
-        }
-      />
+      <PageHeader title={page.title} headline={page.headline} intro={page.intro} />
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         {stories.length === 0 ? (
           <div className="rounded-xl border border-border bg-card p-8 shadow-card">

@@ -1,16 +1,20 @@
+import { cn } from "cn";
 import Link from "next/link";
 
 import { CmsImage } from "@/components/media/CmsImage";
 import { populated } from "@/lib/payload";
 import { ImageMorph } from "@/components/media/ImageMorph";
+import { compactCardTitle } from "@/components/ui/card-title";
 import type { Category, Product } from "@/payload-types";
 
 type Props = {
   product: Pick<Product, "name" | "slug" | "summary" | "primaryImage" | "category">;
   eager?: boolean;
+  /** Narrower card for four-across rows on the homepage: no category tag, shorter summary. */
+  compact?: boolean;
 };
 
-export function ProductCard({ product, eager }: Props) {
+export function ProductCard({ product, eager, compact }: Props) {
   const category = populated<Category>(product.category);
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition duration-200 hover:border-gold hover:shadow-card-hover motion-safe:hover:-translate-y-1 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2">
@@ -18,19 +22,19 @@ export function ProductCard({ product, eager }: Props) {
         <div className="aspect-[4/3] overflow-hidden border-b border-border bg-tint">
           <CmsImage
             image={product.primaryImage}
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            sizes={compact ? "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
             eager={eager}
             className="h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-[1.02]"
           />
         </div>
       </ImageMorph>
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        {category && (
+      <div className={cn("flex flex-1 flex-col gap-2", compact ? "p-4" : "p-5")}>
+        {category && !compact && (
           <p className="self-start rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-primary">
             {category.title}
           </p>
         )}
-        <h3 className="text-lg font-semibold leading-snug text-navy">
+        <h3 className={cn("font-semibold leading-snug text-navy", compact ? compactCardTitle : "text-lg")}>
           <Link
             href={`/products/${product.slug}`}
             className="after:absolute after:inset-0 focus-visible:outline-none group-hover:text-primary"
@@ -38,7 +42,7 @@ export function ProductCard({ product, eager }: Props) {
             {product.name}
           </Link>
         </h3>
-        <p className="text-sm leading-relaxed text-muted-foreground">{product.summary}</p>
+        <p className={cn("text-sm leading-relaxed text-muted-foreground", compact && "line-clamp-3")}>{product.summary}</p>
       </div>
     </article>
   );

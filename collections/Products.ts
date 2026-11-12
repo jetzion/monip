@@ -61,7 +61,7 @@ export const Products: CollectionConfig = {
       hooks: { beforeDuplicate: [() => false] },
       admin: {
         position: "sidebar",
-        description: "Show this product in featured sections on the homepage.",
+        description: "Show this product on the homepage, which shows the 4 most recently published featured products.",
       },
     },
     {

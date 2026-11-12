@@ -187,19 +187,19 @@ export const Home: GlobalConfig = {
       ],
     },
     {
-      name: "closing",
-      type: "group",
-      label: "Closing call to action",
-      fields: [
-        {
-          name: "heading",
-          type: "text",
-          required: true,
-          maxLength: 80,
-          defaultValue: "Have a product or program in mind?",
-        },
-        label("buttonLabel", "Discuss a project", "Button to the contact page."),
-      ],
+      name: "featuredServices",
+      type: "relationship",
+      label: "Featured services",
+      relationTo: "services",
+      hasMany: true,
+      maxRows: 4,
+      // IDs only: the page loads the services itself, published ones only.
+      maxDepth: 0,
+      admin: {
+        isSortable: true,
+        description:
+          "Up to 4 services shown as cards above Featured products, in this order (drag to reorder). Only published services appear. Leave empty to show the first 4 by the Services sort order.",
+      },
     },
   ],
 };

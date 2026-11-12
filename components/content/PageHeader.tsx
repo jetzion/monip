@@ -2,6 +2,8 @@ import { cn } from "cn";
 
 type Props = {
   title: string;
+  /** Optional large heading; when set, the title becomes the small label above it. */
+  headline?: string | null;
   intro?: string | null;
   /** Shown above the title, e.g. a breadcrumb. */
   eyebrow?: React.ReactNode;
@@ -13,25 +15,29 @@ type Props = {
 };
 
 /** Navy page header band shared by every page, including the homepage hero. */
-export function PageHeader({ title, intro, eyebrow, children, size = "page", background }: Props) {
+export function PageHeader({ title, headline, intro, eyebrow, children, size = "page", background }: Props) {
   const hero = size === "hero";
+  const label = headline ? (
+    <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-on-dark-muted">{title}</p>
+  ) : null;
   return (
     <section className="header-band relative overflow-hidden text-white">
       {background}
       <div
         className={cn(
           "relative z-10 mx-auto max-w-6xl px-4 sm:px-6",
-          hero ? "py-20 sm:py-28" : "py-12 sm:py-16",
+          hero ? "py-6 sm:py-15" : "min-h-[24.25rem] py-12 sm:min-h-[22.25rem] sm:py-16",
         )}
       >
         {eyebrow}
+        {label}
         <h1
           className={cn(
             "font-display max-w-4xl font-semibold leading-[1.05]",
             hero ? "text-4xl sm:text-5xl lg:text-6xl" : "text-4xl sm:text-5xl",
           )}
         >
-          {title}
+          {headline || title}
         </h1>
         {intro && (
           <p

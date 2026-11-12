@@ -164,8 +164,12 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Home (global)
 
--   `hero` (headline, intro, about link label, background) and `closing`
-    (heading, button label); drafts and Live Preview. Link targets are in code.
+-   `hero` (headline, intro, about link label, background) and
+    `featuredServices` (up to 4 services, ordered; empty shows the first 4 by
+    sort order; published only); drafts and Live Preview. Link targets are in
+    code. The closing call-to-action box and its fields were removed on
+    2026-11-12 (a plain "Discuss a project" button follows the featured
+    products).
 -   Hero background: **Video** (an uploaded MP4; empty uses the built-in
     `public/hero/decoration.mp4`) or **Images** (1 to 6 JPG/PNG, each with a
     display time of 2 to 30 s, default 6; one transition for all: Fade,
@@ -475,7 +479,7 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 193 tests)
+### Unit tests (`pnpm test`, Vitest, 197 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
@@ -496,7 +500,7 @@ grid and session placement, calendar URLs, and cruise change detection),
 and the training report (URL parameters, month overlap in each session's
 time zone, rows, totals, grouping, month choices).
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 117 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 121 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -676,7 +680,7 @@ Update this section as decisions are confirmed.
 | Page transitions | React `<ViewTransition>` in `app/(frontend)/template.tsx` (re-exported by `products/` and `success-stories/` so detail pages fade too): old page fades out in 250 ms, new page fades in and rises 8 px over 450 ms. Product and success story card photos morph into their detail page photo over 700 ms (`components/media/ImageMorph.tsx`). Header stays put (`view-transition-name: site-header`); none under reduced motion; browser Back and catalog filtering swap instantly. Also frosted sticky header, nav hover hint, balanced headings, brand text selection. Page body sits on a pastel "aurora" backdrop (two fixed `body::before/::after` gradient layers drifting over 32 s and 40 s; still under reduced motion) so cards appear to float. Navigation: active underline glides between links (`nav-indicator` view transition), hover underline draws from the centre, header slims 80 to 64 px over the first 140 px of scroll (CSS scroll-driven, skipped where unsupported), mobile menu drops open with staggered links and retracts on close. Chat restyled to match: header band, card-style replies, gradient user messages, typing dots; David shown with an illustrated face (`components/chat/AssistantAvatar.tsx`, chosen over a photo so the AI is not mistaken for a real employee) (2026-11-05) | Confirmed |
 | Product gallery | Primary image plus gallery as thumbnails under a large preview; clicking a thumbnail morphs it (moves and enlarges, 550 ms view transition `gallery-pick`) into the preview; selected thumbnail outlined, its optional Media **Image name** underlined (migration `20261105_195838_media_image_name`). Instant swap under reduced motion or without the View Transitions API (2026-11-05) | Confirmed |
 | Catalog order | Products grouped in one section per category (heading and count), ordered by category Sort order, then title, then product name; also for search results. Product card titles are `h3` under the section `h2` (2026-11-05) | Confirmed |
-| Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23) | Confirmed |
+| Homepage | Copy edited in the Home global; hero has headline, intro, and a "More about MONIP Group" link to About (hero buttons removed 2026-10-23). Since 2026-11-12: hero, then 4 admin-chosen service cards (images cropped to 4:3), then the 4 most recent featured products in compact cards, then a plain "Discuss a project" button; the closing call-to-action box was removed. Hero 20% shorter (padding `py-6 sm:py-15`, was `py-20 sm:py-28`): 418 px on desktop, 394 px on tablet, 470 px on phones | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
 | Privacy policy | Text supplied in `PRIVACY-POLICY.md`, published as the Privacy policy page. The CMS page is the master copy once published; the file is the original supplied text | Confirmed (privacy email and chat section missing) |
@@ -762,10 +766,18 @@ Update this section as decisions are confirmed.
 - [x] Homepage hero background editable: uploaded MP4 or a slideshow of up to 6 images with per-image display time and Fade, Scale & Zoom, or Slide-In, transition time, and mask opacity; migrations `20261112_173857_hero_background` and `20261112_180120_hero_mask_and_transition_time` (verified against a fresh database); unit and e2e tests; editor guide. Deployed 2026-11-12
 - [x] Media alt text suggested from the file name (extension removed, symbols to spaces) when a file is chosen in the admin (`components/admin/AltField.tsx`); the editor can change it, and typed text is never overwritten; API uploads without alt text get the same default (`lib/media-alt.ts`); unit and e2e tests; editor guide. Deployed 2026-11-12
 - [x] Gold accent (`--gold`) for primary buttons, links, and small highlights on the navy-and-white base; accessibility spec passes (18 tests, axe colour contrast). Deployed 2026-11-12
+- [x] Homepage sections: closing box removed (fields dropped; plain "Discuss a project" button instead), featured products 4 across in compact cards, "Our services" section with up to 4 admin-chosen services (`featuredServices` on Home); migration `20261112_191539_home_sections` (verified against a fresh database); unit and e2e tests; editor guide. Not deployed yet
+- [x] Page headers: Title (required), Headline, and Intro editable in Pages for Products, Services (new "services" page key; the page works without an entry), Clients, Success Stories, About, and Privacy; with a headline, the title becomes the small label above it (`PageHeader`). Page banners at least as tall as the Products banner; About body text spans the card. Migration `20261112_211746_pages_services_key` (verified against a fresh database); e2e test `page-headers.spec.ts`; editor guide. Not deployed yet
 
 ## 13. Next Steps
 
 **Can be done now, locally**
+
+- **Reminder (MONIP, in the admin):** fix the service slugs, now used in the
+    homepage service card links (`/services#<slug>`): `placeholder-service-1`,
+    `-2`, `-3` and `progra` should match their titles (e.g. `sourcing`,
+    `strategy`, `design`, `programs`). Nothing else links to them, so no
+    redirects are needed. Also on production.
 
 1.  Give e2e tests their own database, created from migrations and
     seeded before each run, so content edits stop breaking tests and

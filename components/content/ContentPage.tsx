@@ -6,16 +6,16 @@ import type { Page } from "@/payload-types";
 import { PageHeader } from "./PageHeader";
 
 type Props = {
-  page: Pick<Page, "title" | "intro" | "image" | "body">;
+  page: Pick<Page, "title" | "headline" | "intro" | "image" | "body">;
   /** Extra sections after the body, e.g. the offices map on About. */
   children?: React.ReactNode;
 };
 
-/** Layout for CMS-managed text pages (About, Our clients, Privacy). */
+/** Layout for CMS-managed text pages (About, Privacy). */
 export function ContentPage({ page, children }: Props) {
   return (
     <article>
-      <PageHeader title={page.title} intro={page.intro} />
+      <PageHeader title={page.title} headline={page.headline} intro={page.intro} />
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 sm:py-16">
         {page.image && (
           <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
@@ -31,7 +31,7 @@ export function ContentPage({ page, children }: Props) {
           <div className="rounded-xl border border-border bg-card p-6 shadow-card sm:p-10">
             <RichText
               data={page.body}
-              className="max-w-3xl space-y-5 text-[1.0625rem] leading-relaxed [&_a]:link-accent [&_h2]:font-display [&_h2]:border-l-4 [&_h2]:border-gold [&_h2]:pl-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-navy [&_h2:not(:first-child)]:mt-10 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-navy [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&_ul]:marker:text-primary"
+              className="space-y-5 text-[1.0625rem] leading-relaxed [&_a]:link-accent [&_h2]:font-display [&_h2]:border-l-4 [&_h2]:border-gold [&_h2]:pl-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-navy [&_h2:not(:first-child)]:mt-10 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-navy [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&_ul]:marker:text-primary"
             />
           </div>
         )}

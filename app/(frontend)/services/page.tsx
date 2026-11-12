@@ -8,21 +8,26 @@ import { CmsImage } from "@/components/media/CmsImage";
 import { ButtonLink } from "@/components/ui/button-link";
 import { pillClassName } from "@/components/ui/pill";
 import { contentAccess } from "@/lib/queries/access";
-import { getPublishedServices } from "@/lib/queries/content";
+import { getPage, getPublishedServices } from "@/lib/queries/content";
 
-export const metadata: Metadata = {
-  title: "Services",
-  description: "Services MONIP Group provides.",
-  alternates: { canonical: "/services" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPage("services", await contentAccess());
+  return {
+    title: page?.seo?.title || page?.title || "Services",
+    description: page?.seo?.description || page?.intro || "Services MONIP Group provides.",
+    alternates: { canonical: "/services" },
+  };
+}
 
+/** Title, headline, and intro come from Pages ("Services"); the page works without that entry. */
 export default async function ServicesPage() {
-  const services = await getPublishedServices(await contentAccess());
+  const access = await contentAccess();
+  const [services, page] = await Promise.all([getPublishedServices(access), getPage("services", access)]);
   if (services.length === 0) notFound();
 
   return (
     <>
-      <PageHeader title="Services">
+      <PageHeader title={page?.title ?? "Services"} headline={page?.headline} intro={page?.intro}>
         <nav aria-label="Services on this page" className="mt-8">
           <ul className="flex flex-wrap gap-2">
             {services.map((service) => (

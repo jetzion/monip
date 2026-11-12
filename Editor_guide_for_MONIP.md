@@ -46,7 +46,7 @@ A product needs a name, a summary, a main image, and a category before it can be
 
 **SEO tab** (optional): the title and description search engines show. Left empty, the product name and summary are used.
 
-**Sidebar**: tick **Featured** to show the product on the homepage, which shows the three most recently published featured products. **Published At** is filled in automatically on first publish.
+**Sidebar**: tick **Featured** to show the product on the homepage, which shows the four most recently published featured products. **Published At** is filled in automatically on first publish.
 
 | Field | Where visitors see it |
 | --- | --- |
@@ -92,7 +92,9 @@ Services and pages use the same draft, preview, and publish steps as products. C
 
 **Services.** Each service is a section on the Services page, ordered by **Sort order**, with a required **Summary** plus optional body text and image. The Services page and its menu link appear once at least one service is published.
 
-**Home page.** Open **Home page** (under Globals) to change the homepage text: the headline, intro, About link label, and the closing call to action. Where the links go is fixed. Edits save as a draft with Live Preview; click **Publish changes** to update the site. Featured products are chosen with the **Featured** checkbox on each product.
+**Home page.** Open **Home page** (under Globals) to change the homepage text: the headline, intro, and About link label, the background (below), and the featured services. Where the links go is fixed. Edits save as a draft with Live Preview; click **Publish changes** to update the site. Featured products are chosen with the **Featured** checkbox on each product.
+
+**Featured services.** The homepage shows 4 service cards above Featured products: image (cropped to 4:3, so 4:3 images look best), title, and the start of the summary; each links to that service on the Services page. In **Home page**, **Featured services** picks up to 4 services and their order (drag to reorder). Only published services appear. Leave it empty to show the first 4 by the Services **Sort order**.
 
 **Homepage background.** In **Home page**, **Background** chooses what plays behind the headline:
 
@@ -101,9 +103,11 @@ Services and pages use the same draft, preview, and publish steps as products. C
 
 Visitors can pause either one, and visitors who have reduced motion turned on see it paused.
 
-**Products page header.** Open **Pages** and the "Products" entry to change the title and the intro text at the top of the Products catalog. The catalog itself is always shown; without a published Products entry it shows the title "Products" and no intro.
+**Page headers.** Every page entry in **Pages** has a **Title** (required), an optional **Headline**, and an optional **Intro**. Without a headline, the title is the large heading at the top of the page. With one, the headline becomes the large heading and the title the small label above it. The intro appears below the heading.
 
-**About, Our clients, and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
+**Products and Services page headers.** Open **Pages** and the "Products" entry (or create a "Services" entry) to change the title, headline, and intro at the top of the Products catalog or the Services page. Both pages are shown without an entry: they then show the title "Products" or "Services" and no intro.
+
+**About, Our clients, and Privacy policy.** Open **Pages**, click **Create New**, and choose which page it is in the **Page** field (each can exist only once). Add a title, an optional headline, a short intro, an optional photo (shown below the intro and used when the page is shared), and the body text. A page and its link (in the main menu, or the footer for Privacy policy) appear only once it is published.
 
 **Client logos.** Open **Clients** to add, remove, or reorder the logos on the Our clients page. Each needs the client name and a logo (give the logo image alt text such as "MSC Cruises logo"). The list shows each logo and is in page order: drag the ⠿ handle on the left of a row to move it, and the page updates straight away. You can also reorder with the keyboard: focus the handle, press Space, use the arrow keys, then press Space again. Show only clients MONIP has approval to name.
 

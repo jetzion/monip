@@ -19,14 +19,14 @@ function logoHeight(logo: Media | null) {
   return Math.min(88, Math.round(46 * (ratio / 3) ** -0.6));
 }
 
-/** Title and intro come from Pages ("Our clients"); logos from the Clients collection. */
+/** Title, headline, and intro come from Pages ("Our clients"); logos from the Clients collection. */
 export default async function ClientsPage() {
   const access = await contentAccess();
   const [page, clients] = await Promise.all([requirePage("clients"), getPublishedClients(access)]);
 
   return (
     <>
-      <PageHeader title={page.title} intro={page.intro} />
+      <PageHeader title={page.title} headline={page.headline} intro={page.intro} />
       {clients.length > 0 && (
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <ul aria-label="Client logos" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 lg:gap-6">

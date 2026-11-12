@@ -253,7 +253,7 @@ export interface Product {
    */
   slug: string;
   /**
-   * Show this product in featured sections on the homepage.
+   * Show this product on the homepage, which shows the 4 most recently published featured products.
    */
   featured?: boolean | null;
   /**
@@ -510,7 +510,7 @@ export interface Office {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * About, Products, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published (the Products catalog is always shown; its entry sets the title and intro).
+ * About, Products, Services, Our clients, Success Stories, and Privacy pages. A page and its link appear on the site only once published (Products and Services work without an entry; when present, it sets their title, headline, and intro).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
@@ -519,13 +519,13 @@ export interface Page {
   id: number;
   title: string;
   /**
-   * Large heading under the page title, e.g. Turning Ideas Into Results.
+   * Optional large heading, e.g. Turning Ideas Into Results. When set, the title becomes the small label above it.
    */
   headline?: string | null;
   /**
    * Which site page this content is for.
    */
-  key: 'about' | 'products' | 'clients' | 'success-stories' | 'privacy';
+  key: 'about' | 'products' | 'services' | 'clients' | 'success-stories' | 'privacy';
   /**
    * Short introduction shown under the page title.
    */
@@ -1199,13 +1199,10 @@ export interface Home {
      */
     overlayOpacity: number;
   };
-  closing: {
-    heading: string;
-    /**
-     * Button to the contact page.
-     */
-    buttonLabel: string;
-  };
+  /**
+   * Up to 4 services shown as cards above Featured products, in this order (drag to reorder). Only published services appear. Leave empty to show the first 4 by the Services sort order.
+   */
+  featuredServices?: (number | Service)[] | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1317,12 +1314,7 @@ export interface HomeSelect<T extends boolean = true> {
         transitionSeconds?: T;
         overlayOpacity?: T;
       };
-  closing?:
-    | T
-    | {
-        heading?: T;
-        buttonLabel?: T;
-      };
+  featuredServices?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

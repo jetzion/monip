@@ -20,6 +20,8 @@ import * as migration_20261028_164728_chat_invitation_times_per_visit from './20
 import * as migration_20261105_195838_media_image_name from './20261105_195838_media_image_name';
 import * as migration_20261112_173857_hero_background from './20261112_173857_hero_background';
 import * as migration_20261112_180120_hero_mask_and_transition_time from './20261112_180120_hero_mask_and_transition_time';
+import * as migration_20261112_191539_home_sections from './20261112_191539_home_sections';
+import * as migration_20261112_211746_pages_services_key from './20261112_211746_pages_services_key';
 
 export const migrations = [
   {
@@ -130,6 +132,16 @@ export const migrations = [
   {
     up: migration_20261112_180120_hero_mask_and_transition_time.up,
     down: migration_20261112_180120_hero_mask_and_transition_time.down,
-    name: '20261112_180120_hero_mask_and_transition_time'
+    name: '20261112_180120_hero_mask_and_transition_time',
+  },
+  {
+    up: migration_20261112_191539_home_sections.up,
+    down: migration_20261112_191539_home_sections.down,
+    name: '20261112_191539_home_sections',
+  },
+  {
+    up: migration_20261112_211746_pages_services_key.up,
+    down: migration_20261112_211746_pages_services_key.down,
+    name: '20261112_211746_pages_services_key'
   },
 ];
