@@ -759,9 +759,9 @@ Update this section as decisions are confirmed.
 - [x] Catalog grouped by category (sections ordered by category Sort order); deployed 2026-11-05
 - [x] Training Schedule: cruise line, ship, and port chosen in any order (Port first works); form title hint; deployed 2026-11-05
 - [x] Cruise Fleet Schedule: "Miami, FL" renamed to "Miami, Florida" (local and production), 2026-11-05
-- [x] Homepage hero background editable: uploaded MP4 or a slideshow of up to 6 images with per-image display time and Fade, Scale & Zoom, or Slide-In, transition time, and mask opacity; migrations `20261112_173857_hero_background` and `20261112_180120_hero_mask_and_transition_time` (verified against a fresh database); unit and e2e tests; editor guide. Not deployed yet
-- [x] Media alt text suggested from the file name (extension removed, symbols to spaces) when a file is chosen in the admin (`components/admin/AltField.tsx`); the editor can change it, and typed text is never overwritten; API uploads without alt text get the same default (`lib/media-alt.ts`); unit and e2e tests; editor guide. Not deployed yet
-- [x] Gold accent (`--gold`) for primary buttons, links, and small highlights on the navy-and-white base; accessibility spec passes (18 tests, axe colour contrast). Not deployed yet
+- [x] Homepage hero background editable: uploaded MP4 or a slideshow of up to 6 images with per-image display time and Fade, Scale & Zoom, or Slide-In, transition time, and mask opacity; migrations `20261112_173857_hero_background` and `20261112_180120_hero_mask_and_transition_time` (verified against a fresh database); unit and e2e tests; editor guide. Deployed 2026-11-12
+- [x] Media alt text suggested from the file name (extension removed, symbols to spaces) when a file is chosen in the admin (`components/admin/AltField.tsx`); the editor can change it, and typed text is never overwritten; API uploads without alt text get the same default (`lib/media-alt.ts`); unit and e2e tests; editor guide. Deployed 2026-11-12
+- [x] Gold accent (`--gold`) for primary buttons, links, and small highlights on the navy-and-white base; accessibility spec passes (18 tests, axe colour contrast). Deployed 2026-11-12
 
 ## 13. Next Steps
 
