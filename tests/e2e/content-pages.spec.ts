@@ -16,7 +16,7 @@ test("services page lists published services", async ({ page }) => {
 
 test("About page is linked from the header", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("banner").getByRole("link", { name: "About", exact: true }).click();
+  await page.getByRole("banner").getByRole("link", { name: "About us", exact: true }).click();
   await expect(page).toHaveURL(/\/about$/);
   await expect(page.getByRole("heading", { level: 1, name: /^About/ })).toBeVisible();
 });

@@ -28,7 +28,7 @@ export function PageHeader({ title, headline, intro, eyebrow, children, aside, s
       <div
         className={cn(
           "relative z-10 mx-auto max-w-6xl px-4 sm:px-6",
-          hero ? "py-6 sm:py-15" : "min-h-[24.25rem] py-12 sm:min-h-[22.25rem] sm:py-16",
+          hero ? "py-6 sm:py-15" : "min-h-[19.4rem] py-12 sm:min-h-[17.8rem] sm:py-16",
           aside && "lg:flex lg:items-start lg:justify-between lg:gap-12",
         )}
       >
