@@ -46,7 +46,7 @@ export default async function HomePage() {
       >
         <Link
           href="/about"
-          className="mt-4 inline-block font-semibold text-white underline underline-offset-4 hover:text-on-dark-muted"
+          className="mt-4 inline-block font-semibold text-gold underline decoration-2 underline-offset-4 hover:text-gold-hover"
         >
           {hero.aboutLinkLabel}
         </Link>
@@ -57,7 +57,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <SectionHeading id="featured-heading">Featured products</SectionHeading>
-              <Link href="/products" className="text-sm font-semibold text-azure hover:underline">
+              <Link href="/products" className="link-accent text-sm">
                 View all products
               </Link>
             </div>
@@ -78,7 +78,7 @@ export default async function HomePage() {
           <h2 className="font-display max-w-xl text-3xl font-semibold leading-tight">
             {closing.heading}
           </h2>
-          <ButtonLink href="/contact" variant="inverse" className="h-11 self-start px-6 md:self-auto">
+          <ButtonLink href="/contact" className="h-11 self-start px-6 md:self-auto">
             {closing.buttonLabel}
           </ButtonLink>
         </div>

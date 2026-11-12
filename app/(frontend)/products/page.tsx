@@ -60,7 +60,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
             {resultSummary(products.length, params.q, category?.title)}
           </p>
           {filtered && (
-            <Link href="/products" className="text-sm font-semibold text-azure hover:underline">
+            <Link href="/products" className="link-accent text-sm">
               Clear filters
             </Link>
           )}
@@ -79,7 +79,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
               {filtered ? (
                 <>
                   Try different keywords or{" "}
-                  <Link href={catalogHref({})} className="text-azure underline underline-offset-4">
+                  <Link href={catalogHref({})} className="link-accent">
                     browse all products
                   </Link>
                   .

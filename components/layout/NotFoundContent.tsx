@@ -10,12 +10,12 @@ export function NotFoundContent() {
       </p>
       <ul className="mt-8 flex gap-6 text-sm font-medium">
         <li>
-          <Link href="/" className="text-primary underline underline-offset-4">
+          <Link href="/" className="link-accent">
             Go to the homepage
           </Link>
         </li>
         <li>
-          <Link href="/products" className="text-primary underline underline-offset-4">
+          <Link href="/products" className="link-accent">
             Browse products
           </Link>
         </li>

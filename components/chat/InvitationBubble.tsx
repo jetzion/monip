@@ -86,7 +86,7 @@ export function InvitationBubble({ page, question, maxShows }: { page: Invitatio
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           className={cn(
-            "pointer-events-auto rounded-2xl rounded-br-sm bg-highlight px-4 py-3 text-left font-semibold text-navy shadow-card-hover transition-opacity duration-300 starting:opacity-0 hover:bg-highlight-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 motion-reduce:transition-none",
+            "pointer-events-auto rounded-2xl rounded-br-sm bg-gold px-4 py-3 text-left font-semibold text-navy shadow-card-hover transition-opacity duration-300 starting:opacity-0 hover:bg-gold-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 motion-reduce:transition-none",
             phase === "fading" && "pointer-events-none opacity-0",
           )}
         >

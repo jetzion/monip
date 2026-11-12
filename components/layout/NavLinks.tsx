@@ -45,7 +45,7 @@ export function NavLinks({ items, onNavigate, variant }: Props) {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "block border-l-4 py-3 pl-3 font-medium",
-                  active ? "border-primary text-foreground" : "border-transparent text-muted-foreground",
+                  active ? "border-gold text-foreground" : "border-transparent text-muted-foreground",
                 )}
               >
                 {item.label}

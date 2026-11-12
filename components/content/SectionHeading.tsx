@@ -10,7 +10,7 @@ type Props = {
 export function SectionHeading({ id, children, className }: Props) {
   return (
     <h2 id={id} className={cn("font-display text-3xl font-semibold text-navy sm:text-4xl", className)}>
-      <span aria-hidden="true" className="mb-4 block h-1 w-12 rounded-full bg-primary" />
+      <span aria-hidden="true" className="mb-4 block h-1 w-12 rounded-full bg-gold" />
       {children}
     </h2>
   );

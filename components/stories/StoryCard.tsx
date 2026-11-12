@@ -17,7 +17,7 @@ export function StoryCard({ story, eager }: Props) {
   const customer = visibleCustomer(story);
   const date = formatStoryDate(story.publicationDate);
   return (
-    <article className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition duration-200 hover:border-primary/50 hover:shadow-card-hover motion-safe:hover:-translate-y-1 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2">
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition duration-200 hover:border-gold hover:shadow-card-hover motion-safe:hover:-translate-y-1 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2">
       <ImageMorph name={`story-image-${story.slug}`}>
         <div className="aspect-[4/3] overflow-hidden border-b border-border bg-tint">
           <CmsImage

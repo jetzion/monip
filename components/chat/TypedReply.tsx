@@ -55,7 +55,7 @@ export function TypedReply({ text, animate, onTyped, onLetter, onNavigate }: Pro
       start += part.text.length;
     } else {
       nodes.push(
-        <Link key={index} href="/contact" onClick={onNavigate} className="font-medium text-primary underline underline-offset-4">
+        <Link key={index} href="/contact" onClick={onNavigate} className="link-accent">
           Contact us
         </Link>,
       );

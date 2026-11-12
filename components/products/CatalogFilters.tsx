@@ -39,7 +39,7 @@ export function CatalogFilters({ params, categories, activeParentId }: Props) {
           className="h-11 bg-white"
         />
         {params.category && <input type="hidden" name="category" value={params.category} />}
-        <Button type="submit" variant="inverse" className="h-11 px-5">
+        <Button type="submit" className="h-11 px-5">
           Search
         </Button>
       </form>

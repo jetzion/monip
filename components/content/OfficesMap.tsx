@@ -11,7 +11,7 @@ export function OfficesMap({ offices }: Props) {
   const names = offices.map((office) => office.name).join(", ");
   return (
     <section aria-labelledby="offices-heading" className="rounded-xl border border-border bg-card p-6 shadow-card sm:p-10">
-      <h2 id="offices-heading" className="font-display border-l-4 border-primary pl-4 text-2xl font-semibold text-navy">
+      <h2 id="offices-heading" className="font-display border-l-4 border-gold pl-4 text-2xl font-semibold text-navy">
         Our offices
       </h2>
 
@@ -29,7 +29,7 @@ export function OfficesMap({ offices }: Props) {
           const labelLeft = labelOnLeft(office, offices);
           return (
             <span key={office.id} className="absolute" style={{ left: `${left}%`, top: `${top}%` }}>
-              <span className="absolute size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary ring-2 ring-primary/25 sm:size-3.5 sm:ring-4" />
+              <span className="absolute size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold ring-2 ring-gold/30 sm:size-3.5 sm:ring-4" />
               <span
                 className={cn(
                   "absolute hidden -translate-y-1/2 whitespace-nowrap rounded bg-white/90 px-1.5 py-0.5 text-xs font-semibold text-navy shadow-sm sm:block",
@@ -50,7 +50,7 @@ export function OfficesMap({ offices }: Props) {
       >
         {offices.map((office) => (
           <li key={office.id} className="flex gap-3">
-            <span aria-hidden="true" className="mt-1.5 size-2.5 shrink-0 rounded-full bg-primary" />
+            <span aria-hidden="true" className="mt-1.5 size-2.5 shrink-0 rounded-full bg-gold" />
             <div>
               <p className="font-semibold text-navy">{office.name}</p>
               {office.address && <p className="mt-0.5 whitespace-pre-line text-sm text-muted-foreground">{office.address}</p>}

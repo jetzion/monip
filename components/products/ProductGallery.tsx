@@ -78,7 +78,7 @@ export function ProductGallery({ images, morphName }: Props) {
                   <span
                     className={cn(
                       "block overflow-hidden rounded-lg border bg-card shadow-card transition-colors",
-                      active ? "border-primary ring-2 ring-primary" : "border-border group-hover:border-primary/50",
+                      active ? "border-gold ring-2 ring-gold" : "border-border group-hover:border-gold/60",
                     )}
                   >
                     <Image
@@ -94,7 +94,7 @@ export function ProductGallery({ images, morphName }: Props) {
                     <span
                       className={cn(
                         "text-center text-sm underline-offset-4",
-                        active ? "font-medium text-foreground underline decoration-primary decoration-2" : "text-muted-foreground",
+                        active ? "font-medium text-foreground underline decoration-gold decoration-2" : "text-muted-foreground",
                       )}
                     >
                       {image.name}
