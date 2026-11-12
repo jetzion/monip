@@ -56,7 +56,7 @@ A product needs a name, a summary, a main image, and a category before it can be
 | Category and subcategory | Card label, the catalog's category sections, Specifications list, catalog filters |
 | Image name (on each image) | Under the image's thumbnail on the product page |
 
-**Images.** Every image needs alt text, a short description of what it shows for people using screen readers, such as "Stainless steel travel mug with black lid". Landscape photos work best: product cards crop images to a 4:3 shape. You can upload from the image field (**Create New**) or in **Media**.
+**Images.** Every image needs alt text, a short description of what it shows for people using screen readers, such as "Stainless steel travel mug with black lid". When you choose a file, **Alt text** is filled in from the file name (without the extension, with symbols such as _ and - turned into spaces): "travel-mug_black.jpg" becomes "travel mug black". Rewrite it into a real description before saving; naming files descriptively gives a better starting point. Landscape photos work best: product cards crop images to a 4:3 shape. You can upload from the image field (**Create New**) or in **Media**.
 
 **Image name** (optional, on each image in **Media**): a short name such as "Emerald", shown under the image's thumbnail on the product page; the selected thumbnail's name is underlined. The name belongs to the image, so it shows on every product that uses it.
 
@@ -93,6 +93,13 @@ Services and pages use the same draft, preview, and publish steps as products. C
 **Services.** Each service is a section on the Services page, ordered by **Sort order**, with a required **Summary** plus optional body text and image. The Services page and its menu link appear once at least one service is published.
 
 **Home page.** Open **Home page** (under Globals) to change the homepage text: the headline, intro, About link label, and the closing call to action. Where the links go is fixed. Edits save as a draft with Live Preview; click **Publish changes** to update the site. Featured products are chosen with the **Featured** checkbox on each product.
+
+**Homepage background.** In **Home page**, **Background** chooses what plays behind the headline:
+
+- **Video**: upload an MP4 in **Video** (muted and looped; keep it 10 to 20 seconds and under 10 MB). Leave it empty to use the built-in video.
+- **Images (slideshow)**: add 1 to 6 JPG or PNG images under **Slideshow images**, set each one's **Display time** (2 to 30 seconds), and drag rows to change the order. **Transition** sets how each image replaces the previous one: **Fade**, **Scale & Zoom** (a slow zoom while the image is shown), or **Slide-In** (from the right). **Transition time** sets how long each change takes (0.3 to 3 seconds, shorter than every display time). **Mask opacity** sets the strength of the dark layer over the images: 100% is the standard look; lower shows more of the image but makes the white text harder to read, so check it in Live Preview. Wide landscape images (at least 1920 px wide) look best; the text sits on a dark overlay.
+
+Visitors can pause either one, and visitors who have reduced motion turned on see it paused.
 
 **Products page header.** Open **Pages** and the "Products" entry to change the title and the intro text at the top of the Products catalog. The catalog itself is always shown; without a published Products entry it shows the title "Products" and no intro.
 

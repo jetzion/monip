@@ -255,6 +255,10 @@ If credentials, content, access, or a business decision is missing:
 -   Collection hooks throw public `APIError`s with an explicit name:
     production bundling breaks `instanceof ValidationError` and empties
     class names.
+-   API writes to a global with drafts (Home) must send `_status: "published"`:
+    after an editor's autosave draft, a save without it stays a draft and
+    unpublishes the page for visitors (on 2026-11-12 an e2e run did this and
+    the homepage and `next build` failed).
 -   Public queries use Payload's Local API with `overrideAccess: false`
     (the Local API skips access control by default).
 -   Restart `pnpm dev` after changing `payload.config.ts` or collections;

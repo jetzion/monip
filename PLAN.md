@@ -164,8 +164,14 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Home (global)
 
--   `hero` (headline, intro, about link label) and `closing`
+-   `hero` (headline, intro, about link label, background) and `closing`
     (heading, button label); drafts and Live Preview. Link targets are in code.
+-   Hero background: **Video** (an uploaded MP4; empty uses the built-in
+    `public/hero/decoration.mp4`) or **Images** (1 to 6 JPG/PNG, each with a
+    display time of 2 to 30 s, default 6; one transition for all: Fade,
+    Scale & Zoom, Slide-In; transition time 0.3 to 3 s, default 1.2, shorter
+    than every display time; mask opacity 0 to 100%, default 100). Pause
+    button for both; reduced motion starts paused.
 
 ### Client
 
@@ -469,7 +475,7 @@ Rules:
 
 ## 7. Testing Strategy
 
-### Unit tests (`pnpm test`, Vitest, 181 tests)
+### Unit tests (`pnpm test`, Vitest, 193 tests)
 
 Slugs, catalog URL params (including LIKE wildcard stripping), inquiry
 validation, email composition, site URL and indexability, preview path
@@ -490,7 +496,7 @@ grid and session placement, calendar URLs, and cruise change detection),
 and the training report (URL parameters, month overlap in each session's
 time zone, rows, totals, grouping, month choices).
 
-### End-to-end tests (`pnpm test:e2e`, Playwright, 106 tests)
+### End-to-end tests (`pnpm test:e2e`, Playwright, 117 tests)
 
 Run against a production build on port 3100 (can run alongside
 `pnpm dev`), using system Chrome and the local development database.
@@ -504,7 +510,9 @@ accounts use their own (`E2E_USER_SET`, see CLAUDE.md).
 
 -   Catalog browsing, search, category/subcategory filters, empty states.
 -   Product and general inquiries, validation errors, honeypot.
--   Home featured products and CMS copy, hero video pause, sticky header,
+-   Home featured products and CMS copy, hero video pause, hero background
+    (built-in and uploaded video, slideshow with each transition, pause,
+    reduced motion, mask opacity, transition time, validation), sticky header,
     header CTA, content and Our clients pages, About offices map and
     list, removed Sustainability page, Privacy policy link, mobile menu.
 -   Success Stories: menu link, cards to detail page and back, 404 for
@@ -621,7 +629,7 @@ Update this section as decisions are confirmed.
 | Frontend | Next.js 16.4 + TypeScript; `cacheComponents` disabled for Payload; experimental `globalNotFound` for unmatched URLs | Confirmed |
 | CMS | Payload CMS 3.91 inside the Next.js app, admin at `/admin` (replaced Sanity). Pinned below the newest release when it is inside pnpm's minimum release age | Confirmed |
 | Hosting | Vercel | Confirmed |
-| Styling | Tailwind CSS v4 + shadcn/ui; "Indigo Signature" palette from the logo (indigo #3d4ea0, navy #141b3a, azure #1767ad). Tinted page background #e6ebf4 with white cards (visible shadow-card), navy header-band page headers, white header and footer panels | Confirmed |
+| Styling | Tailwind CSS v4 + shadcn/ui; "Indigo Signature" palette from the logo (indigo #3d4ea0, navy #141b3a, azure #1767ad). One vivid accent, warm gold `--gold` #f5a524 (2026-11-12): primary buttons (gold with navy text, 8.4:1), links (navy text with a gold underline on light backgrounds via `link-accent`; gold text on navy), and small highlights (section bars, active nav underline, footer and form top borders, map dots, card hover, selected thumbnail). Never gold text or focus rings on white (2:1). Outline buttons, tags, focus rings, and the chat button stay indigo/azure. Tinted page background #e6ebf4 with white cards (visible shadow-card), navy header-band page headers, white header and footer panels | Confirmed |
 | Package manager | pnpm | Confirmed |
 | Testing | Vitest unit tests; Playwright e2e + axe against a production build | Confirmed |
 | Content updates | Hooks call `revalidatePath` on publish/unpublish only (not draft autosaves) | Confirmed |
@@ -646,6 +654,7 @@ Update this section as decisions are confirmed.
 | Task briefs | Original feature requests kept as history in `docs/briefs/`; this plan records what was decided | Confirmed |
 | Deployment | Temporary: https://monip-group.vercel.app on MONIP's Vercel team `monip` (Pro), Neon `monip-db` (free, iad1), public Blob store `monip-media`. Content copied from local on 2026-10-26 (schema from migrations, data only; inquiries and sessions excluded). Custom domain and DNS later. Code is pushed to GitHub `jetzion/monip` (`origin`), but Vercel is not connected to it yet, so deploys are manual (`vercel deploy --prod --force --scope monip`) | Confirmed 2026-10-26 |
 | Editor guide | `Editor_guide_for_MONIP.md` (exported from the shared editor guide doc) | Confirmed |
+| Homepage hero background | Editors choose Video (MP4 upload) or Images (up to 6 JPG/PNG, display time per image, one transition: Fade, Scale & Zoom, Slide-In), transition time, and mask opacity in the Home global; built-in video when nothing is uploaded | Confirmed 2026-11-12 |
 | Homepage hero video | `public/hero/decoration.mp4`: 14 s montage of decoration techniques (2.0 MB, muted loop, poster for reduced motion, pause button). Pexels License clips (free commercial use, no attribution required): 28050441 embroidery machine, 34888657 screen printing (first seconds), 34240702 laser engraving (cropped to exclude a maker URL and engraved name), 5963499 leather hot-stamping. Old site videos are Wix library stock and not reusable | Confirmed (replace with MONIP footage if available) |
 | Monitoring | Vercel Observability and runtime logs | Confirmed |
 | Website chat | OpenRouter via `POST /api/chat` (non-streaming JSON). Assistant is named "David" (shown on every reply); friendly greeting without "virtual assistant", but it never claims to be human and says it is an AI if asked; the long AI notice was removed 2026-10-23 and replaced by a small "AI" tag next to David's name on every reply; that tag was removed at the owner's request on 2026-11-05, and the chat header ("David, MONIP's AI assistant") remains the disclosure (bot-disclosure laws, EU AI Act Art. 50). Personality (2026-11-05): warm, direct, enthusiastic voice; one or two sentences early in a conversation; recognizes frustration, confusion, or negative tone and responds calmly with a simpler answer and the contact form; one of five short greetings per conversation (`lib/chat/greetings.ts`); greeting and replies typed out letter by letter at 30 ms (`components/chat/TypedReply.tsx`; instant under reduced motion). A keyboard click sound was tried and removed the same day. Answers only from published CMS content; never prices, lead times, MOQs, certifications; points to the contact form. `provider.data_collection: "deny"`; in-memory rate limit (10/min/IP); nothing stored. Approved 2026-10-23 | Confirmed |
@@ -750,6 +759,9 @@ Update this section as decisions are confirmed.
 - [x] Catalog grouped by category (sections ordered by category Sort order); deployed 2026-11-05
 - [x] Training Schedule: cruise line, ship, and port chosen in any order (Port first works); form title hint; deployed 2026-11-05
 - [x] Cruise Fleet Schedule: "Miami, FL" renamed to "Miami, Florida" (local and production), 2026-11-05
+- [x] Homepage hero background editable: uploaded MP4 or a slideshow of up to 6 images with per-image display time and Fade, Scale & Zoom, or Slide-In, transition time, and mask opacity; migrations `20261112_173857_hero_background` and `20261112_180120_hero_mask_and_transition_time` (verified against a fresh database); unit and e2e tests; editor guide. Not deployed yet
+- [x] Media alt text suggested from the file name (extension removed, symbols to spaces) when a file is chosen in the admin (`components/admin/AltField.tsx`); the editor can change it, and typed text is never overwritten; API uploads without alt text get the same default (`lib/media-alt.ts`); unit and e2e tests; editor guide. Not deployed yet
+- [x] Gold accent (`--gold`) for primary buttons, links, and small highlights on the navy-and-white base; accessibility spec passes (18 tests, axe colour contrast). Not deployed yet
 
 ## 13. Next Steps
 
