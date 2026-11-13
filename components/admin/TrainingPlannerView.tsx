@@ -65,7 +65,7 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
   const rows = stored ? planRows(stored, new Map(trainers.docs.map((trainer) => [trainer.id, trainer.name ?? ""]))) : null;
   const ships = [...new Set(combos.map((combo) => combo.ship))].sort((a, b) => a.localeCompare(b));
   const ports = [...new Set(combos.map((combo) => combo.port))].sort((a, b) => a.localeCompare(b));
-  const initial = stored?.settings ?? {
+  const defaults = {
     from: addDays(today, 1),
     to: addDays(today, 30),
     preset: "balanced" as const,
@@ -95,7 +95,8 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
 
           <TrainingPlannerSettings
             key={stored?.createdAt ?? "new"}
-            initial={initial}
+            initial={stored?.settings ?? defaults}
+            defaults={defaults}
             ships={ships}
             ports={ports}
             trainers={trainerOptions}

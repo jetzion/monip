@@ -211,6 +211,14 @@ test("asks the AI for a plan from an instruction and shows what it applied", asy
   // Removing the rule changes the settings for the next plan.
   await page.getByRole("button", { name: `Remove rule: E2E Planner One ${RUN} unavailable on 10 Mar 2030` }).click();
   await expect(page.getByRole("list", { name: "Rules" })).toHaveCount(0);
+
+  // Clear empties the form and the instruction but keeps the current plan.
+  await page.reload();
+  await expect(page.getByLabel("Instruction for the AI (optional)")).toHaveValue("Trainer One is away on 10 March. Book their flights.");
+  await page.getByRole("button", { name: "Clear settings" }).click();
+  await expect(page.getByLabel("Instruction for the AI (optional)")).toHaveValue("");
+  await expect(page.getByRole("list", { name: "Rules" })).toHaveCount(0);
+  await expect(beta).toContainText(`E2E Planner Two ${RUN}`);
 });
 
 test("shows the stored AI summary", async ({ page, request }) => {
@@ -236,4 +244,21 @@ test("applies an accepted move to the existing session", async ({ request }) => 
   expect(moved.id).toBe(session.id);
   expect(moved.cruise).toBe(sailingIds[2]);
   expect(moved.startsAt.slice(0, 10)).toBe("2030-03-17");
+});
+
+test("clears the proposed sessions but keeps accepted ones", async ({ page, request }) => {
+  // A fresh plan: the previous test stored a hand-made move the page cannot show.
+  expect((await request.post(`${PLAN}/recommend`, { headers: admin, data: SETTINGS })).ok()).toBe(true);
+  await login(page, ADMIN);
+  await page.goto("/admin/training-planner");
+  const sessions = page.getByRole("region", { name: "Proposed sessions" });
+  await expect(sessions).toBeVisible();
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Clear proposed sessions" }).click();
+  await expect(sessions).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Recommend with these settings" })).toBeVisible();
+  const { current } = (await (await request.get(PLAN, { headers: admin })).json()) as { current: unknown };
+  expect(current).toBeNull();
+  expect(await sessionsOf(request)).toHaveLength(1);
 });

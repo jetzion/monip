@@ -24,7 +24,7 @@ export function interpretPrompt(context: InterpretContext): string {
     `{"understood": "one short sentence on what you applied", "notApplied": ["each part of the instruction you could not express"], "settings": {...}}`,
     "Include in settings only what the instruction changes. Allowed keys:",
     `- "from", "to": first and last cruise start date, "YYYY-MM-DD" (today is ${context.today}; at most 92 days apart)`,
-    `- "preset": "balanced", "lowerCost" (mostly online), or "moreInPerson"`,
+    `- "preset": "balanced", "lowerCost" (remote training: mostly online), or "moreInPerson"`,
     `- "ships": only plan these ships; "priorityShips": plan these first; names exactly from the ship list`,
     `- "ports": only plan cruises starting from these ports (use this when the admin asks for a port only); names from the port list`,
     `- "trainers": only use these trainers (ids); use this when the admin names who should do the training`,

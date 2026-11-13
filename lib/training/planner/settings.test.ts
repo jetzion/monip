@@ -44,7 +44,7 @@ describe("readPlanSettings", () => {
     });
     expect(readPlanSettings({ from: "2026-10-01", to: "2026-10-31", preset: "balanced" }, now)).toEqual({ error: "Choose dates from today on." });
     expect(readPlanSettings({ from: "2026-12-01", to: "2026-12-31", preset: "cheap" }, now)).toEqual({
-      error: "Choose Balanced, Lower cost, or More in-person.",
+      error: "Choose Remote training, Balanced, or More in-person.",
     });
   });
 });

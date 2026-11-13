@@ -11,6 +11,8 @@ import { PRESETS, type Preset } from "@/lib/training/planner/types";
 type Option = { label: string; value: string };
 type Props = {
   initial: FormSettings;
+  /** The settings Clear returns the form to. */
+  defaults: FormSettings;
   ships: string[];
   ports: string[];
   trainers: Option[];
@@ -43,7 +45,7 @@ export async function errorOf(response: Response, fallback: string) {
  * Settings for a plan, an instruction for the AI, and the buttons that make a
  * plan (replacing the current one): by hand, or from the instruction.
  */
-export function TrainingPlannerSettings({ initial, ships, ports, trainers, hasPlan, instruction: initialInstruction }: Props) {
+export function TrainingPlannerSettings({ initial, defaults, ships, ports, trainers, hasPlan, instruction: initialInstruction }: Props) {
   const router = useRouter();
   const [form, setForm] = useState(initial);
   const [instruction, setInstruction] = useState(initialInstruction);
@@ -67,6 +69,13 @@ export function TrainingPlannerSettings({ initial, ships, ports, trainers, hasPl
     await post("summarize", {});
     setBusy("");
     router.refresh();
+  };
+
+  /** Empties the form and the instruction; the current plan stays until a new one replaces it. */
+  const clear = () => {
+    setForm(defaults);
+    setInstruction("");
+    setError("");
   };
 
   const recommend = async () => {
@@ -237,6 +246,9 @@ export function TrainingPlannerSettings({ initial, ships, ports, trainers, hasPl
         </Button>
         <Button type="button" buttonStyle="secondary" disabled={Boolean(busy)} onClick={recommend}>
           {hasPlan ? "Suggest a new plan" : "Recommend"} with these settings
+        </Button>
+        <Button type="button" buttonStyle="secondary" disabled={Boolean(busy)} onClick={clear}>
+          Clear settings
         </Button>
         {busy && (
           <p className="training-form__check" role="status">

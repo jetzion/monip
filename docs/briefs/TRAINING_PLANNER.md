@@ -27,7 +27,7 @@ sessions by hand exactly as today.
 | Existing sessions | The planner may propose moving any existing session, including ones added by hand, unless the session is marked **Fixed**. Moves may be on the same day, since cruise schedules change. Past sessions are never moved. |
 | Moves | Shown separately ("Move: from ... to ..."), each with its reason, accepted or rejected one by one. Each move carries a penalty so it is proposed only for a clear gain. An accepted move updates the existing session. |
 | Trainer changes | Trainers tell the admin; the admin adjusts the schedule. The confirmation screen lists the trainers affected by accepted moves so the admin can inform them (no notifications in the system). |
-| Plan presets | Balanced, Lower cost, More in-person. |
+| Plan presets | Remote training (internally `lowerCost`), Balanced, More in-person. |
 | Division of work | Planning code builds the plan and guarantees the hard constraints (no trainer in two places, sessions inside the port window, trainer limits). The AI turns the admin's instructions into planner settings and writes the plan summary. Every plan is re-checked by the code and, on acceptance, by the existing session conflict check. |
 | Data sent to the AI | Approved: ships, ports, dates, and trainer names may be sent to the AI provider (OpenRouter, as used by the website chat). |
 | New plan | "Suggest a new plan" generates a fresh recommendation that replaces the previous one. Accepted items are already sessions and stay. |

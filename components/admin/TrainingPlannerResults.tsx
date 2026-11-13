@@ -62,6 +62,23 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
     router.refresh();
   };
 
+  /** Removes the current plan; sessions already accepted stay in the schedule. */
+  const clear = async () => {
+    if (!window.confirm("Clear the proposed sessions? Sessions you already accepted stay in the schedule.")) return;
+    setBusy(true);
+    setError("");
+    const response = await fetch("/api/globals/training-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ current: null }),
+    }).catch(() => null);
+    setBusy(false);
+    if (!response) return setError("The server could not be reached. Try again.");
+    if (!response.ok) return setError(await errorOf(response, "The proposed sessions could not be cleared. Try again."));
+    router.refresh();
+  };
+
   return (
     <>
       {moves.length > 0 && (
@@ -202,6 +219,9 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
       <div className="training-form__submit">
         <Button type="button" buttonStyle="primary" disabled={busy || count === 0} onClick={accept}>
           {busy ? "Saving…" : `Accept selected (${count})`}
+        </Button>
+        <Button type="button" buttonStyle="secondary" disabled={busy} onClick={clear}>
+          Clear proposed sessions
         </Button>
         <p className="training-form__check">Ticked moves are applied first, then ticked sessions are added. Each is checked for conflicts again.</p>
       </div>

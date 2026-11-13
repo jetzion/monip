@@ -5,8 +5,8 @@ import type { Place } from "./bookings";
 export type Preset = "balanced" | "lowerCost" | "moreInPerson";
 
 export const PRESETS: { value: Preset; label: string }[] = [
+  { value: "lowerCost", label: "Remote training" },
   { value: "balanced", label: "Balanced" },
-  { value: "lowerCost", label: "Lower cost" },
   { value: "moreInPerson", label: "More in-person" },
 ];
 

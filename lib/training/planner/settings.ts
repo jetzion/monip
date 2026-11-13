@@ -40,7 +40,7 @@ export function readPlanSettings(body: unknown, now: Date): { settings: PlanSett
   const days = (Date.parse(to) - Date.parse(from)) / 86_400_000 + 1;
   if (days > MAX_RANGE_DAYS) return { error: `Choose at most ${MAX_RANGE_DAYS} days (about three months).` };
   if (to < now.toISOString().slice(0, 10)) return { error: "Choose dates from today on." };
-  if (!PRESETS.some((option) => option.value === preset)) return { error: "Choose Balanced, Lower cost, or More in-person." };
+  if (!PRESETS.some((option) => option.value === preset)) return { error: "Choose Remote training, Balanced, or More in-person." };
   const onlineHours = [2, 4, 8].includes(Number(input.onlineHours)) ? (Number(input.onlineHours) as 2 | 4 | 8) : 2;
   const nights = Number(input.maxOnboardingNights);
   return {
