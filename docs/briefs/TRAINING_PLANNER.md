@@ -91,6 +91,25 @@ Preferences (weighted by the preset):
 3. Fewer trips and nights away from home base (Lower cost: strongly).
 4. Fewer moves of existing sessions.
 
+Planner defaults (step 2, 2026-11-12):
+
+- One session per ship per plan; ships with a session already in the range
+  are not planned again. With about 55 ships a month and 2-3 trainers,
+  trainer time runs out before ships do.
+- Online sessions are 2 hours (2, 4, or 8 allowed), at the earliest free
+  half hour inside the in-port window.
+- Onboarding only on cruises of up to 7 nights.
+- Changing port between in-person sessions needs at least 12 hours within
+  a time zone and 36 hours between time zones (or when a zone is unknown);
+  there is no real travel data.
+- A move is proposed only when it lets an otherwise untrained ship be
+  trained; one move per such ship.
+- Ties go to the trainer with fewer training days that month.
+- Format values: Balanced departure day 3, onboarding 2, online 1; Lower
+  cost online 3, departure day 2, onboarding 0; More in-person onboarding 4,
+  departure day 3, online 0. Each trip costs 1 (Balanced), 3 (Lower cost),
+  or 0.5 (More in-person), a night a third of that. Known costs break ties.
+
 ## Open items
 
 - Cost figures per format, trip, and night (MONIP to find out). The planner
@@ -100,8 +119,8 @@ Preferences (weighted by the preset):
 
 1. Data: trainer fields, Fixed on sessions, planning costs settings
    (migration, editor guide). Done 2026-11-12.
-2. Planner code (`lib/training/planner.ts`) with unit tests: candidate slots,
-   constraints, presets, moves, reasons.
+2. Planner code (`lib/training/planner/`) with unit tests: candidate slots,
+   constraints, presets, moves, reasons. Done 2026-11-12.
 3. Planner page: settings, proposals, moves, summary, accept selected (e2e
    tests with their own accounts).
 4. AI: instruction to settings and the summary through OpenRouter (mocked in
