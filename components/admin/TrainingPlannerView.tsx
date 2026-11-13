@@ -6,7 +6,8 @@ import type { AdminViewServerProps } from "payload";
 import { upcomingCruiseCombos } from "@/lib/training/cruise-options";
 import { cruiseOptions } from "@/lib/training/planner/cruise-options";
 import { planRows } from "@/lib/training/planner/rows";
-import { isStoredPlan } from "@/lib/training/planner/stored";
+import { readStoredPlan } from "@/lib/training/planner/stored";
+import { NO_RULES } from "@/lib/training/planner/types";
 import { addDays } from "@/lib/training/time";
 
 import { TrainingPlannerResults } from "./TrainingPlannerResults";
@@ -58,19 +59,23 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
     payload.find({ collection: "trainers", ...access, depth: 0, limit: 0, pagination: false, select: { name: true } }),
     upcomingCruiseCombos(payload, today),
   ]);
-  const stored = isStoredPlan(current) ? current : null;
+  const stored = readStoredPlan(current);
   const cruises = stored ? await cruiseOptions(req, stored) : {};
   const trainerOptions = trainers.docs.map((trainer) => ({ label: trainer.name ?? "", value: String(trainer.id) }));
   const rows = stored ? planRows(stored, new Map(trainers.docs.map((trainer) => [trainer.id, trainer.name ?? ""]))) : null;
   const ships = [...new Set(combos.map((combo) => combo.ship))].sort((a, b) => a.localeCompare(b));
+  const ports = [...new Set(combos.map((combo) => combo.port))].sort((a, b) => a.localeCompare(b));
   const initial = stored?.settings ?? {
     from: addDays(today, 1),
     to: addDays(today, 30),
     preset: "balanced" as const,
     ships: [],
+    ports: [],
+    trainers: [],
     priorityShips: [],
     onlineHours: 2 as const,
     maxOnboardingNights: 7,
+    rules: NO_RULES,
   };
 
   return (
@@ -88,12 +93,51 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
             </p>
           </header>
 
-          <TrainingPlannerSettings initial={initial} ships={ships} hasPlan={Boolean(stored)} />
+          <TrainingPlannerSettings
+            key={stored?.createdAt ?? "new"}
+            initial={initial}
+            ships={ships}
+            ports={ports}
+            trainers={trainerOptions}
+            hasPlan={Boolean(stored)}
+            instruction={stored?.instruction ?? ""}
+          />
 
           {rows && (
             <section aria-labelledby="planner-plan-title">
               <h2 id="planner-plan-title">{rows.title}</h2>
               <p className="training-form__check">{rows.made}</p>
+              {stored!.instruction && (
+                <div className="training-planner__ai">
+                  <p>
+                    <strong>Instruction:</strong> {stored!.instruction}
+                  </p>
+                  {stored!.understood && (
+                    <p>
+                      <strong>The AI applied:</strong> {stored!.understood}
+                    </p>
+                  )}
+                  {stored!.notApplied && stored!.notApplied.length > 0 && (
+                    <>
+                      <p>
+                        <strong>Not applied</strong> (change the settings by hand if needed):
+                      </p>
+                      <ul>
+                        {stored!.notApplied.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              )}
+              {stored!.aiSummary && (
+                <div className="training-planner__ai">
+                  <p>
+                    <strong>AI summary:</strong> {stored!.aiSummary}
+                  </p>
+                </div>
+              )}
               <ul className="training-planner__summary">
                 {rows.lines.map((line) => (
                   <li key={line}>{line}</li>

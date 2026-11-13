@@ -1,6 +1,7 @@
 import { type FieldError, isFieldError, sessionTimes, type TrainingType } from "../schedule";
 import { dayOf, isTime, zonedTime } from "../time";
 import { clash, type Place, trainingDays, travelClash, withinMonthlyLimit, type Bookings } from "./bookings";
+import { ruleBonus, ruleViolations } from "./rules";
 import type { PlanCosts, PlanSailing, PlanSettings, PlanTrainer, Preset, Slot } from "./types";
 
 /** Why a sailing cannot be planned, or null when it can. */
@@ -93,7 +94,7 @@ export function buildSlot(
   const penalty = TRAVEL_PENALTY[settings.preset] * (trips + nights / 3);
   // Known costs break ties: cheaper is slightly better.
   const score = FORMAT_VALUE[settings.preset][type] - penalty - (cost ?? 0) / 1_000_000;
-  return {
+  const slot: Slot = {
     sailing,
     trainerId: trainer.id,
     type,
@@ -108,6 +109,7 @@ export function buildSlot(
     cost,
     score,
   };
+  return { ...slot, score: score + ruleBonus(slot, settings.rules) };
 }
 
 /**
@@ -131,5 +133,6 @@ export function slotFor(sailing: PlanSailing, trainer: PlanTrainer, type: Traini
   if (start < Date.parse(settings.now) || clash(bookings, trainer.id, start, end)) return null;
   if (slot.place && travelClash(bookings, trainer.id, start, end, slot.place)) return null;
   if (!withinMonthlyLimit(bookings, trainer, trainingDays(slot.startsAt, slot.endsAt, slot.timeZone))) return null;
+  if (ruleViolations(slot, trainer, settings.rules).length) return null;
   return slot;
 }

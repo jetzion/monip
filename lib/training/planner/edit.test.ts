@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { applyEdit, checkEdit } from "./edit";
 import { buildPlan } from "./plan";
 import type { StoredPlan } from "./stored";
-import type { PlanInput, PlanSailing, PlanSettings, PlanTrainer } from "./types";
+import { NO_RULES, type PlanInput, type PlanSailing, type PlanSettings, type PlanTrainer } from "./types";
 
 const portZones = { "Miami, Florida": "America/New_York", "Barcelona, Spain": "Europe/Madrid" };
 const sailing = (id: number, ship: string, day: string, overrides: Partial<PlanSailing> = {}): PlanSailing => ({
@@ -31,10 +31,13 @@ const settings: PlanSettings = {
   to: "2026-12-20",
   preset: "balanced",
   ships: [],
+  ports: [],
+  trainers: [],
   priorityShips: [],
   onlineHours: 2,
   maxOnboardingNights: 7,
   now: "2026-11-20T00:00:00.000Z",
+  rules: NO_RULES,
 };
 const input: PlanInput = {
   settings,
@@ -97,6 +100,13 @@ describe("checkEdit", () => {
     const travel = checkEdit(input, stored, indexOf("Gamma"), { cruise: 4, trainer: 1, type: "departureDay" });
     expect(travel).toMatchObject({
       warnings: ["Less than 36 hours to travel to or from Alpha (proposed), Departure day training, 5 Dec 2026, 06:00 – 16:30 (America/New_York)."],
+    });
+  });
+
+  it("warns when an edit breaks the plan's rules", () => {
+    const ruled = { ...input, settings: { ...settings, rules: { ...settings.rules, unavailable: [{ trainerId: 1, from: "2026-12-12", to: "2026-12-12" }] } } };
+    expect(checkEdit(ruled, stored, indexOf("Alpha"), { cruise: 2, trainer: 1, type: "departureDay" })).toMatchObject({
+      warnings: ["Breaks the plan's rule: Trainer 1 is unavailable on 12 Dec 2026."],
     });
   });
 

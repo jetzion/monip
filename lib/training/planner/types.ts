@@ -56,6 +56,20 @@ export type PlanCosts = {
   night: number | null;
 };
 
+/** Admin rules for a plan, typed or produced by the AI from an instruction. Dates are "YYYY-MM-DD", inclusive. */
+export type PlanRules = {
+  /** No training on these days: one trainer, or everyone when trainerId is null. */
+  unavailable: { trainerId: number | null; from: string; to: string }[];
+  /** A training type not used, on these days or (without dates) at all. */
+  blockedTypes: { type: TrainingType; from: string | null; to: string | null }[];
+  /** Keep a trainer away from a port, or prefer them there (in-person training). */
+  trainerPorts: { trainerId: number; port: string; mode: "avoid" | "prefer" }[];
+  /** Ships left out of the plan. */
+  excludeShips: string[];
+};
+
+export const NO_RULES: PlanRules = { unavailable: [], blockedTypes: [], trainerPorts: [], excludeShips: [] };
+
 export type PlanSettings = {
   /** First and last cruise start day of the range, "YYYY-MM-DD". */
   from: string;
@@ -63,6 +77,10 @@ export type PlanSettings = {
   preset: Preset;
   /** Only these ships; all eligible ships when empty. */
   ships: string[];
+  /** Only cruises starting from these ports; all ports when empty. */
+  ports: string[];
+  /** Only these trainers (ids); all trainers when empty. */
+  trainers: number[];
   /** Planned first, in this order. */
   priorityShips: string[];
   onlineHours: 2 | 4 | 8;
@@ -70,6 +88,7 @@ export type PlanSettings = {
   maxOnboardingNights: number;
   /** Nothing is proposed or moved before this instant (ISO). */
   now: string;
+  rules: PlanRules;
 };
 
 export type PlanInput = {

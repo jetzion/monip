@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildPlan } from "./plan";
-import type { PlanInput, PlanSailing, PlanSession, PlanSettings, PlanTrainer } from "./types";
+import { NO_RULES, type PlanInput, type PlanSailing, type PlanSession, type PlanSettings, type PlanTrainer } from "./types";
 
 const portZones = { "Miami, Florida": "America/New_York", "Barcelona, Spain": "Europe/Madrid" };
 
@@ -31,10 +31,13 @@ const settings: PlanSettings = {
   to: "2026-12-20",
   preset: "balanced",
   ships: [],
+  ports: [],
+  trainers: [],
   priorityShips: [],
   onlineHours: 2,
   maxOnboardingNights: 7,
   now: "2026-11-20T00:00:00.000Z",
+  rules: NO_RULES,
 };
 const noCosts = { onlineSession: null, departureDaySession: null, onboardingDay: null, trip: null, night: null };
 const plan = (input: Partial<PlanInput> & Pick<PlanInput, "sailings">) =>
@@ -141,6 +144,35 @@ describe("buildPlan", () => {
     const sailings = [sailing("Alpha", "2026-12-05"), sailing("Beta", "2026-12-08")];
     const result = plan({ sailings, trainers: [trainer(1), trainer(2)] });
     expect(result.proposals.map((p) => p.trainerId)).toEqual([1, 2]);
+  });
+
+  it("follows the admin's rules", () => {
+    const sailings = [sailing("Alpha", "2026-12-05"), sailing("Beta", "2026-12-08")];
+    const trainers = [trainer(1), trainer(2)];
+    const withRules = (rules: Partial<PlanSettings["rules"]>) => ({ ...settings, rules: { ...NO_RULES, ...rules } });
+    // Trainer 1 away: both ships go to Trainer 2.
+    const away = plan({ sailings, trainers, settings: withRules({ unavailable: [{ trainerId: 1, from: "2026-12-01", to: "2026-12-20" }] }) });
+    expect(away.proposals.map((p) => p.trainerId)).toEqual([2, 2]);
+    // No departure day: Alpha goes on board 5-12 Dec, which keeps the only trainer at sea for Beta on the 8th.
+    const noDeparture = plan({ sailings, settings: withRules({ blockedTypes: [{ type: "departureDay", from: null, to: null }] }) });
+    expect(noDeparture.proposals.map((p) => [p.sailing.ship, p.type])).toEqual([["Alpha", "onboarding"]]);
+    expect(noDeparture.unscheduled.map((u) => u.ship)).toEqual(["Beta"]);
+    // Prefer Trainer 2 in Miami: both go to Trainer 2 despite the workload tie-break.
+    const prefer = plan({ sailings, trainers, settings: withRules({ trainerPorts: [{ trainerId: 2, port: "Miami, Florida", mode: "prefer" }] }) });
+    expect(prefer.proposals.map((p) => p.trainerId)).toEqual([2, 2]);
+    // Leave out Beta.
+    expect(plan({ sailings, settings: withRules({ excludeShips: ["Beta"] }) }).proposals.map((p) => p.sailing.ship)).toEqual(["Alpha"]);
+  });
+
+  it("plans only the chosen ports and trainers", () => {
+    const sailings = [sailing("Alpha", "2026-12-05"), sailing("Beta", "2026-12-08", { startPort: "Barcelona, Spain", endPort: "Barcelona, Spain" })];
+    const trainers = [trainer(1), trainer(2)];
+    const miami = plan({ sailings, trainers, settings: { ...settings, ports: ["Miami, Florida"] } });
+    expect(miami.proposals.map((p) => p.sailing.ship)).toEqual(["Alpha"]);
+    expect(miami.summary.shipsEligible).toBe(1);
+    const onlyTwo = plan({ sailings, trainers, settings: { ...settings, trainers: [2] } });
+    expect(onlyTwo.proposals.map((p) => p.trainerId)).toEqual([2, 2]);
+    expect(onlyTwo.summary.load.map((entry) => entry.trainerId)).toEqual([2]);
   });
 
   it("explains travel away from home base", () => {

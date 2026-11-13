@@ -8,12 +8,20 @@ import { loadPlanInput } from "./load";
 import { buildPlan } from "./plan";
 import { costText, travelText, whenText } from "./rows";
 import { readPlanSettings } from "./settings";
-import { isStoredPlan, type StoredPlan } from "./stored";
+import { readStoredPlan, type StoredPlan } from "./stored";
 
 const fail = (status: number, error: string) => Response.json({ error }, { status });
 
-const denied = (req: PayloadRequest) =>
+export const denied = (req: PayloadRequest) =>
   !req.user ? fail(401, "Log in to use the training planner.") : !isAdminUser(req) ? fail(403, "Only admins can use the training planner.") : null;
+
+/** The instruction, what the AI applied, and what it could not, sent with a plan made from an instruction. */
+function readAiNote(body: unknown): Pick<StoredPlan, "instruction" | "understood" | "notApplied"> {
+  const input = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+  const text = (value: unknown) => (typeof value === "string" && value.trim() ? value.trim().slice(0, 1000) : undefined);
+  const notApplied = Array.isArray(input.notApplied) ? input.notApplied.map(text).filter((item): item is string => Boolean(item)).slice(0, 20) : undefined;
+  return { instruction: text(input.instruction), understood: text(input.understood), notApplied };
+}
 
 const save = (req: PayloadRequest, current: StoredPlan) =>
   req.payload.updateGlobal({ slug: "training-plan", data: { current }, req, user: req.user, overrideAccess: false });
@@ -25,10 +33,13 @@ export const recommendEndpoint: Endpoint = {
   handler: async (req) => {
     const refused = denied(req);
     if (refused) return refused;
-    const read = readPlanSettings(await req.json?.(), new Date());
+    const body = await req.json?.();
+    const read = readPlanSettings(body, new Date());
     if ("error" in read) return fail(400, read.error);
     const plan = buildPlan(await loadPlanInput(req, read.settings));
+    const ai = readAiNote(body);
     const current: StoredPlan = {
+      ...ai,
       settings: read.settings,
       createdAt: new Date().toISOString(),
       createdBy: req.user!.email ?? "",
@@ -48,8 +59,8 @@ export const acceptEndpoint: Endpoint = {
   handler: async (req) => {
     const refused = denied(req);
     if (refused) return refused;
-    const { current } = await req.payload.findGlobal({ slug: "training-plan", req, user: req.user, overrideAccess: false });
-    if (!isStoredPlan(current)) return fail(400, "There is no plan to accept. Recommend one first.");
+    const current = readStoredPlan((await req.payload.findGlobal({ slug: "training-plan", req, user: req.user, overrideAccess: false })).current);
+    if (!current) return fail(400, "There is no plan to accept. Recommend one first.");
     const selection = readSelection(await req.json?.());
     if (selection.proposals.length + selection.moves.length === 0) return fail(400, "Tick at least one session or move.");
     const updated = await acceptItems(req, current, selection);
@@ -84,8 +95,8 @@ export const editEndpoint: Endpoint = {
   handler: async (req) => {
     const refused = denied(req);
     if (refused) return refused;
-    const { current } = await req.payload.findGlobal({ slug: "training-plan", req, user: req.user, overrideAccess: false });
-    if (!isStoredPlan(current)) return fail(400, "There is no plan to edit. Recommend one first.");
+    const current = readStoredPlan((await req.payload.findGlobal({ slug: "training-plan", req, user: req.user, overrideAccess: false })).current);
+    if (!current) return fail(400, "There is no plan to edit. Recommend one first.");
     const request = readChange(await req.json?.());
     if (!request) return fail(400, "Choose a cruise, trainer, and training type.");
     if (current.proposalStatus[request.index]?.status === "accepted") {

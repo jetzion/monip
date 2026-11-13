@@ -277,8 +277,13 @@ If credentials, content, access, or a business decision is missing:
 -   E2E tests share the development database, which now holds real
     content; delete `e2e-*@example.com` inquiries after each run, and
     expect catalog tests to fail where editors replaced placeholders.
--   The chat calls OpenRouter only from `app/api/chat`; tests mock it.
-    Never log or expose `OPENROUTER_API_KEY`.
+-   OpenRouter is called only on the server (`lib/chat/openrouter.ts`):
+    the chat (`app/api/chat`), the chat invitation pick, AI product
+    descriptions, and the training planner (`interpret` and `summarize`
+    endpoints, `lib/training/planner/ai.ts`); tests mock it. The model
+    reasons before it writes and `max_tokens` covers both, so a small
+    limit returns no text (the planner summary needs about 700). Never log
+    or expose `OPENROUTER_API_KEY`.
 -   For admin-only checks, `pnpm payload run scripts/e2e-users.ts create
     <password>` makes `e2e-admin@example.com` and `e2e-editor@example.com`;
     run it with `delete` afterwards (the Cruise Fleet Schedule e2e tests

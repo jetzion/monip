@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { book, booking, type Bookings } from "./bookings";
 import { ineligibleReason, slotFor } from "./slots";
-import type { PlanCosts, PlanSailing, PlanSettings, PlanTrainer } from "./types";
+import { NO_RULES, type PlanCosts, type PlanSailing, type PlanSettings, type PlanTrainer } from "./types";
 
 const portZones = { "Miami, Florida": "America/New_York", "Barcelona, Spain": "Europe/Madrid" };
 const sailing: PlanSailing = {
@@ -22,10 +22,13 @@ const settings: PlanSettings = {
   to: "2026-12-31",
   preset: "balanced",
   ships: [],
+  ports: [],
+  trainers: [],
   priorityShips: [],
   onlineHours: 2,
   maxOnboardingNights: 7,
   now: "2026-11-20T00:00:00.000Z",
+  rules: NO_RULES,
 };
 const noCosts: PlanCosts = { onlineSession: null, departureDaySession: null, onboardingDay: null, trip: null, night: null };
 const context = (overrides: Partial<{ settings: PlanSettings; costs: PlanCosts; bookings: Bookings }> = {}) => ({

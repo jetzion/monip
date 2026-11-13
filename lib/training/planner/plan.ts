@@ -76,11 +76,21 @@ function lastTrained(sessions: PlanSession[]) {
  * session that frees a trainer. Existing sessions are never changed here;
  * moves are proposals for the admin.
  */
-export function buildPlan(input: PlanInput): Plan {
-  const { settings, sessions, trainers, portZones } = input;
+export function buildPlan(full: PlanInput): Plan {
+  const { settings } = full;
+  // Trainers left out by the settings plan nothing; their sessions still count as booked time.
+  const trainers = settings.trainers.length ? full.trainers.filter((trainer) => settings.trainers.includes(trainer.id)) : full.trainers;
+  const input = { ...full, trainers };
+  const { sessions, portZones } = input;
   const inRange = input.sailings.filter((sailing) => {
     const day = dayOf(sailing.startDate);
-    return day >= settings.from && day <= settings.to && (settings.ships.length === 0 || settings.ships.includes(sailing.ship));
+    return (
+      day >= settings.from &&
+      day <= settings.to &&
+      (settings.ships.length === 0 || settings.ships.includes(sailing.ship)) &&
+      (settings.ports.length === 0 || settings.ports.includes(sailing.startPort ?? "")) &&
+      !settings.rules.excludeShips.includes(sailing.ship)
+    );
   });
   const byShip = new Map<string, PlanSailing[]>();
   for (const sailing of inRange) byShip.set(sailing.ship, [...(byShip.get(sailing.ship) ?? []), sailing]);

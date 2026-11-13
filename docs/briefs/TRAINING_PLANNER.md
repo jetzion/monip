@@ -126,4 +126,9 @@ Planner defaults (step 2, 2026-11-12):
    a proposal before accepting; planner rules warn, clashes block) done
    2026-11-12.
 4. AI: instruction to settings and the summary through OpenRouter (mocked in
-   tests).
+   tests). Done 2026-11-12: the instruction becomes settings and rules
+   (trainer or everyone unavailable, training type blocked, trainer kept away
+   from or preferred for a port, ships left out), checked on the server and
+   shown in the form before planning; anything else is listed as not
+   applied. "Use Declan for the Miami ships" is a preference (a score bonus),
+   not a guaranteed assignment.

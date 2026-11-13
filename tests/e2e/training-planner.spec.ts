@@ -77,6 +77,12 @@ test.afterAll(async ({ request }) => {
   users("delete");
 });
 
+// The page's AI calls are mocked so no OpenRouter request is made (the API tests below never reach the AI).
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/globals/training-plan/summarize", (route) => route.fulfill({ json: { summary: "Mock summary" } }));
+  await page.route("**/api/globals/training-plan/interpret", (route) => route.fulfill({ status: 503, json: { error: "Not mocked." } }));
+});
+
 const login = async (page: Page, email: string) => {
   await page.goto("/admin/login");
   await page.getByLabel("Email").fill(email);
@@ -167,6 +173,50 @@ test("edits a proposal before accepting it", async ({ page, request }) => {
   await expect(beta).toContainText("Online training, 10 Mar 2030, 17:00 – 19:00");
   await expect(beta).toContainText("edited by an admin");
   await expect(page.getByText("1 of 2 plannable ships planned: 0 departure day, 0 onboarding, 1 online.")).toBeVisible();
+});
+
+test("asks the AI for a plan from an instruction and shows what it applied", async ({ page, request }) => {
+  const editor = await auth(request, EDITOR);
+  for (const path of ["interpret", "summarize"]) {
+    expect((await request.post(`${PLAN}/${path}`, { headers: editor, data: { instruction: "x" } })).status()).toBe(403);
+  }
+  expect((await request.post(`${PLAN}/interpret`, { headers: admin, data: { instruction: " " } })).status()).toBe(400);
+
+  await login(page, ADMIN);
+  // The AI keeps Trainer One away on 10 March and cannot book flights.
+  await page.route("**/api/globals/training-plan/interpret", async (route) => {
+    const { instruction, settings } = route.request().postDataJSON() as { instruction: string; settings: Record<string, unknown> };
+    expect(instruction).toBe("Trainer One is away on 10 March. Book their flights.");
+    await route.fulfill({
+      json: {
+        understood: "Trainer One is unavailable on 10 March.",
+        notApplied: ["Booking flights is not part of planning."],
+        settings: { ...settings, ...SETTINGS, rules: { unavailable: [{ trainerId: trainerIds[0], from: "2030-03-10", to: "2030-03-10" }], blockedTypes: [], trainerPorts: [], excludeShips: [] } },
+      },
+    });
+  });
+  await page.goto("/admin/training-planner");
+  await page.getByLabel("Instruction for the AI (optional)").fill("Trainer One is away on 10 March. Book their flights.");
+  await page.getByRole("button", { name: "Ask AI for a plan" }).click();
+
+  await expect(page.getByText("The AI applied: Trainer One is unavailable on 10 March.")).toBeVisible();
+  await expect(page.getByText("Booking flights is not part of planning.")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Rules" })).toContainText(`E2E Planner One ${RUN} unavailable on 10 Mar 2030`);
+  // Beta needs a trainer on the 10th; only Trainer Two may take it.
+  const beta = page.getByRole("region", { name: "Proposed sessions" }).getByRole("row", { name: new RegExp(SHIPS[1]) }).first();
+  await expect(beta).toContainText(`E2E Planner Two ${RUN}`);
+
+  // Removing the rule changes the settings for the next plan.
+  await page.getByRole("button", { name: `Remove rule: E2E Planner One ${RUN} unavailable on 10 Mar 2030` }).click();
+  await expect(page.getByRole("list", { name: "Rules" })).toHaveCount(0);
+});
+
+test("shows the stored AI summary", async ({ page, request }) => {
+  const { current } = (await (await request.get(PLAN, { headers: admin })).json()) as { current: Record<string, unknown> };
+  await request.post(PLAN, { headers: admin, data: { current: { ...current, aiSummary: "One ship is planned in person." } } });
+  await login(page, ADMIN);
+  await page.goto("/admin/training-planner");
+  await expect(page.getByText("AI summary: One ship is planned in person.")).toBeVisible();
 });
 
 test("applies an accepted move to the existing session", async ({ request }) => {

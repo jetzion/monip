@@ -3,17 +3,20 @@ import { describe, expect, it } from "vitest";
 import { buildPlan } from "./plan";
 import { planRows } from "./rows";
 import type { StoredPlan } from "./stored";
-import type { PlanSettings } from "./types";
+import { NO_RULES, type PlanSettings } from "./types";
 
 const settings: PlanSettings = {
   from: "2026-12-01",
   to: "2026-12-31",
   preset: "balanced",
   ships: [],
+  ports: [],
+  trainers: [],
   priorityShips: [],
   onlineHours: 2,
   maxOnboardingNights: 7,
   now: "2026-11-20T00:00:00.000Z",
+  rules: NO_RULES,
 };
 
 const plan = buildPlan({

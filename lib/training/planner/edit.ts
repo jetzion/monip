@@ -2,6 +2,7 @@ import { describeSession, type TrainingType } from "../schedule";
 import { dayOf, isTime, zonedTime } from "../time";
 import { book, booking, type Bookings, clash, trainingDays, travelClash, travelGap, withinMonthlyLimit } from "./bookings";
 import { placeOf, reasonFor } from "./plan";
+import { ruleViolations } from "./rules";
 import { buildSlot, cruiseNights, ineligibleReason, onlineStart } from "./slots";
 import type { StoredPlan } from "./stored";
 import { summarize } from "./summary";
@@ -101,6 +102,7 @@ export function checkEdit(input: PlanInput, stored: StoredPlan, index: number, c
   if (!withinMonthlyLimit(bookings, trainer, days)) {
     warnings.push(`Over ${trainer.name}'s limit of ${trainer.maxDaysPerMonth} training days in ${monthName(days[0])}.`);
   }
+  warnings.push(...ruleViolations(slot, trainer, input.settings.rules).map((rule) => `Breaks the plan's rule: ${rule}`));
   return { slot, warnings };
 }
 
