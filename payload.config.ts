@@ -22,6 +22,7 @@ import { Trainers } from "./collections/Trainers";
 import { TrainingSessions } from "./collections/TrainingSessions";
 import { Users } from "./collections/Users";
 import { ChatInvitation } from "./globals/ChatInvitation";
+import { TrainingCosts } from "./globals/TrainingCosts";
 import { Home } from "./globals/Home";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -70,7 +71,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries, CruiseSailings, TrainingSessions, Trainers, PortTimeZones],
-  globals: [Home, ChatInvitation],
+  globals: [Home, ChatInvitation, TrainingCosts],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),
   typescript: {

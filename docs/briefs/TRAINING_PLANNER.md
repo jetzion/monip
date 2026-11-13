@@ -99,7 +99,7 @@ Preferences (weighted by the preset):
 ## Build order
 
 1. Data: trainer fields, Fixed on sessions, planning costs settings
-   (migration, editor guide).
+   (migration, editor guide). Done 2026-11-12.
 2. Planner code (`lib/training/planner.ts`) with unit tests: candidate slots,
    constraints, presets, moves, reasons.
 3. Planner page: settings, proposals, moves, summary, accept selected (e2e

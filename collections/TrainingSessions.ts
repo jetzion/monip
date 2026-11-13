@@ -96,6 +96,16 @@ export const TrainingSessions: CollectionConfig = {
       },
     },
     {
+      name: "fixed",
+      label: "Fixed",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description: "The training planner never suggests moving a fixed session, for example when travel is booked.",
+      },
+    },
+    {
       type: "row",
       admin: { position: "sidebar" },
       fields: [

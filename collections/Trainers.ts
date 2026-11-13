@@ -39,5 +39,34 @@ export const Trainers: CollectionConfig = {
       ],
     },
     { name: "name", type: "text", admin: { hidden: true } },
+    {
+      type: "row",
+      fields: [
+        {
+          name: "homeBase",
+          label: "Home base",
+          type: "relationship",
+          relationTo: "port-time-zones",
+          admin: {
+            description: "The trainer's nearest start port. The training planner counts sessions elsewhere as travel.",
+          },
+        },
+        {
+          name: "maxDaysPerMonth",
+          label: "Maximum training days per month",
+          type: "number",
+          min: 1,
+          max: 31,
+          admin: { step: 1, description: "Used by the training planner. Leave empty for no limit." },
+        },
+      ],
+    },
+    {
+      name: "canJoinCruises",
+      label: "Can join cruises",
+      type: "checkbox",
+      defaultValue: true,
+      admin: { description: "Only trainers who can join cruises are suggested for onboarding training." },
+    },
   ],
 };

@@ -114,10 +114,12 @@ export interface Config {
   globals: {
     home: Home;
     'chat-invitation': ChatInvitation;
+    'training-costs': TrainingCost;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'chat-invitation': ChatInvitationSelect<false> | ChatInvitationSelect<true>;
+    'training-costs': TrainingCostsSelect<false> | TrainingCostsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -659,6 +661,10 @@ export interface TrainingSession {
    */
   endDate?: string | null;
   /**
+   * The training planner never suggests moving a fixed session, for example when travel is booked.
+   */
+  fixed?: boolean | null;
+  /**
    * Set on save. Shown in your computer's time zone; the calendar uses the session's own.
    */
   startsAt?: string | null;
@@ -692,6 +698,18 @@ export interface Trainer {
   firstName: string;
   lastName: string;
   name?: string | null;
+  /**
+   * The trainer's nearest start port. The training planner counts sessions elsewhere as travel.
+   */
+  homeBase?: (number | null) | PortTimeZone;
+  /**
+   * Used by the training planner. Leave empty for no limit.
+   */
+  maxDaysPerMonth?: number | null;
+  /**
+   * Only trainers who can join cruises are suggested for onboarding training.
+   */
+  canJoinCruises?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1090,6 +1108,7 @@ export interface TrainingSessionsSelect<T extends boolean = true> {
   timeZone?: T;
   durationHours?: T;
   endDate?: T;
+  fixed?: T;
   startsAt?: T;
   endsAt?: T;
   cruiseCopy?:
@@ -1114,6 +1133,9 @@ export interface TrainersSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
   name?: T;
+  homeBase?: T;
+  maxDaysPerMonth?: T;
+  canJoinCruises?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1305,6 +1327,37 @@ export interface ChatInvitation {
   createdAt?: string | null;
 }
 /**
+ * Estimated costs in US dollars, used by the training planner to compare plans. Leave a value empty while it is unknown. Admins only.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-costs".
+ */
+export interface TrainingCost {
+  id: number;
+  /**
+   * Cost of one online session.
+   */
+  onlineSession?: number | null;
+  /**
+   * Cost of one departure-day session, without travel.
+   */
+  departureDaySession?: number | null;
+  /**
+   * Cost of each day a trainer spends on board, without travel.
+   */
+  onboardingDay?: number | null;
+  /**
+   * A return trip to a port that is not the trainer's home base.
+   */
+  trip?: number | null;
+  /**
+   * Each night away from home base that is not spent on board.
+   */
+  night?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
@@ -1403,6 +1456,20 @@ export interface ChatInvitationSelect<T extends boolean = true> {
         about?: T;
         clients?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-costs_select".
+ */
+export interface TrainingCostsSelect<T extends boolean = true> {
+  onlineSession?: T;
+  departureDaySession?: T;
+  onboardingDay?: T;
+  trip?: T;
+  night?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

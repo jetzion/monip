@@ -146,7 +146,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 **Before you start**
 
-- **Trainers:** click **Manage trainers** (or open **Trainers** in the menu) to add, edit, or remove trainers; each needs a first and last name. A trainer with scheduled sessions cannot be removed until those sessions are moved to another trainer or deleted.
+- **Trainers:** click **Manage trainers** (or open **Trainers** in the menu) to add, edit, or remove trainers; each needs a first and last name. For the training planner (coming), also set **Home base** (the trainer's nearest start port; sessions elsewhere count as travel), **Can join cruises** (ticked by default; only these trainers are suggested for onboarding), and **Maximum training days per month** (empty means no limit). A trainer with scheduled sessions cannot be removed until those sessions are moved to another trainer or deleted.
 - **Port time zones:** departure-day and onboarding sessions use the time zone of the cruise's start port. **Port time zones** lists each start port, spelled exactly as in the Cruise Fleet Schedule, with its time zone (for example "America/New_York"). It was filled in for every port in the schedule; when an import brings a new port, add it here. If a port is missing, the form says which one to add.
 
 **Schedule a session** with the **Schedule training** form at the top of the page (its title reminds you to select Cruise line or Port first):
@@ -159,6 +159,10 @@ Until the email service is set up, notification emails are not delivered: check 
    - **Onboarding training:** runs every day from the cruise's start date to its end date. You can choose an earlier or later end date, but not one before the start.
 4. Check the line next to **Add to Calendar**: it shows the session as it will be saved, or what is still missing. The button works only when everything is filled in correctly.
 5. Click **Add to Calendar**. A confirmation appears and the form clears. If it cannot be saved, the reason appears below and your choices are kept.
+
+**Fixed sessions:** tick **Fixed** in a session's sidebar (on its own page, through **Edit**) when it must not move, for example because travel is booked. The training planner will never suggest moving a fixed session. The session details show whether it is fixed.
+
+**Planning costs:** **Training planning costs** (under Globals) holds estimated costs in US dollars per online session, departure-day session, onboarding day, trip, and hotel night. The training planner uses them to compare plans; leave a value empty while it is unknown.
 
 **Conflicts:** a trainer cannot have two sessions that overlap, counting time zones (09:00 in London is 04:00 in New York). Onboarding blocks whole days. Back-to-back sessions are fine: one may start when another ends. A clash is refused with the session it clashes with.
 

@@ -62,6 +62,8 @@ export function TrainingSessionDetails({ session, trainer, changes, editHref, cl
         <dd>{trainer}</dd>
         <dt>Cruise</dt>
         <dd>{cruise}</dd>
+        <dt>Fixed</dt>
+        <dd>{session.fixed ? "Yes (the training planner will not move it)" : "No"}</dd>
         <dt>Created</dt>
         <dd>{stamp(session.createdAt)}</dd>
         <dt>Last updated</dt>
