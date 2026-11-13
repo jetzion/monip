@@ -11,6 +11,8 @@ export type ProposalRow = {
   shipName: string;
   values: ProposalValues;
   ship: string;
+  /** The cruise's start port, where it embarks. */
+  port: string;
   when: string;
   trainer: string;
   travel: string;
@@ -46,6 +48,7 @@ export function planRows(stored: StoredPlan, trainerNames: Map<number, string>) 
     shipName: proposal.sailing.ship,
     values: { cruise: proposal.sailing.id, trainer: proposal.trainerId, type: proposal.type, startTime: proposal.fields.startTime ?? null },
     ship: `${proposal.sailing.ship} (${proposal.sailing.cruiseLine})`,
+    port: proposal.sailing.startPort ?? "Unknown",
     when: when(proposal),
     trainer: name(proposal.trainerId),
     travel: travelText(proposal),

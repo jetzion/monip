@@ -60,6 +60,7 @@ describe("planRows", () => {
         shipName: "Alpha",
         values: { cruise: 1, trainer: 3, type: "departureDay", startTime: null },
         ship: "Alpha (Line)",
+        port: "Barcelona, Spain",
         when: "Departure day training, 5 Dec 2026, 06:00 – 16:30 (Europe/Madrid)",
         trainer: "Anna Rossi",
         travel: "1 trip, 1 night",

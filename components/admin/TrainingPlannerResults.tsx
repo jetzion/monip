@@ -130,6 +130,7 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
                     />
                   </th>
                   <th scope="col">Ship</th>
+                  <th scope="col">Embarkation port</th>
                   <th scope="col">When</th>
                   <th scope="col">Trainer</th>
                   <th scope="col">Travel</th>
@@ -154,6 +155,7 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
                       />
                     </td>
                     <td>{row.ship}</td>
+                    <td>{row.port}</td>
                     <td>{row.when}</td>
                     <td>{row.trainer}</td>
                     <td>{row.travel}</td>
@@ -177,7 +179,7 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
                   </tr>
                   {editing === row.index && (
                     <tr>
-                      <td colSpan={8}>
+                      <td colSpan={9}>
                         <TrainingPlannerEdit
                           index={row.index}
                           ship={row.ship}

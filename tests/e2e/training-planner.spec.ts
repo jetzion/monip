@@ -120,6 +120,8 @@ test("recommends a plan, accepts part of it, and replaces it on request", async 
   await expect(page.getByRole("heading", { name: "Balanced plan for cruises starting 1 Mar 2030 – 31 Mar 2030" })).toBeVisible();
   await expect(page.getByText("2 of 2 plannable ships planned: 2 departure day, 0 onboarding, 0 online.")).toBeVisible();
   const sessions = page.getByRole("region", { name: "Proposed sessions" });
+  await expect(sessions.getByRole("columnheader", { name: "Embarkation port" })).toBeVisible();
+  await expect(sessions.getByRole("row", { name: new RegExp(SHIPS[0]) }).getByRole("cell", { name: "Miami, Florida", exact: true })).toBeVisible();
   // Same day, same port: one ship per trainer.
   await expect(sessions.getByRole("row", { name: new RegExp(SHIPS[0]) })).toContainText("Departure day training, 10 Mar 2030, 07:00 – 16:00");
   await expect(sessions.getByRole("row", { name: new RegExp(SHIPS[1]) })).toContainText("home base; not trained before.");
