@@ -8,12 +8,12 @@ import { readStoredMedia } from "./stored-file";
 const MEASURABLE = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
 
 /** The image being saved: the upload when the server holds all of it, otherwise the stored file. */
-async function imageBytes(req: PayloadRequest, filename: string, filesize: number | undefined, staticDir: string) {
+async function imageBytes(req: PayloadRequest, filename: string, filesize: number | undefined, staticDir: string, folder: string) {
   const file = req.file as (NonNullable<PayloadRequest["file"]> & { tempFilePath?: string }) | undefined;
   if (file?.tempFilePath) return readFile(file.tempFilePath);
   // Browser uploads to Blob send only part of the file; it is already stored by then.
   if (file?.data?.length && file.data.length === filesize) return file.data;
-  return readStoredMedia(filename, staticDir);
+  return readStoredMedia(filename, staticDir, folder);
 }
 
 /**
@@ -30,7 +30,12 @@ export const measureContentBoxHook: CollectionBeforeChangeHook = async ({ collec
 
   try {
     const staticDir = collection.upload ? collection.upload.staticDir ?? "media" : "media";
-    const measured = await measureContentBox(await imageBytes(req, filename, data.filesize ?? originalDoc?.filesize, staticDir));
+    // Blob folder, as the storage plugin builds it: prefix, then the object key.
+    const upload = req.file?.clientUploadContext as { _objectKey?: string } | undefined;
+    const objectKey = data._objectKey ?? upload?._objectKey ?? originalDoc?._objectKey;
+    const folder = [data.prefix ?? originalDoc?.prefix, objectKey].filter(Boolean).join("/");
+    const bytes = await imageBytes(req, filename, data.filesize ?? originalDoc?.filesize, staticDir, folder);
+    const measured = await measureContentBox(bytes);
     const width = data.width ?? originalDoc?.width;
     const height = data.height ?? originalDoc?.height;
     data.contentBox = measured.width === width && measured.height === height ? measured.box : null;
