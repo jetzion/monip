@@ -113,7 +113,8 @@ export async function TrainingListView({ payload, user, searchParams, collection
           <h1>{collectionConfig.labels.plural as string}</h1>
           <p>{collectionConfig.admin.description as string}</p>
           <p>
-            <Link href={`${payload.config.routes.admin}/training-report`}>Training report</Link> (PDF download)
+            <Link href={`${payload.config.routes.admin}/training-report`}>Training report</Link> (PDF download) ·{" "}
+            <Link href={`${payload.config.routes.admin}/training-planner`}>Training planner</Link>
           </p>
         </header>
 

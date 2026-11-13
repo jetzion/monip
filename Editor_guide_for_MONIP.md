@@ -180,6 +180,14 @@ Until the email service is set up, notification emails are not delivered: check 
 - **Edit** it, for example to choose another cruise when the original was removed; or
 - **Delete** it.
 
+**Training planner:** click **Training planner** below the page title (or go to `/admin/training-planner`). It recommends training for each ship with cruises in a date range; nothing changes until you accept it.
+
+1. Choose the **First** and **Last cruise start date** (up to about three months) and a **Plan**: **Balanced** (in person where practical, less travel), **Lower cost** (mostly online), or **More in-person** (more onboarding and departure days, more travel). Optionally limit the plan to some ships, list **Priority ships** to plan first, and change the online session length or the longest cruise offered for onboarding.
+2. Click **Recommend**. Each ship gets at most one session: priority ships first, then those trained least recently. The plan checks every trainer's existing sessions, monthly day limit, whether they can join cruises, and time to travel between ports.
+3. Review the summary (ships planned, formats, trips and nights, estimated cost when **Training planning costs** are filled in, and each trainer's days per month), the **Proposed sessions** (with the reason for each), any **Moves of existing sessions** (suggested only when a move is the only way to train another ship; fixed sessions are never moved), and the ships not planned or skipped with the reason.
+4. Tick the sessions and moves you want and click **Accept selected**. Moves are applied first, then sessions are added; each is checked for conflicts again, and anything that cannot be saved shows why. Accepted sessions appear in the calendar like any other. Tell trainers about accepted moves.
+5. **Suggest a new plan** replaces the current plan (sessions you accepted stay in the schedule). To keep a proposal, accept it before asking for a new plan.
+
 **Training report:** click **Training report** below the page title (or go to `/admin/training-report`).
 
 1. Choose a **Trainer**, or leave it on **All trainers**.

@@ -80,7 +80,7 @@ export function slotFor(
   const startTime = type === "online" ? onlineStart(sailing, zone, settings.onlineHours, trainer.id, bookings) : null;
   if (type === "online" && !startTime) return null;
   const date = `${dayOf(sailing.startDate)}T12:00:00.000Z`;
-  const online = { date, startTime: startTime ?? undefined, timeZone: zone, durationHours: String(settings.onlineHours) };
+  const online = { date, startTime: startTime ?? undefined, timeZone: zone, durationHours: String(settings.onlineHours) as "2" | "4" | "8" };
   const times = sessionTimes({ type, ...(type === "online" ? online : {}) }, sailing, zone);
   if (isFieldError(times)) return null;
   const start = Date.parse(times.startsAt);

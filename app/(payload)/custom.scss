@@ -809,3 +809,53 @@ body::before {
 .training-report__error {
   color: var(--theme-error-500);
 }
+
+// Training planner: summary, outcome labels, and ship lists.
+.training-planner__summary {
+  margin: 12px 0 24px;
+  padding-left: 20px;
+}
+
+.training-planner__accepted {
+  color: var(--theme-success-650, var(--theme-text));
+  font-weight: 600;
+}
+
+.training-planner__failed {
+  color: var(--theme-error-500);
+  font-weight: 600;
+}
+
+.training-planner__list {
+  margin-top: 20px;
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
+
+.training-planner h3 {
+  margin: 28px 0 8px;
+}
+
+// Planner tables size columns to their content: narrow tick boxes, wide reasons.
+.training-planner .training-report__table {
+  table {
+    table-layout: auto;
+  }
+
+  th,
+  td {
+    overflow-wrap: normal;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 1%;
+  }
+
+  td:last-child {
+    min-width: 260px;
+  }
+}

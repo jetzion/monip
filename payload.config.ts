@@ -23,6 +23,7 @@ import { TrainingSessions } from "./collections/TrainingSessions";
 import { Users } from "./collections/Users";
 import { ChatInvitation } from "./globals/ChatInvitation";
 import { TrainingCosts } from "./globals/TrainingCosts";
+import { TrainingPlan } from "./globals/TrainingPlan";
 import { Home } from "./globals/Home";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -56,6 +57,10 @@ export default buildConfig({
           Component: "/components/admin/TrainingReportView#TrainingReportView",
           path: "/training-report",
         },
+        trainingPlanner: {
+          Component: "/components/admin/TrainingPlannerView#TrainingPlannerView",
+          path: "/training-planner",
+        },
       },
     },
     meta: {
@@ -71,7 +76,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries, CruiseSailings, TrainingSessions, Trainers, PortTimeZones],
-  globals: [Home, ChatInvitation, TrainingCosts],
+  globals: [Home, ChatInvitation, TrainingCosts, TrainingPlan],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),
   typescript: {

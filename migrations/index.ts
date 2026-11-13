@@ -25,6 +25,7 @@ import * as migration_20261112_211746_pages_services_key from './20261112_211746
 import * as migration_20261112_223616_media_content_box from './20261112_223616_media_content_box';
 import * as migration_20261112_225948_measure_remaining_media from './20261112_225948_measure_remaining_media';
 import * as migration_20261113_001235_training_planner_data from './20261113_001235_training_planner_data';
+import * as migration_20261113_003411_training_plan from './20261113_003411_training_plan';
 
 export const migrations = [
   {
@@ -160,6 +161,11 @@ export const migrations = [
   {
     up: migration_20261113_001235_training_planner_data.up,
     down: migration_20261113_001235_training_planner_data.down,
-    name: '20261113_001235_training_planner_data'
+    name: '20261113_001235_training_planner_data',
+  },
+  {
+    up: migration_20261113_003411_training_plan.up,
+    down: migration_20261113_003411_training_plan.down,
+    name: '20261113_003411_training_plan'
   },
 ];

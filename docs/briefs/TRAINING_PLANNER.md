@@ -122,6 +122,7 @@ Planner defaults (step 2, 2026-11-12):
 2. Planner code (`lib/training/planner/`) with unit tests: candidate slots,
    constraints, presets, moves, reasons. Done 2026-11-12.
 3. Planner page: settings, proposals, moves, summary, accept selected (e2e
-   tests with their own accounts).
+   tests with their own accounts). 3a (recommend, review, accept) done
+   2026-11-12; 3b (edit a proposal before accepting) next.
 4. AI: instruction to settings and the summary through OpenRouter (mocked in
    tests).

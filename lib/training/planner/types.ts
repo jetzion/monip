@@ -90,7 +90,7 @@ export type SessionFields = {
   date?: string;
   startTime?: string;
   timeZone?: string;
-  durationHours?: string;
+  durationHours?: "2" | "4" | "8";
 };
 
 /** A place a trainer could train a ship. */

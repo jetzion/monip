@@ -115,11 +115,13 @@ export interface Config {
     home: Home;
     'chat-invitation': ChatInvitation;
     'training-costs': TrainingCost;
+    'training-plan': TrainingPlan;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'chat-invitation': ChatInvitationSelect<false> | ChatInvitationSelect<true>;
     'training-costs': TrainingCostsSelect<false> | TrainingCostsSelect<true>;
+    'training-plan': TrainingPlanSelect<false> | TrainingPlanSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1359,6 +1361,24 @@ export interface TrainingCost {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-plan".
+ */
+export interface TrainingPlan {
+  id: number;
+  current?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -1470,6 +1490,16 @@ export interface TrainingCostsSelect<T extends boolean = true> {
   onboardingDay?: T;
   trip?: T;
   night?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-plan_select".
+ */
+export interface TrainingPlanSelect<T extends boolean = true> {
+  current?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
