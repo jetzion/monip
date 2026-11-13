@@ -133,6 +133,42 @@ test("recommends a plan, accepts part of it, and replaces it on request", async 
   await expect(sessions.getByRole("row", { name: new RegExp(SHIPS[0]) })).toHaveCount(0);
 });
 
+test("edits a proposal before accepting it", async ({ page, request }) => {
+  const editor = await auth(request, EDITOR);
+  const body = { index: 0, cruise: sailingIds[1], trainer: trainerIds[1], type: "departureDay", save: false };
+  expect((await request.post(`${PLAN}/edit`, { headers: editor, data: body })).status()).toBe(403);
+
+  await login(page, ADMIN);
+  await page.goto("/admin/training-planner");
+  const sessions = page.getByRole("region", { name: "Proposed sessions" });
+  const beta = sessions.getByRole("row", { name: new RegExp(SHIPS[1]) }).first();
+  const trainerOf = (await beta.innerText()).includes(`Planner One ${RUN}`) ? "One" : "Two";
+  const other = trainerOf === "One" ? "Two" : "One";
+  await sessions.getByRole("button", { name: `Edit session for ${SHIPS[1]} (E2E Line)` }).click();
+  const form = page.getByRole("group", { name: `Change the session for ${SHIPS[1]} (E2E Line)` });
+  const choose = async (label: string, option: string) => {
+    await form.getByLabel(label, { exact: true }).click();
+    await page.getByRole("option", { name: option, exact: true }).click();
+  };
+
+  // The other trainer already has Alpha's accepted session on the 10th.
+  await choose("Trainer", `E2E Planner ${other} ${RUN}`);
+  await expect(form.getByRole("alert")).toContainText(`already has training then: ${SHIPS[0]}`);
+  await expect(form.getByRole("button", { name: "Save change" })).toBeDisabled();
+
+  // Online after the ship leaves is allowed, with a warning.
+  await choose("Trainer", `E2E Planner ${trainerOf} ${RUN}`);
+  await choose("Training type", "Online training");
+  await form.getByLabel("Start time (port time)").fill("17:00");
+  await expect(form.getByText("Outside the ship's time in port (07:00–16:00).")).toBeVisible();
+  await expect(form.getByText("Will be: Online training, 10 Mar 2030, 17:00 – 19:00 (America/New_York).", { exact: false })).toBeVisible();
+  await form.getByRole("button", { name: "Save anyway" }).click();
+
+  await expect(beta).toContainText("Online training, 10 Mar 2030, 17:00 – 19:00");
+  await expect(beta).toContainText("edited by an admin");
+  await expect(page.getByText("1 of 2 plannable ships planned: 0 departure day, 0 onboarding, 1 online.")).toBeVisible();
+});
+
 test("applies an accepted move to the existing session", async ({ request }) => {
   const [session] = await sessionsOf(request);
   const { current } = (await (await request.get(PLAN, { headers: admin })).json()) as { current: Record<string, unknown> };

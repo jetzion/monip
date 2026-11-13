@@ -1,9 +1,15 @@
-import { describeSession } from "../schedule";
+import { describeSession, type TrainingType } from "../schedule";
 import type { ItemStatus, StoredPlan } from "./stored";
 import { PRESETS, type Slot } from "./types";
 
+/** Current choices of a proposal, as the editor starts them. */
+export type ProposalValues = { cruise: number; trainer: number; type: TrainingType; startTime: string | null };
+
 export type ProposalRow = {
   index: number;
+  /** Ship name alone, to find its cruises for editing. */
+  shipName: string;
+  values: ProposalValues;
   ship: string;
   when: string;
   trainer: string;
@@ -21,6 +27,11 @@ const month = (value: string) => new Intl.DateTimeFormat("en-GB", { month: "long
 const when = (slot: Pick<Slot, "type" | "startsAt" | "endsAt" | "timeZone">) => describeSession(slot);
 const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
+export const travelText = (slot: Pick<Slot, "travel" | "trips" | "nights">) =>
+  slot.travel ? `${plural(slot.trips, "trip")}, ${plural(slot.nights, "night")}` : "None";
+export const costText = (slot: Pick<Slot, "cost">) => (slot.cost === null ? "Unknown" : usd.format(slot.cost));
+export const whenText = (slot: Pick<Slot, "type" | "startsAt" | "endsAt" | "timeZone">) => describeSession(slot);
+
 /** Rows, summary lines, and the title for the planner page. */
 export function planRows(stored: StoredPlan, trainerNames: Map<number, string>) {
   const { plan, settings } = stored;
@@ -32,11 +43,13 @@ export function planRows(stored: StoredPlan, trainerNames: Map<number, string>) 
 
   const proposals: ProposalRow[] = byStart(plan.proposals).map(({ item: proposal, index }) => ({
     index,
+    shipName: proposal.sailing.ship,
+    values: { cruise: proposal.sailing.id, trainer: proposal.trainerId, type: proposal.type, startTime: proposal.fields.startTime ?? null },
     ship: `${proposal.sailing.ship} (${proposal.sailing.cruiseLine})`,
     when: when(proposal),
     trainer: name(proposal.trainerId),
-    travel: proposal.travel ? `${plural(proposal.trips, "trip")}, ${plural(proposal.nights, "night")}` : "None",
-    cost: proposal.cost === null ? "Unknown" : usd.format(proposal.cost),
+    travel: travelText(proposal),
+    cost: costText(proposal),
     reason: proposal.reason,
     status: stored.proposalStatus[index] ?? null,
   }));

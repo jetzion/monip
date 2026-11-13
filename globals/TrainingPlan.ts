@@ -1,7 +1,7 @@
 import type { GlobalConfig } from "payload";
 
 import { isAdmin } from "../access/roles";
-import { acceptEndpoint, recommendEndpoint } from "../lib/training/planner/endpoints";
+import { acceptEndpoint, editEndpoint, recommendEndpoint } from "../lib/training/planner/endpoints";
 
 /**
  * The current training plan from the planner (/admin/training-planner),
@@ -15,6 +15,6 @@ export const TrainingPlan: GlobalConfig = {
     read: isAdmin,
     update: isAdmin,
   },
-  endpoints: [recommendEndpoint, acceptEndpoint],
+  endpoints: [recommendEndpoint, acceptEndpoint, editEndpoint],
   fields: [{ name: "current", type: "json" }],
 };

@@ -54,6 +54,8 @@ describe("planRows", () => {
     expect(rows.proposals).toEqual([
       {
         index: 0,
+        shipName: "Alpha",
+        values: { cruise: 1, trainer: 3, type: "departureDay", startTime: null },
         ship: "Alpha (Line)",
         when: "Departure day training, 5 Dec 2026, 06:00 – 16:30 (Europe/Madrid)",
         trainer: "Anna Rossi",

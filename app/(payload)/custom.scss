@@ -859,3 +859,32 @@ body::before {
     min-width: 260px;
   }
 }
+
+// Planner: inline editor for a proposed session.
+.training-planner__edit {
+  padding: 12px 0 4px;
+}
+
+.training-planner__preview {
+  margin-top: 12px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.training-planner__warnings {
+  margin: 6px 0 0;
+  padding-left: 20px;
+  color: var(--theme-warning-650, var(--theme-text));
+}
+
+.training-planner__edit-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--theme-text);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

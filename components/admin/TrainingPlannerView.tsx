@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { AdminViewServerProps } from "payload";
 
 import { upcomingCruiseCombos } from "@/lib/training/cruise-options";
+import { cruiseOptions } from "@/lib/training/planner/cruise-options";
 import { planRows } from "@/lib/training/planner/rows";
 import { isStoredPlan } from "@/lib/training/planner/stored";
 import { addDays } from "@/lib/training/time";
@@ -58,6 +59,8 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
     upcomingCruiseCombos(payload, today),
   ]);
   const stored = isStoredPlan(current) ? current : null;
+  const cruises = stored ? await cruiseOptions(req, stored) : {};
+  const trainerOptions = trainers.docs.map((trainer) => ({ label: trainer.name ?? "", value: String(trainer.id) }));
   const rows = stored ? planRows(stored, new Map(trainers.docs.map((trainer) => [trainer.id, trainer.name ?? ""]))) : null;
   const ships = [...new Set(combos.map((combo) => combo.ship))].sort((a, b) => a.localeCompare(b));
   const initial = stored?.settings ?? {
@@ -99,7 +102,13 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <TrainingPlannerResults key={stored!.createdAt} proposals={rows.proposals} moves={rows.moves} />
+              <TrainingPlannerResults
+                key={stored!.createdAt}
+                proposals={rows.proposals}
+                moves={rows.moves}
+                cruises={cruises}
+                trainers={trainerOptions}
+              />
               <ShipList title="Ships not planned" items={rows.unscheduled} />
               <ShipList title="Ships skipped for missing data" items={rows.skipped} />
             </section>

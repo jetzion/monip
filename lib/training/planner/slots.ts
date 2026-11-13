@@ -1,4 +1,4 @@
-import { isFieldError, sessionTimes, type TrainingType } from "../schedule";
+import { type FieldError, isFieldError, sessionTimes, type TrainingType } from "../schedule";
 import { dayOf, isTime, zonedTime } from "../time";
 import { clash, type Place, trainingDays, travelClash, withinMonthlyLimit, type Bookings } from "./bookings";
 import type { PlanCosts, PlanSailing, PlanSettings, PlanTrainer, Preset, Slot } from "./types";
@@ -50,7 +50,7 @@ const hhmm = (minutes: number) => `${String(Math.floor(minutes / 60)).padStart(2
 const minutesOf = (time: string) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
 
 /** Earliest free start for an online session inside the in-port window, in 30-minute steps. */
-function onlineStart(sailing: PlanSailing, zone: string, hours: number, trainerId: number, bookings: Bookings) {
+export function onlineStart(sailing: PlanSailing, zone: string, hours: number, trainerId: number, bookings: Bookings) {
   const day = dayOf(sailing.startDate);
   const last = minutesOf(sailing.departure!) - hours * 60;
   for (let minute = minutesOf(sailing.arrival!); minute <= last; minute += STEP_MINUTES) {
@@ -60,39 +60,34 @@ function onlineStart(sailing: PlanSailing, zone: string, hours: number, trainerI
   return null;
 }
 
+type SlotContext = { settings: PlanSettings; portZones: Record<string, string>; costs: PlanCosts; bookings: Bookings };
+
+/** Nights of a cruise, or null without an end date. */
+export const cruiseNights = (sailing: PlanSailing) =>
+  sailing.endDate ? (Date.parse(dayOf(sailing.endDate)) - Date.parse(dayOf(sailing.startDate))) / 86_400_000 : null;
+
 /**
- * The slot where this trainer could give this type of training on this
- * sailing, or null when it is not possible (busy, over the monthly limit,
- * cannot join cruises, cruise too long, or in the past).
+ * The session this trainer would give, with its times, place, travel, cost,
+ * and score, without checking availability. Online sessions start at
+ * `startTime` (local "HH:MM"). A FieldError when the times cannot be worked out.
  */
-export function slotFor(
+export function buildSlot(
   sailing: PlanSailing,
   trainer: PlanTrainer,
   type: TrainingType,
-  context: { settings: PlanSettings; portZones: Record<string, string>; costs: PlanCosts; bookings: Bookings },
-): Slot | null {
-  const { settings, portZones, costs, bookings } = context;
+  startTime: string | null,
+  context: Omit<SlotContext, "bookings">,
+): Slot | FieldError {
+  const { settings, portZones, costs } = context;
   const zone = portZones[sailing.startPort ?? ""];
-  if (type === "onboarding") {
-    const nights = sailing.endDate ? (Date.parse(dayOf(sailing.endDate)) - Date.parse(dayOf(sailing.startDate))) / 86_400_000 : null;
-    if (!trainer.canJoinCruises || nights === null || nights > settings.maxOnboardingNights) return null;
-  }
-  const startTime = type === "online" ? onlineStart(sailing, zone, settings.onlineHours, trainer.id, bookings) : null;
-  if (type === "online" && !startTime) return null;
   const date = `${dayOf(sailing.startDate)}T12:00:00.000Z`;
   const online = { date, startTime: startTime ?? undefined, timeZone: zone, durationHours: String(settings.onlineHours) as "2" | "4" | "8" };
   const times = sessionTimes({ type, ...(type === "online" ? online : {}) }, sailing, zone);
-  if (isFieldError(times)) return null;
-  const start = Date.parse(times.startsAt);
-  const end = Date.parse(times.endsAt);
-  if (start < Date.parse(settings.now) || clash(bookings, trainer.id, start, end)) return null;
+  if (isFieldError(times)) return times;
   const endPort = type === "onboarding" ? (sailing.endPort ?? sailing.startPort) : sailing.startPort;
   const place: Place | null =
     type === "online" ? null : { startPort: sailing.startPort, endPort, startZone: zone, endZone: portZones[endPort ?? ""] ?? null };
-  if (place && travelClash(bookings, trainer.id, start, end, place)) return null;
   const days = trainingDays(times.startsAt, times.endsAt, times.timeZone);
-  if (!withinMonthlyLimit(bookings, trainer, days)) return null;
-
   const { travel, trips, nights } = travelFor(type, sailing, trainer);
   const cost = estimate(type, days.length, trips, nights, costs);
   const penalty = TRAVEL_PENALTY[settings.preset] * (trips + nights / 3);
@@ -113,4 +108,28 @@ export function slotFor(
     cost,
     score,
   };
+}
+
+/**
+ * The slot where this trainer could give this type of training on this
+ * sailing, or null when it is not possible (busy, too little time to travel,
+ * over the monthly limit, cannot join cruises, cruise too long, or in the past).
+ */
+export function slotFor(sailing: PlanSailing, trainer: PlanTrainer, type: TrainingType, context: SlotContext): Slot | null {
+  const { settings, portZones, bookings } = context;
+  if (type === "onboarding") {
+    const nights = cruiseNights(sailing);
+    if (!trainer.canJoinCruises || nights === null || nights > settings.maxOnboardingNights) return null;
+  }
+  const zone = portZones[sailing.startPort ?? ""];
+  const startTime = type === "online" ? onlineStart(sailing, zone, settings.onlineHours, trainer.id, bookings) : null;
+  if (type === "online" && !startTime) return null;
+  const slot = buildSlot(sailing, trainer, type, startTime, context);
+  if ("message" in slot) return null;
+  const start = Date.parse(slot.startsAt);
+  const end = Date.parse(slot.endsAt);
+  if (start < Date.parse(settings.now) || clash(bookings, trainer.id, start, end)) return null;
+  if (slot.place && travelClash(bookings, trainer.id, start, end, slot.place)) return null;
+  if (!withinMonthlyLimit(bookings, trainer, trainingDays(slot.startsAt, slot.endsAt, slot.timeZone))) return null;
+  return slot;
 }

@@ -35,7 +35,7 @@ function bestSlot(sailings: PlanSailing[], trainers: PlanTrainer[], input: PlanI
   return best;
 }
 
-function reasonFor(slot: Slot, trainer: PlanTrainer, recency: string): string {
+export function reasonFor(slot: Slot, trainer: PlanTrainer, recency: string): string {
   const port = slot.sailing.startPort ?? "the port";
   const format =
     slot.type === "online"
@@ -49,7 +49,7 @@ function reasonFor(slot: Slot, trainer: PlanTrainer, recency: string): string {
 }
 
 /** Where an existing in-person session takes the trainer. */
-function placeOf(session: PlanSession, portZones: Record<string, string>): Place | null {
+export function placeOf(session: PlanSession, portZones: Record<string, string>): Place | null {
   if (session.type === "online") return null;
   const endPort = session.endPort ?? session.startPort;
   return {

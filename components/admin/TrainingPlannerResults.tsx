@@ -2,14 +2,21 @@
 
 import { Button } from "@payloadcms/ui";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 import type { MoveRow, ProposalRow } from "@/lib/training/planner/rows";
 import type { ItemStatus } from "@/lib/training/planner/stored";
 
+import { type Option, TrainingPlannerEdit } from "./TrainingPlannerEdit";
 import { errorOf } from "./TrainingPlannerSettings";
 
-type Props = { proposals: ProposalRow[]; moves: MoveRow[] };
+type Props = {
+  proposals: ProposalRow[];
+  moves: MoveRow[];
+  /** Each planned ship's cruises in the plan's dates, for editing. */
+  cruises: Record<string, Option[]>;
+  trainers: Option[];
+};
 
 function Status({ status }: { status: ItemStatus | null }) {
   if (!status) return null;
@@ -26,7 +33,7 @@ const toggle = (set: Set<number>, index: number) => {
 };
 
 /** Proposed sessions and moves with tick boxes; Accept selected saves the ticked ones. */
-export function TrainingPlannerResults({ proposals, moves }: Props) {
+export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: Props) {
   const router = useRouter();
   const open = (rows: { index: number; status: ItemStatus | null }[]) =>
     rows.filter((row) => row.status?.status !== "accepted").map((row) => row.index);
@@ -34,6 +41,7 @@ export function TrainingPlannerResults({ proposals, moves }: Props) {
   const [pickedMoves, setPickedMoves] = useState(new Set<number>());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [editing, setEditing] = useState<number | null>(null);
   const count = pickedProposals.size + pickedMoves.size;
   const openMoves = open(moves);
 
@@ -127,11 +135,15 @@ export function TrainingPlannerResults({ proposals, moves }: Props) {
                   <th scope="col">Travel</th>
                   <th scope="col">Cost</th>
                   <th scope="col">Why</th>
+                  <th scope="col">
+                    <span className="sr-only">Change</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {proposals.map((row) => (
-                  <tr key={row.index}>
+                  <Fragment key={row.index}>
+                  <tr>
                     <td>
                       <input
                         type="checkbox"
@@ -149,7 +161,35 @@ export function TrainingPlannerResults({ proposals, moves }: Props) {
                     <td>
                       {row.reason} <Status status={row.status} />
                     </td>
+                    <td>
+                      {row.status?.status !== "accepted" && (
+                        <button
+                          type="button"
+                          className="training-planner__edit-button"
+                          aria-expanded={editing === row.index}
+                          aria-label={`Edit session for ${row.ship}`}
+                          onClick={() => setEditing(editing === row.index ? null : row.index)}
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </td>
                   </tr>
+                  {editing === row.index && (
+                    <tr>
+                      <td colSpan={8}>
+                        <TrainingPlannerEdit
+                          index={row.index}
+                          ship={row.ship}
+                          values={row.values}
+                          cruises={cruises[row.shipName] ?? []}
+                          trainers={trainers}
+                          onClose={() => setEditing(null)}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                  </Fragment>
                 ))}
               </tbody>
             </table>
