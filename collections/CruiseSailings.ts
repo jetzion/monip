@@ -92,7 +92,12 @@ export const CruiseSailings: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "confidence", label: "Confidence", type: "text" },
+        {
+          name: "confidence",
+          label: "Confidence",
+          type: "text",
+          admin: { components: { Cell: "/components/admin/ConfidenceCell#ConfidenceCell" } },
+        },
         {
           name: "source",
           label: "Source",

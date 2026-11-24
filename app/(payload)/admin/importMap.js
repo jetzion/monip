@@ -25,6 +25,7 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FullTextCell as FullTextCell_e04bfd2377652c449b32de2642fbb4e8 } from '../../../components/admin/FullTextCell'
+import { ConfidenceCell as ConfidenceCell_eae2f9c2caa07a9d07d60a294571ddd1 } from '../../../components/admin/ConfidenceCell'
 import { TrainingNavBeforeList as TrainingNavBeforeList_8f0a8a1ab8575a25e6e561f865c5dd50 } from '../../../components/admin/TrainingNav'
 import { SailingActions as SailingActions_ee8702e49f227826a466e738562c37c1 } from '../../../components/admin/SailingActions'
 import { SailingFilters as SailingFilters_0ba85c529e77b4340522f0eed15d2531 } from '../../../components/admin/SailingFilters'
@@ -68,6 +69,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/FullTextCell#FullTextCell": FullTextCell_e04bfd2377652c449b32de2642fbb4e8,
+  "/components/admin/ConfidenceCell#ConfidenceCell": ConfidenceCell_eae2f9c2caa07a9d07d60a294571ddd1,
   "/components/admin/TrainingNav#TrainingNavBeforeList": TrainingNavBeforeList_8f0a8a1ab8575a25e6e561f865c5dd50,
   "/components/admin/SailingActions#SailingActions": SailingActions_ee8702e49f227826a466e738562c37c1,
   "/components/admin/SailingFilters#SailingFilters": SailingFilters_0ba85c529e77b4340522f0eed15d2531,
