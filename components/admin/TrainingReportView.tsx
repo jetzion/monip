@@ -2,7 +2,8 @@ import { DefaultTemplate } from "@payloadcms/next/templates";
 import { Gutter } from "@payloadcms/ui";
 import type { AdminViewServerProps } from "payload";
 
-import { monthOptions, readReportParams, reportQuery, totalsLabel, type ReportGroup } from "@/lib/training/report";
+import { initialsOf } from "@/lib/admin/initials";
+import { monthOptions, readReportParams, reportQuery, totalsLabel, totalsStats, type ReportGroup, type ReportTotals } from "@/lib/training/report";
 import { loadReport, reportTrainers } from "@/lib/training/report-data";
 
 import { TrainingNav } from "./TrainingNav";
@@ -28,22 +29,26 @@ function ReportTable({ group, showTrainer }: { group: ReportGroup; showTrainer: 
             <th scope="col">Ship</th>
             <th scope="col">Start port</th>
             <th scope="col">Cruise dates</th>
-            <th scope="col">Travel cost</th>
+            <th scope="col" className="is-number">
+              Travel cost
+            </th>
           </tr>
         </thead>
         <tbody>
           {group.rows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} className={row.canceled ? "is-canceled" : undefined}>
               <td>{row.dates}</td>
               <td>{row.time}</td>
               <td>{row.timeZone}</td>
-              <td>{row.type}</td>
+              <td>
+                <span className={`training-report__type training-type--${row.typeValue}`}>{row.type}</span>
+              </td>
               {showTrainer && <td>{row.trainer}</td>}
               <td>{row.cruiseLine}</td>
               <td>{row.ship}</td>
               <td>{row.startPort}</td>
               <td>{row.cruiseDates}</td>
-              <td>{row.cost}</td>
+              <td className="is-number">{row.cost}</td>
             </tr>
           ))}
         </tbody>
@@ -51,6 +56,26 @@ function ReportTable({ group, showTrainer }: { group: ReportGroup; showTrainer: 
     </div>
   );
 }
+
+/** The totals as figures: the whole report under its heading. */
+function ReportStats({ totals }: { totals: ReportTotals }) {
+  return (
+    <dl className="training-report__stats">
+      {totalsStats(totals).map((stat) => (
+        <div key={stat.label}>
+          <dt>{stat.label}</dt>
+          <dd>{stat.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** "Ann Lee" to "AL": first and last word. */
+const nameInitials = (name: string) => {
+  const words = name.trim().split(/\s+/);
+  return initialsOf(words[0], words.length > 1 ? words[words.length - 1] : null);
+};
 
 /**
  * Training report at /admin/training-report: one trainer or all, for a range of
@@ -114,7 +139,7 @@ export async function TrainingReportView({ initPageResult, params, searchParams 
           )}
 
           {report && (
-            <section aria-labelledby="training-report-title">
+            <section className="training-report__body" aria-labelledby="training-report-title">
               <div className="training-report__heading">
                 <div>
                   <h2 id="training-report-title">{report.title}</h2>
@@ -128,16 +153,23 @@ export async function TrainingReportView({ initPageResult, params, searchParams 
                   Download PDF
                 </a>
               </div>
-              {!hasRows && <p>No training sessions in these months.</p>}
+              {!hasRows && <p className="training-report__empty">No training sessions in these months.</p>}
+              {hasRows && <ReportStats totals={report.totals} />}
               {hasRows &&
                 report.groups.map((group) => (
                   <div className="training-report__group" key={group.heading ?? "all"}>
-                    {group.heading && <h3>{group.heading}</h3>}
+                    {group.heading && (
+                      <div className="training-report__group-header">
+                        <span className="training-report__initials" aria-hidden="true">
+                          {nameInitials(group.heading)}
+                        </span>
+                        <h3>{group.heading}</h3>
+                      </div>
+                    )}
                     <ReportTable group={group} showTrainer={!grouped} />
                     {grouped && <p className="training-report__totals">{totalsLabel(group.totals)}</p>}
                   </div>
                 ))}
-              {hasRows && <p className="training-report__totals">Total: {totalsLabel(report.totals)}</p>}
             </section>
           )}
         </Gutter>

@@ -10,6 +10,7 @@ import {
   reportQueryRange,
   reportRow,
   totalsLabel,
+  totalsStats,
   totalsOf,
   type ReportParams,
   type ReportSession,
@@ -96,6 +97,8 @@ describe("reportRow", () => {
   it("shows times in the session's time zone", () => {
     expect(reportRow(session({}))).toEqual({
       id: 1,
+      typeValue: "departureDay",
+      canceled: false,
       dates: "3 Oct 2026",
       time: "08:00 – 16:00",
       timeZone: "America/New_York",
@@ -149,6 +152,24 @@ describe("totals", () => {
     expect(totalsLabel({ sessions: 1, hours: 1, days: 1, canceled: 0, cost: 0 })).toBe("1 session · 1 hour · 1 day of onboarding");
     expect(totalsLabel({ sessions: 2, hours: 6, days: 0, canceled: 0, cost: 0 })).toBe("2 sessions · 6 hours");
     expect(totalsLabel({ sessions: 0, hours: 0, days: 0, canceled: 0, cost: 0 })).toBe("0 sessions");
+  });
+});
+
+describe("totalsStats", () => {
+  it("lists the figures that are not zero", () => {
+    expect(totalsStats({ sessions: 3, hours: 6.5, days: 0, canceled: 1, cost: 1200 })).toEqual([
+      { label: "Sessions", value: "3" },
+      { label: "Hours of training", value: "6.5" },
+      { label: "Estimated travel", value: "$1,200.00" },
+      { label: "Canceled (not counted)", value: "1" },
+    ]);
+  });
+
+  it("always shows the session count", () => {
+    expect(totalsStats({ sessions: 1, hours: 0, days: 4, canceled: 0, cost: 0 })).toEqual([
+      { label: "Session", value: "1" },
+      { label: "Onboarding days", value: "4" },
+    ]);
   });
 });
 

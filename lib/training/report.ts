@@ -36,6 +36,9 @@ export type ReportSession = {
 
 export type ReportRow = {
   id: number;
+  /** The training type, for its colour. */
+  typeValue: TrainingType;
+  canceled: boolean;
   dates: string;
   time: string;
   timeZone: string;
@@ -126,6 +129,8 @@ export function reportRow(session: ReportSession): ReportRow {
   const copy = session.cruiseCopy;
   return {
     id: session.id,
+    typeValue: session.type,
+    canceled: Boolean(session.canceled),
     dates: dayRange(first, last),
     time: session.type === "onboarding" ? "All day" : `${clock(session.startsAt, session.timeZone)} – ${clock(session.endsAt, session.timeZone)}`,
     timeZone: session.timeZone,
@@ -170,6 +175,18 @@ export const totalsLabel = (totals: ReportTotals) =>
   ]
     .filter(Boolean)
     .join(" · ");
+
+/** The totals as labelled figures for summary tiles, leaving out zeros (sessions always shown). */
+export const totalsStats = (totals: ReportTotals): { label: string; value: string }[] =>
+  [
+    { label: totals.sessions === 1 ? "Session" : "Sessions", value: String(totals.sessions), shown: true },
+    { label: "Hours of training", value: String(Math.round(totals.hours * 100) / 100), shown: totals.hours > 0 },
+    { label: "Onboarding days", value: String(totals.days), shown: totals.days > 0 },
+    { label: "Estimated travel", value: usd(totals.cost), shown: totals.cost > 0 },
+    { label: "Canceled (not counted)", value: String(totals.canceled), shown: totals.canceled > 0 },
+  ]
+    .filter((stat) => stat.shown)
+    .map(({ label, value }) => ({ label, value }));
 
 const monthName = (month: string) =>
   new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", month: "long", year: "numeric" }).format(new Date(`${month}-01T12:00:00Z`));
