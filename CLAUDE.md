@@ -295,7 +295,7 @@ If credentials, content, access, or a business decision is missing:
     `e2e-<name>-admin@example.com` (the Training Schedule spec uses
     `training`, the training report spec `report`, the chat invitation spec
     `invite`, the training preferences spec `prefs`, the trainer role spec
-    `role`, the account menu spec `account`). The script also makes `e2e-<name>-trainer@example.com`. Deleting them leaves
+    `role`, the account menu spec `account`, the login password spec `login`). The script also makes `e2e-<name>-trainer@example.com`. Deleting them leaves
     their `payload_preferences` rows; remove rows no longer linked to an
     existing user.
 -   In development, `payload run` scripts sync the schema before running,

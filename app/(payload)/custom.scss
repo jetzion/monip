@@ -23,6 +23,43 @@ html[data-theme="dark"] {
   --monip-accent-text: #9fb0ec;
 }
 
+// Login: the eye button inside the Password field.
+.login__form .field-type.password .field-type__wrap > div:has(.password-reveal) {
+  position: relative;
+
+  input {
+    padding-right: 44px;
+  }
+}
+
+.password-reveal {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--theme-elevation-650);
+  cursor: pointer;
+  transform: translateY(-50%);
+
+  &:hover {
+    color: var(--theme-text);
+    background: var(--theme-elevation-100);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--monip-indigo);
+    outline-offset: 1px;
+  }
+}
+
 // Training accent: tells the training tools apart from website content.
 :root {
   --training-accent: #0f766e;
@@ -1501,7 +1538,8 @@ body::before {
 }
 
 // Named for screen readers only.
-.account-menu__label {
+.account-menu__label,
+.password-reveal__label {
   position: absolute;
   width: 1px;
   height: 1px;

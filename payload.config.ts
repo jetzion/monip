@@ -53,6 +53,8 @@ export default buildConfig({
     components: {
       // The avatar with a menu (Account, Log out); Payload's avatar link is hidden in custom.scss.
       actions: ["/components/admin/AccountMenu#AccountMenu"],
+      // An eye button in the login page's Password field to show the password.
+      afterLogin: ["/components/admin/PasswordReveal#PasswordReveal"],
       graphics: {
         Logo: "/components/admin/AdminLogo#AdminLogo",
         Icon: "/components/admin/AdminIcon#AdminIcon",
