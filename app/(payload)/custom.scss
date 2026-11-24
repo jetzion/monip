@@ -411,6 +411,45 @@ body::before {
   background: var(--theme-elevation-50);
 }
 
+// Training planning costs: two sections in the training panel style, "$" inside each amount.
+.collapsible-field:has(.dollar-prefix) {
+  .collapsible {
+    border-top: 3px solid var(--training-accent);
+    border-radius: 6px;
+  }
+
+  .collapsible__toggle-wrap {
+    background: var(--training-tint);
+  }
+
+  .row-label {
+    color: var(--training-accent);
+    font-weight: 600;
+  }
+}
+
+// The "$" sits over the start of the input; the description stays below.
+.field-type.number:has(.dollar-prefix) .field-type__wrap {
+  display: grid;
+
+  > .dollar-prefix,
+  > .dollar-prefix + div {
+    grid-area: 1 / 1;
+  }
+
+  input {
+    padding-left: 28px;
+  }
+}
+
+.dollar-prefix {
+  z-index: 1;
+  align-self: center;
+  padding-left: 14px;
+  color: var(--theme-elevation-500);
+  pointer-events: none;
+}
+
 // Training lists (Fleet schedule, Trainers, Port time zones): small headings, the row link in the training accent.
 .collection-list--cruise-sailings .table,
 .collection-list--trainers .table,

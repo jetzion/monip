@@ -2,12 +2,13 @@ import type { GlobalConfig, NumberField } from "payload";
 
 import { editTabsHiddenFromTrainers, hiddenFromTrainers, isTraining } from "../access/roles";
 
-const amount = (name: string, label: string, description: string): NumberField => ({
+/** A US dollar amount, shown with "$" and at its share of the row (`width`). */
+const amount = (name: string, label: string, description: string, width: string): NumberField => ({
   name,
   label,
   type: "number",
   min: 0,
-  admin: { step: 1, description },
+  admin: { step: 1, width, description, components: { beforeInput: ["/components/admin/DollarPrefix#DollarPrefix"] } },
 });
 
 /**
@@ -34,35 +35,50 @@ export const TrainingCosts: GlobalConfig = {
     read: isTraining,
     update: isTraining,
   },
+  // Two sections (layout only: the stored fields are unchanged).
   fields: [
     {
-      type: "row",
+      type: "collapsible",
+      label: "Training sessions (without travel)",
       fields: [
-        amount("onlineSession", "Online session", "Cost of one online session."),
-        amount("departureDaySession", "Departure-day session", "Cost of one departure-day session, without travel."),
-        amount("onboardingDay", "Onboarding, per day", "Cost of each day a trainer spends on board, without travel."),
+        {
+          type: "row",
+          fields: [
+            amount("onlineSession", "Online session", "Cost of one online session.", "33%"),
+            amount("departureDaySession", "Departure-day session", "Cost of one departure-day session, without travel.", "33%"),
+            amount("onboardingDay", "Onboarding, per day", "Cost of each day a trainer spends on board, without travel.", "33%"),
+          ],
+        },
       ],
     },
     {
-      type: "row",
+      type: "collapsible",
+      label: "Travel defaults (for ports without their own rate)",
       fields: [
-        amount(
-          "trip",
-          "Travel, per trip",
-          "A return trip to a port that is not the trainer's home base. Also the default flight fare in travel estimates.",
-        ),
-        amount(
-          "night",
-          "Hotel, per night",
-          "Each night away from home base that is not spent on board. Also the default hotel rate in travel estimates.",
-        ),
-      ],
-    },
-    {
-      type: "row",
-      fields: [
-        amount("carRentalPerDay", "Car rental, per day", "Default daily car rental rate in travel estimates."),
-        amount("rideshareFare", "Rideshare, per trip", "Default one-way rideshare fare between the airport and the port in travel estimates."),
+        {
+          type: "row",
+          fields: [
+            amount(
+              "trip",
+              "Travel, per trip",
+              "A return trip to a port that is not the trainer's home base. Also the default flight fare in travel estimates.",
+              "50%",
+            ),
+            amount(
+              "night",
+              "Hotel, per night",
+              "Each night away from home base that is not spent on board. Also the default hotel rate in travel estimates.",
+              "50%",
+            ),
+          ],
+        },
+        {
+          type: "row",
+          fields: [
+            amount("carRentalPerDay", "Car rental, per day", "Default daily car rental rate in travel estimates.", "50%"),
+            amount("rideshareFare", "Rideshare, per trip", "Default one-way rideshare fare between the airport and the port in travel estimates.", "50%"),
+          ],
+        },
       ],
     },
   ],
