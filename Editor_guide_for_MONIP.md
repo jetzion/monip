@@ -154,7 +154,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 1. Below the title, choose how to pick the cruise: **By Cruise/Ship** (the default: Cruise line, Ship, Port, Cruise dates) or **By port** (Port, Cruise line, Ship, Cruise dates); only the order of the fields changes, and choices already made are kept. Then choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Fill in the first three in any order, for example Port first, then Cruise line, then Ship: each list shows only what fits the others, and a list left with one option fills itself in (choosing a ship fills in its cruise line, and its port when it sails from only one). To pick something a list no longer shows, clear one of the other choices with its **x**. Clearing **Cruise line** also clears **Ship** (a ship belongs to its cruise line); the port stays. **Cruise dates** stays greyed out until a ship and port are chosen, then lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
 2. Choose the **Trainer**.
-3. Choose the **Training type**:
+3. Choose the **Training type** (each has the same colour as on the calendar):
    - **Online training:** pick the date, start time, time zone, and duration (2, 4, or 8 hours).
    - **Departure day training:** runs on the cruise's start date, from its arrival to its departure time, in the port's time zone. You cannot change these times. Not available for cruises without both times.
    - **Onboarding training:** runs every day from the cruise's start date to its end date. You can choose an earlier or later end date, but not one before the start.

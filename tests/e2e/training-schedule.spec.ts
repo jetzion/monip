@@ -579,3 +579,16 @@ test("clearing the cruise line clears the ship too", async ({ page }) => {
   await expect(field("training-port")).toContainText("Miami, Florida");
   await expect(page.locator("#training-dates")).toBeDisabled();
 });
+
+test("the Training type buttons have the calendar's colours", async ({ page }) => {
+  await logIn(page);
+  const colour = (selector: string) => page.locator(selector).first().evaluate((element) => getComputedStyle(element).borderLeftColor);
+  for (const type of ["online", "departureDay", "onboarding"]) {
+    const button = await colour(`.training-form__types .training-type--${type}`);
+    const legend = await colour(`.training-calendar__legend .training-calendar__entry--${type}`);
+    expect(button, type).toBe(legend);
+  }
+  // Three different colours.
+  const all = await page.locator(".training-form__types .training-form__type").evaluateAll((labels) => labels.map((label) => getComputedStyle(label).borderLeftColor));
+  expect(new Set(all).size).toBe(3);
+});

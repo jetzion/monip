@@ -158,7 +158,7 @@ export function TrainingFormClient({ trainers, homeBases, portZones, rates, comb
         <fieldset className="training-form__types">
           <legend>Training type</legend>
           {TRAINING_TYPES.map((type) => (
-            <label key={type.value}>
+            <label key={type.value} className={`training-form__type training-type--${type.value}`}>
               <input
                 type="radio"
                 name="training-type"

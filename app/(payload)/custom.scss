@@ -586,15 +586,19 @@ body::before {
 }
 
 // One color per training type; the left border keeps types apart without color too.
-.training-calendar__entry--online {
+// Training type colours, shared by calendar entries, the legend, and the Training type radio buttons.
+.training-calendar__entry--online,
+.training-type--online {
   --entry-color: #2563eb;
 }
 
-.training-calendar__entry--departureDay {
+.training-calendar__entry--departureDay,
+.training-type--departureDay {
   --entry-color: #c2410c;
 }
 
-.training-calendar__entry--onboarding {
+.training-calendar__entry--onboarding,
+.training-type--onboarding {
   --entry-color: #15803d;
 }
 
@@ -1218,4 +1222,10 @@ body::before {
 // hidden: without it the avatar menu sits at the right edge of the content.
 .app-header__actions-wrapper {
   margin-right: 0;
+}
+
+// Training type radio buttons: the same colour bar as the calendar legend.
+.training-form__types label.training-form__type {
+  padding-left: 8px;
+  border-left: 4px solid var(--entry-color);
 }
