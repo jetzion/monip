@@ -18,6 +18,31 @@ const toggle = (set: Set<string>, value: string) => {
   return next;
 };
 
+const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+
+/** "2 ships and 1 port preferred", or "None preferred: all ships and ports are offered". */
+const summary = (ships: number, ports: number) =>
+  ships + ports === 0
+    ? "None preferred: Schedule training offers all ships and ports."
+    : `${plural(ships, "ship")} and ${plural(ports, "port")} preferred.`;
+
+/** "3 preferred" as a badge; screen readers hear "(3 preferred)" as part of the heading instead. */
+function CountBadge({ count }: { count: number }) {
+  return (
+    <>
+      <span className={count ? "count-badge count-badge--on" : "count-badge"} aria-hidden="true">
+        {count} preferred
+      </span>
+      <span className="count-badge__text">({count} preferred)</span>
+    </>
+  );
+}
+
+/** How many of a group's options are ticked, shown only when any are. */
+function GroupCount({ ticked }: { ticked: number }) {
+  return ticked ? <span className="training-preferences__ticked">{ticked} ticked</span> : null;
+}
+
 /** Checkboxes for preferred ships (grouped by cruise line) and start ports, with Save. */
 export function TrainingPreferencesForm({ cruiseLines, ports, initialShips, initialPorts }: Props) {
   const router = useRouter();
@@ -46,11 +71,14 @@ export function TrainingPreferencesForm({ cruiseLines, ports, initialShips, init
       <div className="training-preferences__columns">
         <section aria-labelledby="preferences-ships-title">
           <h2 id="preferences-ships-title">
-            Ships ({ships.size} preferred)
+            Ships <CountBadge count={ships.size} />
           </h2>
           {cruiseLines.map((line) => (
             <fieldset key={line.name} className="training-preferences__group">
-              <legend>{line.name}</legend>
+              <legend>
+                {line.name}{" "}
+                <GroupCount ticked={line.ships.filter((ship) => ships.has(ship)).length} />
+              </legend>
               {line.ships.map((ship) => (
                 <label key={ship} className="training-preferences__option">
                   <input type="checkbox" checked={ships.has(ship)} onChange={() => setShips(toggle(ships, ship))} /> {ship}
@@ -61,10 +89,13 @@ export function TrainingPreferencesForm({ cruiseLines, ports, initialShips, init
         </section>
         <section aria-labelledby="preferences-ports-title">
           <h2 id="preferences-ports-title">
-            Start ports ({chosenPorts.size} preferred)
+            Start ports <CountBadge count={chosenPorts.size} />
           </h2>
           <fieldset className="training-preferences__group">
-            <legend>Ports</legend>
+            <legend>
+              Ports{" "}
+              <GroupCount ticked={chosenPorts.size} />
+            </legend>
             {ports.map((port) => (
               <label key={port} className="training-preferences__option">
                 <input type="checkbox" checked={chosenPorts.has(port)} onChange={() => setPorts(toggle(chosenPorts, port))} />{" "}
@@ -78,6 +109,7 @@ export function TrainingPreferencesForm({ cruiseLines, ports, initialShips, init
         <Button type="button" buttonStyle="primary" disabled={busy} onClick={save}>
           {busy ? "Saving…" : "Save preferences"}
         </Button>
+        <p className="training-preferences__summary">{summary(ships.size, chosenPorts.size)}</p>
         <p role="status">{message}</p>
       </div>
     </div>

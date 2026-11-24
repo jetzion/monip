@@ -1395,10 +1395,29 @@ body::before {
   }
 }
 
+// Training preferences: ships by cruise line and start ports, ticked ones highlighted.
 .training-preferences__columns {
   display: grid;
   gap: 2rem;
   grid-template-columns: 2fr 1fr;
+  align-items: start;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px;
+  }
+}
+
+// Wide screens: the ports stay in view and scroll on their own beside the long ship list.
+@media (min-width: 769px) {
+  .training-preferences__columns > section:last-child {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1407,36 +1426,101 @@ body::before {
   }
 }
 
+.count-badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--theme-elevation-100);
+  color: var(--theme-elevation-650);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.count-badge--on {
+  background: var(--training-accent);
+  color: var(--theme-elevation-0);
+}
+
+// The heading's text for screen readers, "Ships (2 preferred)"; the badge itself is hidden from them.
+.count-badge__text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
 .training-preferences__group {
-  border: 1px solid var(--theme-elevation-150);
-  border-radius: 4px;
-  margin: 0 0 1rem;
-  padding: 0.5rem 1rem 1rem;
   display: grid;
-  gap: 0.25rem 1rem;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 2px 1rem;
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem 0.75rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-top: 3px solid var(--training-accent);
+  border-radius: 6px;
 }
 
 .training-preferences__group legend {
+  padding: 0 0.4rem;
   font-weight: 600;
-  padding: 0 0.25rem;
+}
+
+.training-preferences__ticked {
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--training-tint);
+  color: var(--training-accent);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .training-preferences__option {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 3px 6px;
+  border-radius: 4px;
   cursor: pointer;
+
+  input {
+    accent-color: var(--training-accent);
+  }
+
+  &:hover {
+    background: var(--theme-elevation-50);
+  }
+
+  &:has(input:checked) {
+    background: var(--training-tint);
+    color: var(--training-accent);
+    font-weight: 600;
+  }
 }
 
+// Save bar: stays at the bottom of the screen with a summary of what is ticked.
 .training-preferences__actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   position: sticky;
   bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--theme-elevation-150);
   background: var(--theme-bg);
-  padding: 0.5rem 0;
+  box-shadow: 0 -8px 16px -12px rgb(0 0 0 / 0.25);
+
+  .btn,
+  p {
+    margin: 0;
+  }
+}
+
+.training-preferences__summary {
+  color: var(--theme-elevation-650);
 }
 
 /* Canceled sessions: greyed out, struck through, with a label. */
