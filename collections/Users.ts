@@ -44,30 +44,31 @@ export const Users: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "firstName", label: "First name", type: "text" },
-        { name: "lastName", label: "Last name", type: "text" },
+        { name: "firstName", label: "First name", type: "text", admin: { width: "33%" } },
+        { name: "lastName", label: "Last name", type: "text", admin: { width: "33%" } },
+        {
+          name: "role",
+          type: "select",
+          required: true,
+          defaultValue: "editor",
+          saveToJWT: true,
+          options: [
+            { label: "Admin", value: "admin" },
+            { label: "Editor", value: "editor" },
+            { label: "Trainer", value: "trainer" },
+          ],
+          admin: {
+            width: "33%",
+            description: "Admins manage users. Editors manage site content. Trainers use the Training Schedule and its tools.",
+          },
+          access: {
+            create: isAdminField,
+            update: isAdminField,
+          },
+        },
       ],
     },
     // The full name, kept from First and Last name on save (avatar initials, display).
     { name: "name", type: "text", admin: { hidden: true } },
-    {
-      name: "role",
-      type: "select",
-      required: true,
-      defaultValue: "editor",
-      saveToJWT: true,
-      options: [
-        { label: "Admin", value: "admin" },
-        { label: "Editor", value: "editor" },
-        { label: "Trainer", value: "trainer" },
-      ],
-      admin: {
-        description: "Admins manage users. Editors manage site content. Trainers use the Training Schedule and its tools.",
-      },
-      access: {
-        create: isAdminField,
-        update: isAdminField,
-      },
-    },
   ],
 };

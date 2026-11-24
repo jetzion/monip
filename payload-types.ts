@@ -161,11 +161,11 @@ export interface User {
   id: number;
   firstName?: string | null;
   lastName?: string | null;
-  name?: string | null;
   /**
    * Admins manage users. Editors manage site content. Trainers use the Training Schedule and its tools.
    */
   role: 'admin' | 'editor' | 'trainer';
+  name?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -928,8 +928,8 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
-  name?: T;
   role?: T;
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
