@@ -411,8 +411,9 @@ body::before {
   background: var(--theme-elevation-50);
 }
 
-// Sailings table: small headings, the ship stands out, aligned figures.
-.collection-list--cruise-sailings .table {
+// Training lists (Fleet schedule, Trainers): small headings, the row link in the training accent.
+.collection-list--cruise-sailings .table,
+.collection-list--trainers .table {
   th {
     color: var(--theme-elevation-650);
     font-size: 12px;
@@ -430,7 +431,10 @@ body::before {
       text-decoration: underline;
     }
   }
+}
 
+// Sailings table: the ship stands out, aligned figures.
+.collection-list--cruise-sailings .table {
   td.cell-ship {
     font-weight: 600;
   }
@@ -446,7 +450,8 @@ body::before {
 }
 
 // Confidence: confirmed green, a cruise line's own calendar blue, unconfirmed amber, pattern grey.
-.confidence-pill {
+.confidence-pill,
+.yes-no {
   --pill-color: var(--theme-elevation-500);
   display: inline-block;
   padding: 2px 10px;
@@ -469,6 +474,40 @@ body::before {
 
 .confidence-pill--unconfirmed {
   --pill-color: #b45309;
+}
+
+.yes-no--yes {
+  --pill-color: #15803d;
+}
+
+// Trainers list: initials badge before the first name, and an empty monthly limit.
+// Rows centred, so the other columns line up with the name beside its badge.
+.collection-list--trainers .table td {
+  vertical-align: middle;
+}
+
+.trainer-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trainer-cell__initials {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--training-accent);
+  color: var(--theme-elevation-0);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.day-limit--none {
+  color: var(--theme-elevation-500);
 }
 
 // Long itinerary and source values wrap within a fixed width; URLs may

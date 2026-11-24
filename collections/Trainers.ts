@@ -18,7 +18,7 @@ export const Trainers: CollectionConfig = {
     group: "Training",
     components: { views: { edit: editTabsHiddenFromTrainers }, beforeList: ["/components/admin/TrainingNav#TrainingNavBeforeList"] },
     useAsTitle: "name",
-    defaultColumns: ["firstName", "lastName", "updatedAt"],
+    defaultColumns: ["firstName", "lastName", "homeBase", "maxDaysPerMonth", "canJoinCruises"],
     description: "Trainers available in the Training Schedule. Admins manage them; trainers can view them.",
   },
   defaultSort: ["lastName", "firstName"],
@@ -36,7 +36,13 @@ export const Trainers: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "firstName", label: "First name", type: "text", required: true },
+        {
+          name: "firstName",
+          label: "First name",
+          type: "text",
+          required: true,
+          admin: { components: { Cell: "/components/admin/TrainerNameCell#TrainerNameCell" } },
+        },
         { name: "lastName", label: "Last name", type: "text", required: true },
       ],
     },
@@ -59,7 +65,7 @@ export const Trainers: CollectionConfig = {
           type: "number",
           min: 1,
           max: 31,
-          admin: { step: 1, description: "Used by the training planner. Leave empty for no limit." },
+          admin: { step: 1, description: "Used by the training planner. Leave empty for no limit.", components: { Cell: "/components/admin/DayLimitCell#DayLimitCell" } },
         },
       ],
     },
@@ -68,7 +74,7 @@ export const Trainers: CollectionConfig = {
       label: "Can join cruises",
       type: "checkbox",
       defaultValue: true,
-      admin: { description: "Only trainers who can join cruises are suggested for onboarding training." },
+      admin: { description: "Only trainers who can join cruises are suggested for onboarding training.", components: { Cell: "/components/admin/YesNoCell#YesNoCell" } },
     },
   ],
 };
