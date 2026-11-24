@@ -75,9 +75,8 @@ export function planRows(stored: StoredPlan, trainerNames: Map<number, string>) 
       : `Estimated cost: ${usd.format(summary.cost)}.`,
     ...(plan.moves.length ? [`${plural(plan.moves.length, "move")} of existing sessions suggested.`] : []),
   ];
-  const load = summary.load.map(
-    (entry) => `${entry.name}, ${month(entry.month)}: ${plural(entry.days, "training day")}${entry.limit ? ` of ${entry.limit} allowed` : " (no monthly limit)"}`,
-  );
+  // Each trainer's training days per month against their limit (null: no limit).
+  const load = summary.load.map((entry) => ({ name: entry.name, month: month(entry.month), days: entry.days, limit: entry.limit }));
 
   const preset = PRESETS.find((option) => option.value === settings.preset)?.label ?? settings.preset;
   const title = `${preset} plan for cruises starting ${day(settings.from)} – ${day(settings.to)}`;

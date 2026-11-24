@@ -78,7 +78,7 @@ describe("planRows", () => {
       "1 trip and 1 hotel night away from home base.",
       "Estimated cost: $1,200.",
     ]);
-    expect(rows.load).toEqual(["Anna Rossi, December 2026: 1 training day of 10 allowed"]);
+    expect(rows.load).toEqual([{ name: "Anna Rossi", month: "December 2026", days: 1, limit: 10 }]);
   });
 });
 

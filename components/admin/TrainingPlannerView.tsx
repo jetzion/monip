@@ -14,6 +14,26 @@ import { TrainingNav } from "./TrainingNav";
 import { TrainingPlannerResults } from "./TrainingPlannerResults";
 import { TrainingPlannerSettings } from "./TrainingPlannerSettings";
 
+/** A trainer's training days in a month as a bar against their limit; amber once the limit is reached. */
+function LoadBar({ name, month, days, limit }: { name: string; month: string; days: number; limit: number | null }) {
+  const full = limit !== null && days >= limit;
+  return (
+    <li className={full ? "training-planner__load-row is-full" : "training-planner__load-row"}>
+      <span className="training-planner__load-name">
+        {name} <span className="training-planner__load-month">{month}</span>
+      </span>
+      <span className="training-planner__load-days">
+        {limit === null ? `${days} ${days === 1 ? "day" : "days"} (no limit)` : `${days} of ${limit} days`}
+      </span>
+      {limit !== null && (
+        <span className="training-planner__load-bar" aria-hidden="true">
+          <span style={{ width: `${Math.min(100, (days / limit) * 100)}%` }} />
+        </span>
+      )}
+    </li>
+  );
+}
+
 function ShipList({ title, items }: { title: string; items: { ship: string; reason: string }[] }) {
   if (items.length === 0) return null;
   return (
@@ -145,14 +165,23 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
                   </p>
                 </div>
               )}
-              <ul className="training-planner__summary">
-                {rows.lines.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-                {rows.load.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
+              <div className="training-planner__overview">
+                <ul className="training-planner__summary">
+                  {rows.lines.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+                {rows.load.length > 0 && (
+                  <div className="training-planner__load">
+                    <h3>Trainer days</h3>
+                    <ul>
+                      {rows.load.map((entry) => (
+                        <LoadBar key={`${entry.name}-${entry.month}`} {...entry} />
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
               <TrainingPlannerResults
                 key={stored!.createdAt}
                 proposals={rows.proposals}

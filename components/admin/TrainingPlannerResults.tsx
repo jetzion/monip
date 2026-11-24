@@ -169,7 +169,9 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
                   <th scope="col">When</th>
                   <th scope="col">Trainer</th>
                   <th scope="col">Travel</th>
-                  <th scope="col">Cost</th>
+                  <th scope="col" className="is-number">
+                    Cost
+                  </th>
                   <th scope="col">Why</th>
                   <th scope="col">
                     <span className="sr-only">Change</span>
@@ -191,10 +193,12 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
                     </td>
                     <td>{row.ship}</td>
                     <td>{row.port}</td>
-                    <td>{row.when}</td>
+                    <td>
+                      <span className={`training-report__type training-type--${row.values.type}`}>{row.when}</span>
+                    </td>
                     <td>{row.trainer}</td>
-                    <td>{row.travel}</td>
-                    <td>{row.cost}</td>
+                    <td className={row.travel === "None" ? "is-muted" : undefined}>{row.travel}</td>
+                    <td className="is-number">{row.cost}</td>
                     <td>
                       {row.reason} <Status status={row.status} />
                     </td>

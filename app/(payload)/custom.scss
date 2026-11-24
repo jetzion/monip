@@ -602,6 +602,7 @@ body::before {
   margin-bottom: 28px;
   padding: 20px;
   border: 1px solid var(--theme-elevation-150);
+  border-top: 3px solid var(--training-accent);
   border-radius: 6px;
 
   h2 {
@@ -1239,10 +1240,93 @@ body::before {
   color: var(--theme-error-500);
 }
 
-// Training planner: summary, outcome labels, and ship lists.
+// Training planner: the plan's summary beside each trainer's days, outcome labels, and ship lists.
+.training-planner__overview {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px 24px;
+  margin: 16px 0 8px;
+  padding: 16px 20px;
+  border: 1px solid var(--theme-elevation-150);
+  border-left: 4px solid var(--training-accent);
+  border-radius: 6px;
+  background: var(--theme-elevation-50);
+}
+
+@media (max-width: 768px) {
+  .training-planner__overview {
+    grid-template-columns: 1fr;
+  }
+}
+
 .training-planner__summary {
-  margin: 12px 0 24px;
-  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li:first-child {
+    font-weight: 600;
+  }
+}
+
+.training-planner .training-planner__load h3 {
+  margin: 0 0 8px;
+  color: var(--theme-elevation-650);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.training-planner__load ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.training-planner__load-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+}
+
+.training-planner__load-month {
+  color: var(--theme-elevation-650);
+  font-size: 13px;
+}
+
+.training-planner__load-days {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.training-planner__load-bar {
+  grid-column: 1 / -1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--theme-elevation-150);
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    background: var(--training-accent);
+  }
+}
+
+// At or over the monthly limit.
+.training-planner__load-row.is-full {
+  .training-planner__load-days {
+    color: var(--theme-warning-650, #b45309);
+  }
+
+  .training-planner__load-bar span {
+    background: #d97706;
+  }
 }
 
 .training-planner__accepted {
@@ -1256,11 +1340,24 @@ body::before {
 }
 
 .training-planner__list {
-  margin-top: 20px;
+  margin-top: 16px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
 
   summary {
+    padding: 10px 16px;
     cursor: pointer;
     font-weight: 600;
+  }
+
+  &[open] summary {
+    border-bottom: 1px solid var(--theme-elevation-150);
+    background: var(--theme-elevation-50);
+  }
+
+  ul {
+    margin: 0;
+    padding: 12px 16px 12px 36px;
   }
 }
 
@@ -1312,6 +1409,26 @@ body::before {
   td:last-child {
     min-width: 260px;
   }
+
+  th {
+    color: var(--theme-elevation-650);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  tbody tr:hover td {
+    background: var(--theme-elevation-50);
+  }
+
+  .is-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .is-muted {
+    color: var(--theme-elevation-500);
+  }
 }
 
 // Planner: inline editor for a proposed session.
@@ -1334,13 +1451,25 @@ body::before {
 }
 
 .training-planner__edit-button {
-  padding: 0;
-  border: 0;
-  background: none;
+  padding: 3px 12px;
+  border: 1px solid var(--theme-elevation-250, var(--theme-elevation-200));
+  border-radius: 4px;
+  background: var(--theme-elevation-0);
   color: var(--theme-text);
   font: inherit;
-  text-decoration: underline;
+  font-size: 13px;
   cursor: pointer;
+
+  &:hover,
+  &[aria-expanded="true"] {
+    border-color: var(--training-accent);
+    color: var(--training-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--training-accent);
+    outline-offset: 1px;
+  }
 }
 
 // Planner: the plan's rules, from the AI or kept from the last plan.
