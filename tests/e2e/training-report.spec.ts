@@ -93,10 +93,10 @@ test("editors cannot see the report page", async ({ page }) => {
   await expect(page.getByRole("table")).toHaveCount(0);
 });
 
-test("the Training Schedule links to the report", async ({ page }) => {
+test("the training tab bar links to the report", async ({ page }) => {
   await logIn(page);
   await page.goto("/admin/collections/training-sessions");
-  await page.getByRole("link", { name: "Training report" }).click();
+  await page.getByRole("navigation", { name: "Training" }).getByRole("link", { name: "Report" }).click();
   await expect(page.getByRole("heading", { name: "Training report", level: 1 })).toBeVisible();
 });
 

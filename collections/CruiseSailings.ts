@@ -40,6 +40,7 @@ export const CruiseSailings: CollectionConfig = {
     baseFilter: async ({ req }) => ((await isTimesOnly(req.payload, req.user)) ? timesOnlyWhere : null),
     components: {
       views: { edit: editTabsHiddenFromTrainers },
+      beforeList: ["/components/admin/TrainingNav#TrainingNavBeforeList"],
       beforeListTable: [
         "/components/admin/SailingActions#SailingActions",
         "/components/admin/SailingFilters#SailingFilters",

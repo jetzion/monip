@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, DatePicker, ReactSelect } from "@payloadcms/ui";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 
@@ -111,10 +110,6 @@ export function TrainingFormClient({ trainers, homeBases, portZones, rates, comb
         <h2 id="training-form-title">
           Schedule training <span className="training-form__hint">(select Cruise line or Port first)</span>
         </h2>
-        <p>
-          <Link href="/admin/collections/trainers">Manage trainers</Link> ·{" "}
-          <Link href="/admin/collections/port-time-zones">Port time zones</Link>
-        </p>
       </div>
 
       {/* Named for screen readers only; no visible label beside the buttons. */}
@@ -150,7 +145,7 @@ export function TrainingFormClient({ trainers, homeBases, portZones, rates, comb
             placeholder="Choose a trainer"
             options={trainers}
             value={trainers.find((trainer) => trainer.value === form.trainer)}
-            noOptionsMessage={() => "No trainers yet. Add one under Manage trainers."}
+            noOptionsMessage={() => "No trainers yet. Add one under Trainers."}
             onChange={(option) => set({ trainer: Array.isArray(option) ? "" : String(option?.value ?? "") })}
           />
         </div>

@@ -25,9 +25,11 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FullTextCell as FullTextCell_e04bfd2377652c449b32de2642fbb4e8 } from '../../../components/admin/FullTextCell'
+import { TrainingNavBeforeList as TrainingNavBeforeList_8f0a8a1ab8575a25e6e561f865c5dd50 } from '../../../components/admin/TrainingNav'
 import { SailingActions as SailingActions_ee8702e49f227826a466e738562c37c1 } from '../../../components/admin/SailingActions'
 import { SailingFilters as SailingFilters_0ba85c529e77b4340522f0eed15d2531 } from '../../../components/admin/SailingFilters'
 import { TrainingListView as TrainingListView_b7d1e6dccebff39962c3ba895682b4fe } from '../../../components/admin/TrainingListView'
+import { TrainingNavDescription as TrainingNavDescription_8f0a8a1ab8575a25e6e561f865c5dd50 } from '../../../components/admin/TrainingNav'
 import { AdminIcon as AdminIcon_7be396d0766c6c490887ef074dd0ced4 } from '../../../components/admin/AdminIcon'
 import { AdminLogo as AdminLogo_27eed1898e8caadb2fd2266b54bb4509 } from '../../../components/admin/AdminLogo'
 import { AccountMenu as AccountMenu_b93c325b2a001186130a7950fae795ee } from '../../../components/admin/AccountMenu'
@@ -66,9 +68,11 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/FullTextCell#FullTextCell": FullTextCell_e04bfd2377652c449b32de2642fbb4e8,
+  "/components/admin/TrainingNav#TrainingNavBeforeList": TrainingNavBeforeList_8f0a8a1ab8575a25e6e561f865c5dd50,
   "/components/admin/SailingActions#SailingActions": SailingActions_ee8702e49f227826a466e738562c37c1,
   "/components/admin/SailingFilters#SailingFilters": SailingFilters_0ba85c529e77b4340522f0eed15d2531,
   "/components/admin/TrainingListView#TrainingListView": TrainingListView_b7d1e6dccebff39962c3ba895682b4fe,
+  "/components/admin/TrainingNav#TrainingNavDescription": TrainingNavDescription_8f0a8a1ab8575a25e6e561f865c5dd50,
   "/components/admin/AdminIcon#AdminIcon": AdminIcon_7be396d0766c6c490887ef074dd0ced4,
   "/components/admin/AdminLogo#AdminLogo": AdminLogo_27eed1898e8caadb2fd2266b54bb4509,
   "/components/admin/AccountMenu#AccountMenu": AccountMenu_b93c325b2a001186130a7950fae795ee,

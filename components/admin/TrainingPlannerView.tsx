@@ -10,6 +10,7 @@ import { readStoredPlan } from "@/lib/training/planner/stored";
 import { NO_RULES } from "@/lib/training/planner/types";
 import { addDays } from "@/lib/training/time";
 
+import { TrainingNav } from "./TrainingNav";
 import { TrainingPlannerResults } from "./TrainingPlannerResults";
 import { TrainingPlannerSettings } from "./TrainingPlannerSettings";
 
@@ -84,10 +85,8 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
     <DefaultTemplate {...template}>
       <div className="training-schedule training-report training-planner">
         <Gutter>
+          <TrainingNav />
           <header className="training-schedule__header">
-            <p>
-              <Link href={`${admin}/collections/training-sessions`}>Training Schedule</Link>
-            </p>
             <h1>Training planner</h1>
             <p>
               Recommends training for each ship with cruises in a date range, checked against trainers&apos; existing sessions,

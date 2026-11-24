@@ -1,10 +1,10 @@
 import { DefaultTemplate } from "@payloadcms/next/templates";
 import { Gutter } from "@payloadcms/ui";
-import Link from "next/link";
 import type { AdminViewServerProps } from "payload";
 
 import { getSailingFilterOptions } from "@/lib/sailings/filter-options";
 
+import { TrainingNav } from "./TrainingNav";
 import { TrainingPreferencesForm } from "./TrainingPreferencesForm";
 
 /**
@@ -38,10 +38,8 @@ export async function TrainingPreferencesView({ initPageResult, params, searchPa
     <DefaultTemplate {...template}>
       <div className="training-schedule training-preferences-page">
         <Gutter>
+          <TrainingNav />
           <header className="training-schedule__header">
-            <p>
-              <Link href={`${payload.config.routes.admin}/collections/training-sessions`}>Training Schedule</Link>
-            </p>
             <h1>Training preferences</h1>
             <p>
               Every cruise line, ship, and start port in the Cruise Fleet Schedule. Tick the ships and ports preferred for

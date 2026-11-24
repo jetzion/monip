@@ -60,7 +60,7 @@ test("lists cruise lines, ships, and ports, and saves the ticked ones", async ({
   await request.post(PREFS, { headers: admin, data: { ships: [], ports: [] } });
   await login(page, ADMIN);
   await page.goto("/admin/collections/training-sessions");
-  await page.getByRole("link", { name: "Training preferences" }).click();
+  await page.getByRole("navigation", { name: "Training" }).getByRole("link", { name: "Preferences" }).click();
   await expect(page.getByRole("heading", { name: "Training preferences" })).toBeVisible();
 
   const ships = page.locator("section", { has: page.getByRole("heading", { name: /^Ships/ }) });

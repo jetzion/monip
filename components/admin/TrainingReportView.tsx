@@ -1,11 +1,11 @@
 import { DefaultTemplate } from "@payloadcms/next/templates";
 import { Gutter } from "@payloadcms/ui";
-import Link from "next/link";
 import type { AdminViewServerProps } from "payload";
 
 import { monthOptions, readReportParams, reportQuery, totalsLabel, type ReportGroup } from "@/lib/training/report";
 import { loadReport, reportTrainers } from "@/lib/training/report-data";
 
+import { TrainingNav } from "./TrainingNav";
 import { TrainingReportFilters } from "./TrainingReportFilters";
 
 const GROUP_OPTIONS = [
@@ -60,7 +60,6 @@ export async function TrainingReportView({ initPageResult, params, searchParams 
   const { req, locale, permissions, visibleEntities } = initPageResult;
   const { payload, user } = req;
   const template = { i18n: req.i18n, locale, params, payload, permissions, searchParams, user: user ?? undefined, visibleEntities };
-  const admin = payload.config.routes.admin;
 
   if (user?.collection !== "users" || !["admin", "trainer"].includes(user.role ?? "")) {
     return (
@@ -87,10 +86,8 @@ export async function TrainingReportView({ initPageResult, params, searchParams 
     <DefaultTemplate {...template}>
       <div className="training-schedule training-report">
         <Gutter>
+          <TrainingNav />
           <header className="training-schedule__header">
-            <p>
-              <Link href={`${admin}/collections/training-sessions`}>Training Schedule</Link>
-            </p>
             <h1>Training report</h1>
             <p>Training sessions for one trainer or all trainers over a range of months. Times are in each session&apos;s own time zone.</p>
           </header>

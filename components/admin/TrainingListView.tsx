@@ -14,6 +14,7 @@ import { TRAINING_TYPES } from "@/lib/training/schedule";
 import { isInPerson, needsTravel, readTravel, trainingDays, travelDefaults } from "@/lib/training/travel";
 import { dayOf } from "@/lib/training/time";
 
+import { TrainingNav } from "./TrainingNav";
 import { TrainingCalendar } from "./TrainingCalendar";
 import { TrainingCalendarFilters } from "./TrainingCalendarFilters";
 import { TrainingFormClient } from "./TrainingFormClient";
@@ -193,14 +194,10 @@ export async function TrainingListView({ payload, user, searchParams, collection
   return (
     <div className="collection-list training-schedule">
       <Gutter className="collection-list__wrap">
+        <TrainingNav />
         <header className="training-schedule__header">
           <h1>{collectionConfig.labels.plural as string}</h1>
           <p>{collectionConfig.admin.description as string}</p>
-          <p>
-            <Link href={`${payload.config.routes.admin}/training-report`}>Training report</Link> (PDF download) ·{" "}
-            <Link href={`${payload.config.routes.admin}/training-planner`}>Training planner</Link> ·{" "}
-            <Link href={`${payload.config.routes.admin}/training-preferences`}>Training preferences</Link>
-          </p>
         </header>
 
         {filtered && (

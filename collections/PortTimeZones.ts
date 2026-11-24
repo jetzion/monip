@@ -26,7 +26,7 @@ export const PortTimeZones: CollectionConfig = {
   labels: { singular: "Port time zone", plural: "Port time zones" },
   admin: {
     group: "Training",
-    components: { views: { edit: editTabsHiddenFromTrainers } },
+    components: { views: { edit: editTabsHiddenFromTrainers }, beforeList: ["/components/admin/TrainingNav#TrainingNavBeforeList"] },
     useAsTitle: "port",
     defaultColumns: ["port", "timeZone", "flightFare", "hotelPerNight", "rideshareFare"],
     description:

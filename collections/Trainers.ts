@@ -16,7 +16,7 @@ export const Trainers: CollectionConfig = {
   labels: { singular: "Trainer", plural: "Trainers" },
   admin: {
     group: "Training",
-    components: { views: { edit: editTabsHiddenFromTrainers } },
+    components: { views: { edit: editTabsHiddenFromTrainers }, beforeList: ["/components/admin/TrainingNav#TrainingNavBeforeList"] },
     useAsTitle: "name",
     defaultColumns: ["firstName", "lastName", "updatedAt"],
     description: "Trainers available in the Training Schedule. Admins manage them; trainers can view them.",

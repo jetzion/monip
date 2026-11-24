@@ -116,7 +116,7 @@ test("recommends a plan, accepts part of it, and replaces it on request", async 
   expect((await request.post(`${PLAN}/recommend`, { headers: admin, data: SETTINGS })).ok()).toBe(true);
   await login(page, ADMIN);
   await page.goto("/admin/collections/training-sessions");
-  await page.getByRole("link", { name: "Training planner" }).click();
+  await page.getByRole("navigation", { name: "Training" }).getByRole("link", { name: "Planner" }).click();
 
   await expect(page.getByRole("heading", { name: "Balanced plan for cruises starting 1 Mar 2030 – 31 Mar 2030" })).toBeVisible();
   await expect(page.getByText("2 of 2 plannable ships planned: 2 departure day, 0 onboarding, 0 online.")).toBeVisible();

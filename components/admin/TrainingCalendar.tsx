@@ -1,4 +1,3 @@
-import { Button } from "@payloadcms/ui";
 import Link from "next/link";
 
 import {
@@ -29,7 +28,10 @@ type Props = {
   params: CalendarParams;
 };
 
-/** Monthly grid of training sessions with previous, current, and next month links. */
+/**
+ * Monthly grid of training sessions, coloured by training type, with previous,
+ * current, and next month links. Today is highlighted; past days and weekends are muted.
+ */
 export function TrainingCalendar({ month, today, days, sessions, params }: Props) {
   const byDay = placeSessions(sessions, days);
   const weeks = Array.from({ length: days.length / 7 }, (_, week) => days.slice(week * 7, week * 7 + 7));
@@ -38,19 +40,20 @@ export function TrainingCalendar({ month, today, days, sessions, params }: Props
   return (
     <>
       <div className="training-calendar__bar">
-        <h2 id="training-calendar-title">{monthTitle(month)}</h2>
-        {/* Payload's primary button, as Add to Calendar, rendered as a link because it changes the URL. */}
         <nav aria-label="Change month" className="training-calendar__nav">
-          <Button el="link" buttonStyle="primary" size="medium" to={calendarHref(params, { calMonth: shiftMonth(month, -1), calSession: undefined })}>
-            Previous month
-          </Button>
-          <Button el="link" buttonStyle="primary" size="medium" to={calendarHref(params, { calMonth: today.slice(0, 7), calSession: undefined })}>
-            This month
-          </Button>
-          <Button el="link" buttonStyle="primary" size="medium" to={calendarHref(params, { calMonth: shiftMonth(month, 1), calSession: undefined })}>
-            Next month
-          </Button>
+          <Link
+            href={calendarHref(params, { calMonth: shiftMonth(month, -1), calSession: undefined })}
+            aria-label="Previous month"
+            title="Previous month"
+          >
+            <span aria-hidden="true">‹</span>
+          </Link>
+          <Link href={calendarHref(params, { calMonth: today.slice(0, 7), calSession: undefined })}>Today</Link>
+          <Link href={calendarHref(params, { calMonth: shiftMonth(month, 1), calSession: undefined })} aria-label="Next month" title="Next month">
+            <span aria-hidden="true">›</span>
+          </Link>
         </nav>
+        <h2 id="training-calendar-title">{monthTitle(month)}</h2>
         <p className="training-calendar__count">
           {sessions.length} {sessions.length === 1 ? "session" : "sessions"} shown
         </p>
@@ -69,12 +72,14 @@ export function TrainingCalendar({ month, today, days, sessions, params }: Props
         <tbody>
           {weeks.map((week) => (
             <tr key={week[0]}>
-              {week.map((day) => {
+              {week.map((day, weekday) => {
                 const entries = byDay.get(day) ?? [];
                 const classes = [
                   "training-calendar__day",
                   day.slice(0, 7) !== month && "is-outside",
                   day === today && "is-today",
+                  day < today && "is-past",
+                  weekday >= 5 && "is-weekend",
                   entries.length === 0 && "is-empty",
                 ];
                 return (

@@ -21,7 +21,10 @@ export const TrainingCosts: GlobalConfig = {
   label: "Training planning costs",
   admin: {
     group: "Training",
-    components: { views: { edit: editTabsHiddenFromTrainers } },
+    components: {
+      views: { edit: editTabsHiddenFromTrainers },
+      elements: { Description: "/components/admin/TrainingNav#TrainingNavDescription" },
+    },
     // Not in trainers' navigation (decided 2026-11-24).
     hidden: hiddenFromTrainers,
     description:
