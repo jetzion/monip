@@ -62,3 +62,11 @@ export function zonedTime(day: string, time: string, timeZone: string): Date {
   const matches = [before, after].map((o) => wall - o).filter((t) => wall - offset(t, timeZone) === t);
   return new Date(matches.length ? Math.min(...matches) : wall - before);
 }
+
+/** "UTC+1", "UTC-5", "UTC+5:30", or "UTC": the zone's offset at that moment (daylight saving included). */
+export function utcOffsetLabel(timeZone: string, at: Date): string {
+  const offset = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" })
+    .formatToParts(at)
+    .find((part) => part.type === "timeZoneName")?.value;
+  return (offset ?? "GMT").replace(/^GMT(\+0)?$/, "GMT").replace("GMT", "UTC");
+}

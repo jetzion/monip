@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { addDays, dayOf, isTime, isTimeZone, zonedTime } from "./time";
+import { addDays, dayOf, isTime, isTimeZone, utcOffsetLabel, zonedTime } from "./time";
 
 describe("isTime", () => {
   it("accepts 24-hour HH:MM", () => {
@@ -41,5 +41,22 @@ describe("zonedTime", () => {
     expect(zonedTime("2026-03-08", "02:30", "America/New_York").toISOString()).toBe("2026-03-08T07:30:00.000Z");
     expect(zonedTime("2026-11-01", "01:30", "America/New_York").toISOString()).toBe("2026-11-01T05:30:00.000Z");
     expect(zonedTime("2026-11-01", "12:00", "America/New_York").toISOString()).toBe("2026-11-01T17:00:00.000Z");
+  });
+});
+
+describe("utcOffsetLabel", () => {
+  const winter = new Date("2026-01-15T12:00:00Z");
+  const summer = new Date("2026-07-15T12:00:00Z");
+
+  it("follows daylight saving time", () => {
+    expect(utcOffsetLabel("Europe/Amsterdam", winter)).toBe("UTC+1");
+    expect(utcOffsetLabel("Europe/Amsterdam", summer)).toBe("UTC+2");
+    expect(utcOffsetLabel("America/New_York", winter)).toBe("UTC-5");
+  });
+
+  it("shows half hours and UTC itself", () => {
+    expect(utcOffsetLabel("Asia/Kolkata", winter)).toBe("UTC+5:30");
+    expect(utcOffsetLabel("Atlantic/Reykjavik", winter)).toBe("UTC");
+    expect(utcOffsetLabel("Europe/London", winter)).toBe("UTC");
   });
 });

@@ -12,7 +12,7 @@ const rate = (name: string, label: string, description: string): NumberField => 
   label,
   type: "number",
   min: 0,
-  admin: { step: 1, description },
+  admin: { step: 1, description, components: { Cell: "/components/admin/RateCell#RateCell" } },
 });
 
 /**
@@ -60,7 +60,7 @@ export const PortTimeZones: CollectionConfig = {
           required: true,
           validate: validTimeZone,
           access: { update: isAdminField },
-          admin: { description: 'For example "America/New_York". Search "IANA time zone" plus the city.' },
+          admin: { description: 'For example "America/New_York". Search "IANA time zone" plus the city.', components: { Cell: "/components/admin/TimeZoneCell#TimeZoneCell" } },
         },
       ],
     },

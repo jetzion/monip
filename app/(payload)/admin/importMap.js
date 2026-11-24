@@ -33,6 +33,8 @@ import { TrainingListView as TrainingListView_b7d1e6dccebff39962c3ba895682b4fe }
 import { TrainerNameCell as TrainerNameCell_157a20f05e6ce6904c8bfe1095811d8c } from '../../../components/admin/TrainerNameCell'
 import { DayLimitCell as DayLimitCell_e503686402ee9b4f3c68bc959cb2a53c } from '../../../components/admin/DayLimitCell'
 import { YesNoCell as YesNoCell_c819861bcfbec7c19feb676c4d30e0cc } from '../../../components/admin/YesNoCell'
+import { TimeZoneCell as TimeZoneCell_2cc30d12fe747966f39f67be801387c5 } from '../../../components/admin/TimeZoneCell'
+import { RateCell as RateCell_f6f87838229c7ffd73599936a0b803d2 } from '../../../components/admin/RateCell'
 import { TrainingNavDescription as TrainingNavDescription_8f0a8a1ab8575a25e6e561f865c5dd50 } from '../../../components/admin/TrainingNav'
 import { AdminIcon as AdminIcon_7be396d0766c6c490887ef074dd0ced4 } from '../../../components/admin/AdminIcon'
 import { AdminLogo as AdminLogo_27eed1898e8caadb2fd2266b54bb4509 } from '../../../components/admin/AdminLogo'
@@ -81,6 +83,8 @@ export const importMap = {
   "/components/admin/TrainerNameCell#TrainerNameCell": TrainerNameCell_157a20f05e6ce6904c8bfe1095811d8c,
   "/components/admin/DayLimitCell#DayLimitCell": DayLimitCell_e503686402ee9b4f3c68bc959cb2a53c,
   "/components/admin/YesNoCell#YesNoCell": YesNoCell_c819861bcfbec7c19feb676c4d30e0cc,
+  "/components/admin/TimeZoneCell#TimeZoneCell": TimeZoneCell_2cc30d12fe747966f39f67be801387c5,
+  "/components/admin/RateCell#RateCell": RateCell_f6f87838229c7ffd73599936a0b803d2,
   "/components/admin/TrainingNav#TrainingNavDescription": TrainingNavDescription_8f0a8a1ab8575a25e6e561f865c5dd50,
   "/components/admin/AdminIcon#AdminIcon": AdminIcon_7be396d0766c6c490887ef074dd0ced4,
   "/components/admin/AdminLogo#AdminLogo": AdminLogo_27eed1898e8caadb2fd2266b54bb4509,

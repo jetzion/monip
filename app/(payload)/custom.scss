@@ -411,9 +411,10 @@ body::before {
   background: var(--theme-elevation-50);
 }
 
-// Training lists (Fleet schedule, Trainers): small headings, the row link in the training accent.
+// Training lists (Fleet schedule, Trainers, Port time zones): small headings, the row link in the training accent.
 .collection-list--cruise-sailings .table,
-.collection-list--trainers .table {
+.collection-list--trainers .table,
+.collection-list--port-time-zones .table {
   th {
     color: var(--theme-elevation-650);
     font-size: 12px;
@@ -507,6 +508,42 @@ body::before {
 }
 
 .day-limit--none {
+  color: var(--theme-elevation-500);
+}
+
+// Port time zones list: the zone with its offset today, and rates (or "Default") aligned right.
+.time-zone-cell {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+
+.time-zone-cell__offset {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--training-tint);
+  color: var(--training-accent);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.collection-list--port-time-zones .table {
+  th:is(#heading-flightFare, #heading-hotelPerNight, #heading-rideshareFare),
+  td:is(.cell-flightFare, .cell-hotelPerNight, .cell-rideshareFare) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // The heading is a flex row (label and sort buttons).
+  th:is(#heading-flightFare, #heading-hotelPerNight, #heading-rideshareFare) .sort-column {
+    justify-content: flex-end;
+  }
+}
+
+.rate-cell--default {
   color: var(--theme-elevation-500);
 }
 
