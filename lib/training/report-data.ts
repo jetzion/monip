@@ -27,7 +27,7 @@ export async function loadReport(payload: Payload, user: TypedUser, params: Repo
     payload.find({
       collection: "training-sessions",
       where: { and: where },
-      select: { type: true, startsAt: true, endsAt: true, timeZone: true, trainer: true, cruiseCopy: true },
+      select: { type: true, startsAt: true, endsAt: true, timeZone: true, trainer: true, cruiseCopy: true, canceled: true, estimate: { total: true } },
       sort: "startsAt",
       pagination: false,
       depth: 0,
@@ -49,6 +49,8 @@ export async function loadReport(payload: Payload, user: TypedUser, params: Repo
         trainerId,
         trainer: names.get(trainerId) ?? "Unknown trainer",
         cruiseCopy: session.cruiseCopy,
+        canceled: Boolean(session.canceled),
+        estimate: session.estimate?.total ?? null,
       };
     });
   const trainerName = params.trainer ? (names.get(Number(params.trainer)) ?? "Unknown trainer") : undefined;

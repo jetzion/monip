@@ -26,6 +26,13 @@ import * as migration_20261112_223616_media_content_box from './20261112_223616_
 import * as migration_20261112_225948_measure_remaining_media from './20261112_225948_measure_remaining_media';
 import * as migration_20261113_001235_training_planner_data from './20261113_001235_training_planner_data';
 import * as migration_20261113_003411_training_plan from './20261113_003411_training_plan';
+import * as migration_20261123_151610_training_preferences from './20261123_151610_training_preferences';
+import * as migration_20261123_170118_trainer_role_and_canceled from './20261123_170118_trainer_role_and_canceled';
+import * as migration_20261123_171817_travel_rates from './20261123_171817_travel_rates';
+import * as migration_20261123_172427_session_travel from './20261123_172427_session_travel';
+import * as migration_20261123_173851_session_estimate from './20261123_173851_session_estimate';
+import * as migration_20261123_182933_estimate_sources from './20261123_182933_estimate_sources';
+import * as migration_20261123_192214_return_airport from './20261123_192214_return_airport';
 
 export const migrations = [
   {
@@ -166,6 +173,41 @@ export const migrations = [
   {
     up: migration_20261113_003411_training_plan.up,
     down: migration_20261113_003411_training_plan.down,
-    name: '20261113_003411_training_plan'
+    name: '20261113_003411_training_plan',
+  },
+  {
+    up: migration_20261123_151610_training_preferences.up,
+    down: migration_20261123_151610_training_preferences.down,
+    name: '20261123_151610_training_preferences',
+  },
+  {
+    up: migration_20261123_170118_trainer_role_and_canceled.up,
+    down: migration_20261123_170118_trainer_role_and_canceled.down,
+    name: '20261123_170118_trainer_role_and_canceled',
+  },
+  {
+    up: migration_20261123_171817_travel_rates.up,
+    down: migration_20261123_171817_travel_rates.down,
+    name: '20261123_171817_travel_rates',
+  },
+  {
+    up: migration_20261123_172427_session_travel.up,
+    down: migration_20261123_172427_session_travel.down,
+    name: '20261123_172427_session_travel',
+  },
+  {
+    up: migration_20261123_173851_session_estimate.up,
+    down: migration_20261123_173851_session_estimate.down,
+    name: '20261123_173851_session_estimate',
+  },
+  {
+    up: migration_20261123_182933_estimate_sources.up,
+    down: migration_20261123_182933_estimate_sources.down,
+    name: '20261123_182933_estimate_sources',
+  },
+  {
+    up: migration_20261123_192214_return_airport.up,
+    down: migration_20261123_192214_return_airport.down,
+    name: '20261123_192214_return_airport'
   },
 ];

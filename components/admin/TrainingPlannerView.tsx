@@ -33,7 +33,7 @@ function ShipList({ title, items }: { title: string; items: { ship: string; reas
 
 /**
  * Training planner at /admin/training-planner: settings, the current plan with
- * reasons and totals, and Accept selected. Admins only.
+ * reasons and totals, and Accept selected. Admins and trainers only.
  */
 export async function TrainingPlannerView({ initPageResult, params, searchParams }: AdminViewServerProps) {
   const { req, locale, permissions, visibleEntities } = initPageResult;
@@ -41,12 +41,12 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
   const template = { i18n: req.i18n, locale, params, payload, permissions, searchParams, user: user ?? undefined, visibleEntities };
   const admin = payload.config.routes.admin;
 
-  if (user?.collection !== "users" || user.role !== "admin") {
+  if (user?.collection !== "users" || !["admin", "trainer"].includes(user.role ?? "")) {
     return (
       <DefaultTemplate {...template}>
         <Gutter>
           <h1>Training planner</h1>
-          <p>Only admins can use the training planner.</p>
+          <p>Only admins and trainers can use the training planner.</p>
         </Gutter>
       </DefaultTemplate>
     );
@@ -54,10 +54,11 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
 
   const today = new Date().toISOString().slice(0, 10);
   const access = { req, user, overrideAccess: false } as const;
-  const [{ current }, trainers, combos] = await Promise.all([
+  const [{ current }, trainers, combos, preferences] = await Promise.all([
     payload.findGlobal({ slug: "training-plan", ...access }),
     payload.find({ collection: "trainers", ...access, depth: 0, limit: 0, pagination: false, select: { name: true } }),
     upcomingCruiseCombos(payload, today),
+    payload.findGlobal({ slug: "training-preferences", ...access }),
   ]);
   const stored = readStoredPlan(current);
   const cruises = stored ? await cruiseOptions(req, stored) : {};
@@ -72,7 +73,8 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
     ships: [],
     ports: [],
     trainers: [],
-    priorityShips: [],
+    // Preferred ships from Training preferences that have upcoming cruises, alphabetical.
+    priorityShips: ships.filter((ship) => preferences.ships?.includes(ship)),
     onlineHours: 2 as const,
     maxOnboardingNights: 7,
     rules: NO_RULES,
@@ -92,6 +94,11 @@ export async function TrainingPlannerView({ initPageResult, params, searchParams
               travel, and monthly limits. Nothing changes until you accept it.
             </p>
           </header>
+
+          <p className="training-form__check">
+            Preferred ports from <Link href={`${admin}/training-preferences`}>Training preferences</Link>:{" "}
+            {preferences.ports?.length ? `${preferences.ports.join(", ")} (their cruises are favoured)` : "none"}.
+          </p>
 
           <TrainingPlannerSettings
             key={stored?.createdAt ?? "new"}

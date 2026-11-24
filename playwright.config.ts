@@ -14,6 +14,12 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     channel: "chrome",
   },
+  // Training preferences are one shared setting that Schedule training and the
+  // planner read, so that spec runs alone after the others.
+  projects: [
+    { name: "main", testIgnore: /training-preferences\.spec\.ts/, teardown: "preferences" },
+    { name: "preferences", testMatch: /training-preferences\.spec\.ts/ },
+  ],
   webServer: {
     command: `pnpm build && pnpm start --port ${PORT}`,
     url: `http://localhost:${PORT}/products`,

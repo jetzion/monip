@@ -447,7 +447,8 @@ body::before {
   margin-top: 20px;
 }
 
-.training-form__check {
+.training-form__check,
+.training-estimate__status {
   margin: 0;
   color: var(--theme-elevation-650);
 }
@@ -616,10 +617,6 @@ body::before {
     background: var(--theme-elevation-200);
     text-decoration: underline;
   }
-}
-
-.training-calendar__time {
-  font-weight: 600;
 }
 
 .training-calendar__long-date {
@@ -839,6 +836,31 @@ body::before {
   margin: 28px 0 8px;
 }
 
+// Section title with its buttons on the right; they wrap below on narrow screens.
+.training-planner__table-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 28px 0 8px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.training-planner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+
+  .btn {
+    margin: 0;
+  }
+}
+
 // Planner tables size columns to their content: narrow tick boxes, wide reasons.
 .training-planner .training-report__table {
   table {
@@ -939,4 +961,261 @@ body::before {
     margin: 0;
     padding-left: 20px;
   }
+}
+
+.training-preferences__columns {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 2fr 1fr;
+}
+
+@media (max-width: 768px) {
+  .training-preferences__columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.training-preferences__group {
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 4px;
+  margin: 0 0 1rem;
+  padding: 0.5rem 1rem 1rem;
+  display: grid;
+  gap: 0.25rem 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.training-preferences__group legend {
+  font-weight: 600;
+  padding: 0 0.25rem;
+}
+
+.training-preferences__option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.training-preferences__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  bottom: 0;
+  background: var(--theme-bg);
+  padding: 0.5rem 0;
+}
+
+/* Canceled sessions: greyed out, struck through, with a label. */
+.training-calendar__entry.training-calendar__entry--canceled {
+  --entry-color: var(--theme-elevation-400);
+  background: var(--theme-elevation-50);
+  color: var(--theme-elevation-700);
+  text-decoration: line-through;
+}
+
+.training-calendar__canceled {
+  margin-right: 4px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: var(--theme-elevation-600);
+  color: var(--theme-elevation-0);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* Schedule training: the trainer's trip. */
+.training-travel {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 16px 16px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 4px;
+
+  legend {
+    padding: 0 4px;
+    font-weight: 600;
+  }
+}
+
+.training-travel__row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+.training-travel__choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Sessions that still need travel details or a new estimate. */
+.training-calendar__travel {
+  margin-right: 4px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.training-estimate__wrap {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.training-estimate {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.training-estimate__table {
+  border-collapse: collapse;
+  min-width: 36rem;
+
+  caption {
+    text-align: left;
+    font-weight: 600;
+    padding-bottom: 6px;
+  }
+
+  th,
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--theme-elevation-150);
+    text-align: left;
+  }
+
+  tfoot th,
+  tfoot td {
+    font-weight: 700;
+    border-bottom: none;
+  }
+}
+
+.training-estimate__amount {
+  width: 8rem;
+  padding: 4px 6px;
+}
+
+.training-estimate__note {
+  display: block;
+  max-width: 28rem;
+  color: var(--theme-elevation-600);
+  font-size: 12px;
+}
+
+// While a proposal is being edited, its dropdowns must not be clipped by the
+// table's sideways scrolling (overflow-x also clips vertically).
+.training-report__table:has(.training-planner__edit) {
+  overflow: visible;
+}
+
+.training-travel__wanted {
+  grid-column: 1 / -1;
+}
+
+// Shown at the top center of the screen while travel prices are looked up.
+.training-estimate__searching {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 32px);
+  padding: 16px 24px;
+  transform: translateX(-50%);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 8px;
+  background: var(--theme-elevation-0);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+  text-align: center;
+}
+
+// Schedule training: By Cruise/Ship or By port, below the title.
+.training-form__order {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+}
+
+// Admin header: the avatar with its Account / Log out menu (AccountMenu)
+// replaces Payload's avatar link, which can only open the account page.
+.app-header__account {
+  display: none;
+}
+
+.account-menu__avatar {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+// Named for screen readers only.
+.account-menu__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.account-menu__who {
+  margin: 0 0 4px;
+  padding: 0 8px;
+  color: var(--theme-elevation-600);
+  font-size: 12px;
+}
+
+// The user's initials in a circle of their own colour (lib/admin/initials.ts).
+.account-menu__initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  user-select: none;
+}
+
+// Payload keeps 20px between its header actions and its avatar link, which is
+// hidden: without it the avatar menu sits at the right edge of the content.
+.app-header__actions-wrapper {
+  margin-right: 0;
 }

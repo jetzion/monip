@@ -1,12 +1,14 @@
 import type { CollectionConfig, Where } from "payload";
 
-import { isLoggedIn } from "../access/content";
+import { isContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { slugField } from "../fields/slug";
 import { revalidateCategories, revalidateDeletedCategory } from "../hooks/revalidate";
 
 export const Categories: CollectionConfig = {
   slug: "categories",
   admin: {
+    hidden: hiddenFromTrainers,
     useAsTitle: "title",
     defaultColumns: ["title", "parent", "sortOrder"],
     description:
@@ -22,9 +24,9 @@ export const Categories: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   fields: [
     {

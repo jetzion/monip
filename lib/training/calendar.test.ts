@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   calendarHref,
+  entryLabel,
+  entryText,
   gridRange,
   localDay,
   monthGrid,
@@ -10,7 +12,6 @@ import {
   placeSessions,
   readParams,
   shiftMonth,
-  startLabel,
   type CalendarSession,
 } from "./calendar";
 
@@ -74,11 +75,6 @@ describe("placing sessions", () => {
     expect(placed.get("2026-10-03")?.map((s) => s.id)).toEqual([2]);
     expect(placed.get("2026-10-04")).toEqual([]);
   });
-
-  it("labels start times in the session's zone", () => {
-    expect(startLabel(session({}))).toBe("08:00");
-    expect(startLabel(session({ type: "onboarding" }))).toBe("All day");
-  });
 });
 
 describe("calendar URLs", () => {
@@ -90,5 +86,16 @@ describe("calendar URLs", () => {
     const params = { calMonth: "2026-10", calTrainer: "3", calSession: "9" };
     expect(calendarHref(params, { calMonth: "2026-11", calSession: undefined })).toBe("?calMonth=2026-11&calTrainer=3");
     expect(calendarHref({}, {})).toBe("?");
+  });
+});
+
+describe("calendar entries", () => {
+  it("show the trainer's initials and the ship", () => {
+    expect(entryText(session({ trainer: "Jack Etzion", ship: "Carnival Legend" }))).toBe("JE - Carnival Legend");
+  });
+
+  it("keep the full description, with any notes, for hover text and screen readers", () => {
+    expect(entryLabel(session({}))).toBe("Departure day training, 1 Oct 2026, 08:00 – 15:30 (America/New_York) · Ann Lee · Carnival Conquest");
+    expect(entryLabel(session({ canceled: true, travelStatus: "estimateNeeded" }))).toMatch(/^Canceled\. Estimate needed\. Departure day training/);
   });
 });

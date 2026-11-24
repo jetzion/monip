@@ -12,10 +12,11 @@ The admin is at https://monip-group.vercel.app/admin, a temporary address until 
 
 | Role | Can do | Cannot do |
 | --- | --- | --- |
-| Admin | Everything editors can, plus manage users, read website inquiries, and switch the chat invitation on or off | — |
+| Admin | Everything editors and trainers can, plus manage users, read website inquiries, switch the chat invitation on or off, import and edit sailings, manage trainers and port time zones, and edit or delete any session at any time | — |
 | Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, success stories, offices, pages, the Home page text, chat invitation questions, and images | See other users, change roles, read inquiries, or switch the chat invitation on or off |
+| Trainer | Use the Training Schedule (schedule, edit, delete, cancel, and restore sessions for any trainer), Training preferences, the training planner, the training report, and the travel rates of each port in Port time zones; view the Cruise Fleet Schedule, Trainers, and Port time zones (Training planning costs, the default rates, is not in their navigation) | Edit or delete a session once it has started (cancel or restore only), import or edit sailings, manage trainers or port time zones, or see website content, inquiries, or other users (Users is not in their navigation; they open their own account from the avatar menu) |
 
-You can change your own name and password from your account page. Only an admin can change someone's role.
+To open your account page or log out, click your avatar at the top right (your initials in a circle of your own colour, from your Name, or your email when no name is set): its menu shows who is signed in, **Account**, and **Log out**. You can change your own name and password from your account page. Only an admin can change someone's role.
 
 ## Adding and editing a product
 
@@ -140,9 +141,9 @@ Until the email service is set up, notification emails are not delivered: check 
 - **Add or update sailings in bulk:** click **Download Excel Template**, fill in one row per sailing without renaming the sheet or columns (dates as 2026-10-03, times as 06:00), then click **Import Excel** and choose the file. A summary shows how many sailings were added, updated, unchanged, or rejected, with the row number and reason for each rejected row. Files must be .xlsx and at most 4 MB (the template holds about 25,000 sailings in under 2 MB). If anything goes wrong while saving, nothing is changed.
 - **Updating the data:** an import matches sailings by Ship and Start date. It updates sailings that changed, adds new ones, and keeps sailings that are not in the file. Rows with a missing ship, cruise line, or start date are reported and skipped.
 
-## Training Schedule (admins only)
+## Training Schedule (admins and trainers)
 
-**Training Schedule**, directly below Cruise Fleet Schedule, is where admins schedule product training for cruise personnel. Each session has one cruise, one trainer, and a training type. Only admins can see it; it never appears on the website or in the chat.
+**Training Schedule**, in the **Training** group of the navigation (with Cruise Fleet Schedule, Trainers, Port time zones, and for admins Training planning costs), is where admins schedule product training for cruise personnel. Each session has one cruise, one trainer, and a training type. Admins and trainers can use it; it never appears on the website or in the chat. Trainers schedule and change sessions for any trainer, but once a session has started they can only cancel or restore it; admins can change or delete any session at any time.
 
 **Before you start**
 
@@ -151,7 +152,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 **Schedule a session** with the **Schedule training** form at the top of the page (its title reminds you to select Cruise line or Port first):
 
-1. Choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Fill in the first three in any order, for example Port first, then Cruise line, then Ship: each list shows only what fits the others, and a list left with one option fills itself in (choosing a ship fills in its cruise line, and its port when it sails from only one). To pick something a list no longer shows, clear one of the other choices with its **x**. **Cruise dates** stays greyed out until a ship and port are chosen, then lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
+1. Below the title, choose how to pick the cruise: **By Cruise/Ship** (the default: Cruise line, Ship, Port, Cruise dates) or **By port** (Port, Cruise line, Ship, Cruise dates); only the order of the fields changes, and choices already made are kept. Then choose the cruise with **Cruise line**, **Ship**, **Port**, and **Cruise dates**. Fill in the first three in any order, for example Port first, then Cruise line, then Ship: each list shows only what fits the others, and a list left with one option fills itself in (choosing a ship fills in its cruise line, and its port when it sails from only one). To pick something a list no longer shows, clear one of the other choices with its **x**. Clearing **Cruise line** also clears **Ship** (a ship belongs to its cruise line); the port stays. **Cruise dates** stays greyed out until a ship and port are chosen, then lists that ship's sailings from that port starting today or later, with arrival and departure times when known.
 2. Choose the **Trainer**.
 3. Choose the **Training type**:
    - **Online training:** pick the date, start time, time zone, and duration (2, 4, or 8 hours).
@@ -162,13 +163,23 @@ Until the email service is set up, notification emails are not delivered: check 
 
 **Fixed sessions:** tick **Fixed** in a session's sidebar (on its own page, through **Edit**) when it must not move, for example because travel is booked. The training planner will never suggest moving a fixed session. The session details show whether it is fixed.
 
+**Travel:** for departure-day and onboarding training when the trainer's **Home base** is not the cruise's port (or is not set), or for onboarding on a cruise that ends at another port, the form shows a **Travel** section. When the trainer is based at the cruise's port, tick **Travel needed** to add a trip anyway (for example a hotel before an early start). When the cruise ends at another port, the form says so: under air travel, enter **Return from airport** (the airport the trainer flies home from); the price lookup then asks for that open-jaw fare. The departure city starts as the home base, the departure date as the day before departure-day training (or the cruise start date for onboarding), and the return date as the last training day; change them as needed. Tick **Air travel needed** (then enter the departing and destination airports), **Hotel needed** (check-in and check-out, within the trip), **Car rental needed** (pick-up and return, within the trip; picked up at the destination airport), and **Rideshare needed** (airport to port and back). The line next to **Add to Calendar** says what is missing or wrong. The whole trip blocks the trainer: another session on a travel day is refused with "(travel days included)". The session details list the trip, and its own page shows the same fields under **Travel**.
+
+**Estimate cost:** with travel filled in, click **Estimate cost**. The app looks up current typical prices online for the flight, hotel, car rental, and rideshare; a searching icon shows at the top center of the screen meanwhile (this takes about a minute; only the airports, dates, departure city, and port are sent, never the trainer). A table then lists a line for each part of the trip: the flight (one return fare), the hotel (nights × nightly rate), car rental (days × daily rate), and rideshare (two trips, to the port and back). Each line says where its price came from: **Found online** (with a link to the page and a note on what the price covers), or, when nothing was found, the port's own rate or the default (see **Travel rates**); a line with neither says "No price found or rate set: enter an amount". These are typical prices, not quotes; check them before acknowledging. You can type over any amount. When every line has an amount, tick **I acknowledge the estimated travel cost of …**; only then is **Add to Calendar** enabled. Changing anything in the form afterwards clears the estimate, so click **Estimate cost** again. The session details show the estimated cost and who acknowledged it.
+
+**Travel and Estimate labels:** a session that needs travel but has none (for example, accepted from the training planner) shows **Travel** in the calendar. Open it: its details show the travel fields with suggested dates (as in Schedule training); fill them in, click **Estimate cost**, check the amounts, tick the acknowledgement, and click **Save travel and estimate**. A session whose trip, port, or times changed after its estimate was acknowledged (for example after **Update to current cruise details**) shows **Estimate**; open it, adjust the trip if needed, click **Estimate cost**, check the amounts, tick the acknowledgement, and click **Save travel and estimate**.
+
+**Canceling a session:** click the session in the calendar, then **Cancel session** (it asks first). A canceled session stays in the calendar, greyed out with a "Canceled" label, and in the training report marked "(canceled)", but it is not counted in the totals and no longer blocks the trainer, so another session can take its time. **Restore session** undoes it, as long as the trainer is still free (otherwise the clash is shown). Trainers can cancel or restore any session, including one that has started; you can also tick **Canceled** on the session's own page.
+
 **Planning costs:** **Training planning costs** (under Globals) holds estimated costs in US dollars per online session, departure-day session, onboarding day, trip, and hotel night. The training planner uses them to compare plans; leave a value empty while it is unknown.
+
+**Travel rates:** travel estimates use rates in US dollars. The defaults are in **Training planning costs**: **Travel, per trip** (the flight fare), **Hotel, per night**, **Car rental, per day**, and **Rideshare, per trip** (one way between the airport and the port). A port can have its own **Flight fare**, **Hotel per night**, and **Rideshare fare** in **Port time zones**; an empty port rate uses the default. A rate of 0 counts as not set. Admins and trainers can change all rates; only admins can change a port's name or time zone.
 
 **Conflicts:** a trainer cannot have two sessions that overlap, counting time zones (09:00 in London is 04:00 in New York). Onboarding blocks whole days. Back-to-back sessions are fine: one may start when another ends. A clash is refused with the session it clashes with.
 
 **The calendar**
 
-- Shows one month; use the **Previous month**, **This month**, and **Next month** buttons. Each session shows its start time (or "All day"), type, trainer, and ship, colored by type. Onboarding appears on every day it covers.
+- Shows one month; use the **Previous month**, **This month**, and **Next month** buttons. Each session shows the trainer's initials and the ship (for example "JE - Carnival Legend"), colored by type (see the legend); hover over it for the full description (time, type, trainer, ship). Onboarding appears on every day it covers.
 - Times are shown in each session's own time zone, which the details name.
 - **Filter** by Trainer, Cruise, and Training type; **Clear filters** shows everything again.
 - **Click a session** to see its full details, with **Edit**, **Delete** (asks first), and **Close**. Editing opens the session's own page; saving checks for conflicts again.
@@ -191,12 +202,14 @@ Until the email service is set up, notification emails are not delivered: check 
 7. A new plan replaces the current plan, including your edits (sessions you accepted stay in the schedule). To keep a proposal, accept it before asking for a new plan.
 8. **Clear settings** empties the form and the instruction (the current plan stays). **Clear proposed sessions** removes the current plan after you confirm; sessions you accepted stay in the schedule.
 
+**Training preferences:** click **Training preferences** below the page title (or go to `/admin/training-preferences`). It lists every cruise line with its ships, and every start port, in the Cruise Fleet Schedule. Tick the ships and ports preferred for training and click **Save preferences**. **Schedule training** then offers only preferred ships sailing from preferred ports (with only ships ticked, those ships from any port; with only ports ticked, any ship from those ports; with nothing ticked, everything), and says so above the form. Editing a session on its own page still lists every cruise. A ship or port that leaves the Cruise Fleet Schedule drops off the list, and saving again removes it from the preferences. The training planner uses them: preferred ships fill in **Priority ships** (alphabetically) in a new or cleared plan, and when a ship has cruises from several ports, a cruise from a preferred port is favoured (as strongly as a trainer preferred for a port), and its reason says "preferred port". Ships sailing only from other ports are still planned. The planner page lists the preferred ports.
+
 **Training report:** click **Training report** below the page title (or go to `/admin/training-report`).
 
 1. Choose a **Trainer**, or leave it on **All trainers**.
 2. Choose the **From** and **To** months. A session is included when any of its days falls in those months, so onboarding that starts in the previous month still appears.
 3. Choose the **Layout**: **Group by trainer** (a section per trainer, alphabetical by last name, each with its own totals) or **List by date** (one list with a Trainer column).
-4. The report updates as you choose. Each line shows the dates, time, time zone, training type, cruise line, ship, start port, and cruise dates; totals count sessions, hours of online and departure-day training, and days of onboarding (whole sessions).
+4. The report updates as you choose. Each line shows the dates, time, time zone, training type, cruise line, ship, start port, and cruise dates, and the **Travel cost** (the acknowledged estimate, or "—" without one); totals count sessions, hours of online and departure-day training, days of onboarding (whole sessions), and the estimated travel cost. Canceled sessions are listed, marked "(canceled)", but not counted.
 5. Click **Download PDF** for the same report as a PDF file (US Letter, landscape), marked confidential.
 
 ## Website chat

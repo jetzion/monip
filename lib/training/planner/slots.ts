@@ -1,7 +1,7 @@
 import { type FieldError, isFieldError, sessionTimes, type TrainingType } from "../schedule";
 import { dayOf, isTime, zonedTime } from "../time";
 import { clash, type Place, trainingDays, travelClash, withinMonthlyLimit, type Bookings } from "./bookings";
-import { ruleBonus, ruleViolations } from "./rules";
+import { PREFERRED_BONUS, ruleBonus, ruleViolations } from "./rules";
 import type { PlanCosts, PlanSailing, PlanSettings, PlanTrainer, Preset, Slot } from "./types";
 
 /** Why a sailing cannot be planned, or null when it can. */
@@ -109,7 +109,8 @@ export function buildSlot(
     cost,
     score,
   };
-  return { ...slot, score: score + ruleBonus(slot, settings.rules) };
+  const portBonus = settings.preferredPorts?.includes(sailing.startPort ?? "") ? PREFERRED_BONUS : 0;
+  return { ...slot, score: score + ruleBonus(slot, settings.rules) + portBonus };
 }
 
 /**

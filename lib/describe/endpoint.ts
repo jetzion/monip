@@ -1,6 +1,7 @@
 import type { Endpoint, PayloadRequest } from "payload";
 import sharp from "sharp";
 
+import { isContentUser } from "../../access/roles";
 import { completeChat, type ChatCompletion, type ModelMessage } from "../chat/openrouter";
 import { createRateLimiter } from "../chat/rate-limit";
 import { siteUrl } from "../site";
@@ -83,6 +84,7 @@ export const describeEndpoint: Endpoint = {
   method: "post",
   handler: async (req) => {
     if (!req.user) return fail(401, "Log in to use this feature.");
+    if (!isContentUser(req)) return fail(403, "Only admins and editors can use this feature.");
     if (!allow(String(req.user.id))) return fail(429, "Too many requests. Please wait a minute.");
 
     const body = (await req.json?.()) as DescribeRequest;

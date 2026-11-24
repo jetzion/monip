@@ -83,6 +83,8 @@ export type PlanSettings = {
   trainers: number[];
   /** Planned first, in this order. */
   priorityShips: string[];
+  /** Start ports from Training preferences; their cruises score higher. Missing in plans made before them. */
+  preferredPorts?: string[];
   onlineHours: 2 | 4 | 8;
   /** Longer cruises are not offered for onboarding. */
   maxOnboardingNights: number;

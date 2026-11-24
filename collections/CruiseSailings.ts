@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 
-import { isAdmin } from "../access/roles";
+import { editTabsHiddenFromTrainers, isAdmin, isTraining } from "../access/roles";
 import { importEndpoint } from "../lib/sailings/import-endpoint";
 import { templateEndpoint } from "../lib/sailings/template-endpoint";
 import { isTimesOnly, timesOnlyWhere } from "../lib/sailings/times-only";
@@ -11,13 +11,14 @@ const dayOnly = { date: { pickerAppearance: "dayOnly" as const, displayFormat: "
 
 /**
  * Cruise sailings imported from the fleet calendar workbook (Sailings sheet).
- * Admin only: operator data is commercially sensitive and never public.
+ * Admins edit, trainers view; operator data is commercially sensitive and never public.
  * Ship + Start date identifies a sailing; re-imports match on it.
  */
 export const CruiseSailings: CollectionConfig = {
   slug: "cruise-sailings",
   labels: { singular: "Sailing", plural: "Cruise Fleet Schedule" },
   admin: {
+    group: "Training",
     useAsTitle: "ship",
     defaultColumns: [
       "cruiseLine",
@@ -33,11 +34,12 @@ export const CruiseSailings: CollectionConfig = {
       "arrival",
       "departure",
     ],
-    description: "Cruise sailings imported from the fleet calendar workbook. Admins only.",
+    description: "Cruise sailings imported from the fleet calendar workbook. Admins and trainers only; only admins import or edit.",
     pagination: { defaultLimit: 10, limits: [10, 25, 50, 100] },
     // "Hide sailings without arrival and departure times" (on by default).
     baseFilter: async ({ req }) => ((await isTimesOnly(req.payload, req.user)) ? timesOnlyWhere : null),
     components: {
+      views: { edit: editTabsHiddenFromTrainers },
       beforeListTable: [
         "/components/admin/SailingActions#SailingActions",
         "/components/admin/SailingFilters#SailingFilters",
@@ -47,7 +49,7 @@ export const CruiseSailings: CollectionConfig = {
   defaultSort: ["startDate", "cruiseLine", "ship"],
   endpoints: [templateEndpoint, importEndpoint],
   access: {
-    read: isAdmin,
+    read: isTraining,
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,

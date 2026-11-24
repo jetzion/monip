@@ -1,4 +1,6 @@
-import { describeSession, isFieldError, sessionTimes, type TrainingType } from "./schedule";
+import type { EstimateLine, EstimateOverrides, FoundPrices } from "./estimate";
+import { describeSession, isFieldError, sessionTimes, type SessionTimes, type TrainingType } from "./schedule";
+import { isInPerson, needsTravel, trainingDays, travelData, travelDefaults, travelError, type Travel } from "./travel";
 
 /** The cruise fields the scheduling form needs. */
 export type CruiseOption = {
@@ -8,8 +10,19 @@ export type CruiseOption = {
   startDate: string;
   endDate?: string | null;
   startPort?: string | null;
+  endPort?: string | null;
   arrival?: string | null;
   departure?: string | null;
+};
+
+/** An estimate in the form or the session details. */
+export type EstimateState = {
+  lookup: "loading" | "done" | "failed";
+  /** Why the lookup failed, shown above the estimate made from the rates. */
+  message?: string;
+  found: FoundPrices;
+  overrides: EstimateOverrides;
+  acknowledged: boolean;
 };
 
 export type FormState = {
@@ -21,6 +34,12 @@ export type FormState = {
   timeZone: string;
   durationHours: string;
   endDate: string;
+  /** Travel details the user changed; the rest come from travelDefaults. */
+  travel: Partial<Travel>;
+  /** Travel added by hand for in-person training at the trainer's home base. */
+  travelWanted: boolean;
+  /** Set by Estimate cost (prices found online, or the lookup in progress or failed); any other change clears it. */
+  estimate: EstimateState | null;
 };
 
 export const emptyForm = (timeZone: string): FormState => ({
@@ -32,6 +51,9 @@ export const emptyForm = (timeZone: string): FormState => ({
   timeZone,
   durationHours: "",
   endDate: "",
+  travel: {},
+  travelWanted: false,
+  estimate: null,
 });
 
 const day = (iso: string) =>
@@ -45,25 +67,63 @@ export function cruiseLabel(cruise: CruiseOption): string {
 
 const noon = (day: string) => (day ? `${day}T12:00:00.000Z` : null);
 
-/**
- * Checks the form with the same rules the server uses. Returns the session
- * description when it can be added, or what is still missing or wrong.
- */
-export function checkForm(form: FormState, portZones: Record<string, string>): { ready: true; summary: string } | { ready: false; reason: string } {
-  if (!form.cruise) return { ready: false, reason: "Choose a cruise." };
-  if (!form.trainer) return { ready: false, reason: "Choose a trainer." };
-  if (!form.type) return { ready: false, reason: "Choose a training type." };
+/** The session's times from the form, or why they cannot be worked out yet. */
+function formTimes(form: FormState, portZones: Record<string, string>): { message: string } | (SessionTimes & { type: TrainingType }) {
+  if (!form.cruise) return { message: "Choose a cruise." };
+  if (!form.trainer) return { message: "Choose a trainer." };
+  if (!form.type) return { message: "Choose a training type." };
   const times = sessionTimes(
     { ...form, type: form.type, date: noon(form.date), endDate: noon(form.endDate) },
     form.cruise,
     portZones[form.cruise.startPort ?? ""] ?? null,
   );
-  if (isFieldError(times)) return { ready: false, reason: times.message };
-  return { ready: true, summary: describeSession({ ...times, type: form.type }) };
+  return isFieldError(times) ? { message: times.message } : { ...times, type: form.type };
+}
+
+/**
+ * Whether the form's session has a trip: "needed" (in-person away from home
+ * base, or onboarding on a cruise ending elsewhere), "optional" (in-person at
+ * home base: the Travel needed box), or "none" (online, or the times are not known yet).
+ */
+export function travelChoice(form: FormState, portZones: Record<string, string>, homeBase: string | null): "needed" | "optional" | "none" {
+  const times = formTimes(form, portZones);
+  if ("message" in times || !isInPerson(times.type)) return "none";
+  return needsTravel(times.type, homeBase, form.cruise?.startPort, form.cruise?.endPort) ? "needed" : "optional";
+}
+
+/**
+ * The trip for the form's session: the defaults with the user's changes, or
+ * null when there is none (online, at home base without Travel needed, or the times are not known yet).
+ */
+export function formTravel(form: FormState, portZones: Record<string, string>, homeBase: string | null): Travel | null {
+  const times = formTimes(form, portZones);
+  const choice = travelChoice(form, portZones, homeBase);
+  if ("message" in times || choice === "none" || (choice === "optional" && !form.travelWanted)) return null;
+  return { ...travelDefaults(times.type, trainingDays(times), homeBase), ...form.travel };
+}
+
+/**
+ * Checks the form with the same rules the server uses. Returns the session
+ * description when it can be added, or what is still missing or wrong.
+ */
+export function checkForm(
+  form: FormState,
+  portZones: Record<string, string>,
+  homeBase: string | null,
+): { ready: true; summary: string } | { ready: false; reason: string } {
+  const times = formTimes(form, portZones);
+  if ("message" in times) return { ready: false, reason: times.message };
+  const travel = formTravel(form, portZones, homeBase);
+  const problem = travel && travelError(travel, trainingDays(times));
+  if (problem) return { ready: false, reason: problem.message };
+  if (travel && !form.estimate) return { ready: false, reason: "Click Estimate cost to see the travel cost." };
+  if (travel && form.estimate?.lookup === "loading") return { ready: false, reason: "Looking up current prices online." };
+  if (travel && !form.estimate?.acknowledged) return { ready: false, reason: "Acknowledge the estimated travel cost." };
+  return { ready: true, summary: describeSession(times) };
 }
 
 /** The request body for creating a session; the server works out the times. */
-export function sessionBody(form: FormState) {
+export function sessionBody(form: FormState, travel: Travel | null, lines: EstimateLine[] | null) {
   return {
     cruise: form.cruise?.id,
     trainer: Number(form.trainer),
@@ -72,6 +132,9 @@ export function sessionBody(form: FormState) {
       ? { date: noon(form.date), startTime: form.startTime, timeZone: form.timeZone, durationHours: form.durationHours }
       : {}),
     ...(form.type === "onboarding" ? { endDate: noon(form.endDate) } : {}),
+    ...(travel ? { travel: travelData(travel) } : {}),
+    // The server stamps the acknowledgement; a new time marks it as new.
+    ...(travel && lines && form.estimate?.acknowledged ? { estimate: { lines, acknowledgedAt: new Date().toISOString() } } : {}),
   };
 }
 

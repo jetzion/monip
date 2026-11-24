@@ -9,13 +9,20 @@ import {
   changeChoice,
   cruiseDatesLabel,
   cruiseDatesUrl,
+  PICK_ORDERS,
+  pickFields,
   noChoice,
   optionsFor,
   type CruiseChoice,
   type CruiseCombo,
+  type PickOrder,
 } from "@/lib/training/cruise-choice";
-import { checkForm, emptyForm, errorMessages, sessionBody, type CruiseOption, type FormState } from "@/lib/training/form";
+import { checkForm, emptyForm, errorMessages, formTravel, sessionBody, travelChoice, type CruiseOption, type FormState } from "@/lib/training/form";
+import { estimateLines, withOverrides, type TravelRates } from "@/lib/training/estimate";
 import { DURATIONS, TRAINING_TYPES } from "@/lib/training/schedule";
+
+import { lookUpTripPrices, TrainingEstimate } from "./TrainingEstimate";
+import { TrainingTravelFields } from "./TrainingTravelFields";
 
 type Option = { label: string; value: string };
 
@@ -26,7 +33,11 @@ const durationOptions: Option[] = DURATIONS.map((hours) => ({ label: `${hours} h
 
 type Props = {
   trainers: Option[];
+  /** Home base port of each trainer (by id), for travel. */
+  homeBases: Record<string, string | null>;
   portZones: Record<string, string>;
+  /** Default and per-port travel rates, for the estimate. */
+  rates: TravelRates;
   combos: CruiseCombo[];
   today: string;
 };
@@ -36,14 +47,44 @@ type Props = {
  * line, ship, port, and dates; the server works out the session times and
  * checks conflicts.
  */
-export function TrainingFormClient({ trainers, portZones, combos, today }: Props) {
+export function TrainingFormClient({ trainers, homeBases, portZones, rates, combos, today }: Props) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(() => emptyForm(browserZone()));
   const [formKey, setFormKey] = useState(0);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  const set = (changes: Partial<FormState>) => setForm((current) => ({ ...current, ...changes }));
+  // By Cruise/Ship (default) or By port: only the order of the cruise dropdowns changes.
+  const [order, setOrder] = useState<PickOrder>("ship");
+  // Counts estimate requests; a change to the form makes an answer still on its way stale.
+  const lookupRef = useRef(0);
+  // A session change suggests the travel again; any change needs a new estimate.
+  const set = (changes: Partial<FormState>) => {
+    lookupRef.current += 1;
+    setForm((current) => ({ ...current, travelWanted: false, ...changes, travel: {}, estimate: null }));
+  };
+  const setTravel = (changes: FormState["travel"]) => {
+    lookupRef.current += 1;
+    setForm((current) => ({ ...current, travel: { ...current.travel, ...changes }, estimate: null }));
+  };
+  const changeEstimate = (changes: Partial<NonNullable<FormState["estimate"]>>) =>
+    setForm((current) => (current.estimate ? { ...current, estimate: { ...current.estimate, ...changes } } : current));
 
-  const check = checkForm(form, portZones);
+  const homeBase = homeBases[form.trainer] ?? null;
+  const choice = travelChoice(form, portZones, homeBase);
+  const travel = formTravel(form, portZones, homeBase);
+  const port = form.cruise?.startPort ?? null;
+  // An onboarding cruise ending at another port: the trainer flies home from there.
+  const endsElsewhere = form.type === "onboarding" && form.cruise?.endPort && form.cruise.endPort !== port ? form.cruise.endPort : null;
+  const lines = travel ? withOverrides(estimateLines(travel, port, rates, form.estimate?.found), form.estimate?.overrides ?? {}) : null;
+
+  /** Looks up the trip's prices online; the estimate falls back to the rates if that fails. */
+  const estimate = async () => {
+    if (!travel || !port) return;
+    const request = ++lookupRef.current;
+    setForm((current) => ({ ...current, estimate: { lookup: "loading", found: {}, overrides: {}, acknowledged: false } }));
+    const result = await lookUpTripPrices(travel, port);
+    if (lookupRef.current === request) changeEstimate(result);
+  };
+  const check = checkForm(form, portZones, homeBase);
   const zoneOptions = useMemo(() => Intl.supportedValuesOf("timeZone").map((zone) => ({ label: zone, value: zone })), []);
 
   const submit = async () => {
@@ -51,7 +92,7 @@ export function TrainingFormClient({ trainers, portZones, combos, today }: Props
     const response = await fetch("/api/training-sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sessionBody(form)),
+      body: JSON.stringify(sessionBody(form, travel, lines)),
     }).catch(() => null);
     const body = await response?.json().catch(() => null);
     if (!response?.ok) {
@@ -76,8 +117,30 @@ export function TrainingFormClient({ trainers, portZones, combos, today }: Props
         </p>
       </div>
 
+      {/* Named for screen readers only; no visible label beside the buttons. */}
+      <fieldset className="training-form__order" aria-label="Choose the cruise">
+        {PICK_ORDERS.map((option) => (
+          <label key={option.value}>
+            <input
+              type="radio"
+              name="training-order"
+              value={option.value}
+              checked={order === option.value}
+              onChange={() => setOrder(option.value)}
+            />
+            {option.label}
+          </label>
+        ))}
+      </fieldset>
+
       <div className="training-form__fields" key={formKey}>
-        <CruisePicker combos={combos} today={today} cruise={form.cruise} onChange={(cruise) => set({ cruise, endDate: "" })} />
+        <CruisePicker
+          combos={combos}
+          today={today}
+          order={order}
+          cruise={form.cruise}
+          onChange={(cruise) => set({ cruise, endDate: "" })}
+        />
 
         <div className="training-form__field">
           <label htmlFor="training-trainer">Trainer</label>
@@ -167,6 +230,35 @@ export function TrainingFormClient({ trainers, portZones, combos, today }: Props
             />
           </div>
         )}
+
+        {choice === "optional" && (
+          <label className="training-travel__choice training-travel__wanted">
+            <input
+              type="checkbox"
+              checked={form.travelWanted}
+              onChange={(event) => set({ travelWanted: event.target.checked })}
+            />{" "}
+            Travel needed (the trainer is based at this port)
+          </label>
+        )}
+
+        {travel && <TrainingTravelFields travel={travel} onChange={setTravel} endPort={endsElsewhere} />}
+
+        {travel && lines && (
+          <div className="training-estimate__wrap">
+            <Button buttonStyle="secondary" size="medium" disabled={form.estimate?.lookup === "loading"} onClick={() => void estimate()}>
+              Estimate cost
+            </Button>
+            {form.estimate && (
+              <TrainingEstimate
+                state={form.estimate}
+                lines={lines}
+                onAmount={(item, amount) => changeEstimate({ overrides: { ...form.estimate?.overrides, [item]: amount }, acknowledged: false })}
+                onAcknowledge={(acknowledged) => changeEstimate({ acknowledged })}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       <div className="training-form__submit">
@@ -197,16 +289,17 @@ const selectedValue = (option: unknown) => (Array.isArray(option) ? "" : String(
 type PickerProps = {
   combos: CruiseCombo[];
   today: string;
+  order: PickOrder;
   cruise: CruiseOption | null;
   onChange: (cruise: CruiseOption | null) => void;
 };
 
 /**
- * Cruise line, Ship, Port, and Cruise dates dropdowns. The first three can be
- * filled in any order, and each lists only what fits the others. Cruise dates
+ * Cruise line, Ship, Port (or Port first, By port), and Cruise dates dropdowns.
+ * The first three can be filled in any order, and each lists only what fits the others. Cruise dates
  * lists the ship's upcoming sailings from the port, loaded through the REST API.
  */
-function CruisePicker({ combos, today, cruise, onChange }: PickerProps) {
+function CruisePicker({ combos, today, order, cruise, onChange }: PickerProps) {
   const [choice, setChoice] = useState<CruiseChoice>(noChoice);
   const [sailings, setSailings] = useState<CruiseOption[]>([]);
   const [loading, setLoading] = useState(false);
@@ -234,13 +327,8 @@ function CruisePicker({ combos, today, cruise, onChange }: PickerProps) {
     void loadSailings(next);
   };
 
-  const dropdowns = (
-    [
-      ["cruiseLine", "Cruise line"],
-      ["ship", "Ship"],
-      ["port", "Port"],
-    ] as const
-  ).map(([field, label]) => ({ field, label, options: toOptions(optionsFor(combos, choice, field)) }));
+  const labels = { cruiseLine: "Cruise line", ship: "Ship", port: "Port" } as const;
+  const dropdowns = pickFields(order).map((field) => ({ field, label: labels[field], options: toOptions(optionsFor(combos, choice, field)) }));
   const dateOptions = sailings.map((sailing) => ({ label: cruiseDatesLabel(sailing), value: String(sailing.id) }));
   const ready = Boolean(choice.ship && choice.port);
 

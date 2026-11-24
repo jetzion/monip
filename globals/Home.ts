@@ -3,7 +3,8 @@ import { array, number } from "payload/shared";
 
 import type { Home as HomeData } from "../payload-types";
 
-import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { isContentEditor, publishedOrContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { revalidateHome } from "../hooks/revalidate";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 
@@ -23,14 +24,15 @@ export const Home: GlobalConfig = {
   slug: "home",
   label: "Home page",
   admin: {
+    hidden: hiddenFromTrainers,
     description:
       "Text on the homepage. Link destinations are fixed; featured products are chosen on each product.",
     livePreview: livePreview(() => "/"),
   },
   versions: autosaveDrafts,
   access: {
-    read: publishedOrLoggedIn,
-    update: isLoggedIn,
+    read: publishedOrContentEditor,
+    update: isContentEditor,
   },
   hooks: {
     afterChange: [revalidateHome],

@@ -1,10 +1,14 @@
 import Link from "next/link";
+import type { ComponentProps } from "react";
 
 import { cruiseLabel } from "@/lib/training/form";
 import { describeSession } from "@/lib/training/schedule";
+import { readTravel, travelSummary } from "@/lib/training/travel";
 import type { CruiseSailing, TrainingSession } from "@/payload-types";
 
+import { TrainingEstimatePanel } from "./TrainingEstimatePanel";
 import { TrainingSessionApply } from "./TrainingSessionApply";
+import { TrainingSessionCancel } from "./TrainingSessionCancel";
 import { TrainingSessionDelete } from "./TrainingSessionDelete";
 
 const stamp = (iso: string) =>
@@ -14,12 +18,16 @@ type Props = {
   session: TrainingSession;
   trainer: string;
   changes: string[];
+  /** False for trainers once the session has started: they can only cancel or restore it. */
+  canEdit: boolean;
+  /** Travel details or estimate still needed, the current estimate lines, and the acknowledged estimate. */
+  travel: Omit<ComponentProps<typeof TrainingEstimatePanel>, "id" | "canEdit">;
   editHref: string;
   closeHref: string;
 };
 
-/** Full details of the selected session, with Edit and Delete. */
-export function TrainingSessionDetails({ session, trainer, changes, editHref, closeHref }: Props) {
+/** Full details of the selected session, with Edit, Delete, and Cancel or Restore. */
+export function TrainingSessionDetails({ session, trainer, changes, canEdit, travel: travelInfo, editHref, closeHref }: Props) {
   const live = typeof session.cruise === "object" ? (session.cruise as CruiseSailing | null) : null;
   const copy = session.cruiseCopy;
   const cruise = live
@@ -27,6 +35,8 @@ export function TrainingSessionDetails({ session, trainer, changes, editHref, cl
     : copy?.ship
       ? `${cruiseLabel({ id: 0, ship: copy.ship, cruiseLine: copy.cruiseLine ?? "", startDate: copy.startDate ?? "", endDate: copy.endDate, startPort: copy.startPort })} (no longer in the Cruise Fleet Schedule)`
       : "Unknown cruise";
+  const travel = readTravel(session.travel);
+  const trip = travel ? travelSummary(travel) : null;
   const when =
     session.startsAt && session.endsAt && session.timeZone
       ? describeSession({ type: session.type, startsAt: session.startsAt, endsAt: session.endsAt, timeZone: session.timeZone })
@@ -48,20 +58,25 @@ export function TrainingSessionDetails({ session, trainer, changes, editHref, cl
               <li key={change}>{change}</li>
             ))}
           </ul>
-          {live && (
+          {live && canEdit && (
             <div className="training-details__actions">
               <TrainingSessionApply id={session.id} />
             </div>
           )}
         </div>
       )}
+      <TrainingEstimatePanel id={session.id} {...travelInfo} canEdit={canEdit} />
       <dl>
+        <dt>Status</dt>
+        <dd>{session.canceled ? "Canceled (not in report totals; does not block the trainer)" : "Scheduled"}</dd>
         <dt>When</dt>
         <dd>{when}</dd>
         <dt>Trainer</dt>
         <dd>{trainer}</dd>
         <dt>Cruise</dt>
         <dd>{cruise}</dd>
+        <dt>Travel</dt>
+        <dd>{trip ? trip.map((line) => <div key={line}>{line}</div>) : session.type === "online" ? "None (online)" : "None entered"}</dd>
         <dt>Fixed</dt>
         <dd>{session.fixed ? "Yes (the training planner will not move it)" : "No"}</dd>
         <dt>Created</dt>
@@ -70,10 +85,15 @@ export function TrainingSessionDetails({ session, trainer, changes, editHref, cl
         <dd>{stamp(session.updatedAt)}</dd>
       </dl>
       <div className="training-details__actions">
-        <Link href={editHref} className="btn btn--style-primary btn--size-medium">
-          Edit
-        </Link>
-        <TrainingSessionDelete id={session.id} closeHref={closeHref} />
+        {canEdit && (
+          <>
+            <Link href={editHref} className="btn btn--style-primary btn--size-medium">
+              Edit
+            </Link>
+            <TrainingSessionDelete id={session.id} closeHref={closeHref} />
+          </>
+        )}
+        <TrainingSessionCancel id={session.id} canceled={Boolean(session.canceled)} />
         <Link href={closeHref}>Close</Link>
       </div>
     </section>

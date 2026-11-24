@@ -1,5 +1,7 @@
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
+import { isContentEditor } from '../access/content'
+import { hiddenFromTrainers } from '../access/roles'
 import { altFromFilename } from '../lib/media-alt'
 import { measureContentBoxHook } from '../lib/media/measure-hook'
 
@@ -13,8 +15,12 @@ const defaultAlt: CollectionBeforeValidateHook = ({ data }) => {
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: { hidden: hiddenFromTrainers },
   access: {
     read: () => true,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   hooks: {
     beforeValidate: [defaultAlt],

@@ -36,7 +36,7 @@ function readForm(value: unknown): FormSettings {
   };
 }
 
-/** POST /api/globals/training-plan/interpret { instruction, settings }: the instruction as checked settings (admins only). */
+/** POST /api/globals/training-plan/interpret { instruction, settings }: the instruction as checked settings (admins and trainers only). */
 export const interpretEndpoint = (denied: (req: PayloadRequest) => Response | null): Endpoint => ({
   path: "/interpret",
   method: "post",
@@ -96,7 +96,7 @@ const SUMMARY_PROMPT = [
   "Use only the facts given. Do not invent numbers, ships, or trainers. No lists or headings.",
 ].join("\n");
 
-/** POST /api/globals/training-plan/summarize: writes and stores the AI summary of the current plan (admins only). */
+/** POST /api/globals/training-plan/summarize: writes and stores the AI summary of the current plan (admins and trainers only). */
 export const summarizeEndpoint = (denied: (req: PayloadRequest) => Response | null): Endpoint => ({
   path: "/summarize",
   method: "post",

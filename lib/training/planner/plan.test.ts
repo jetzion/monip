@@ -58,6 +58,18 @@ const existing = (id: number, ship: string, day: string, overrides: Partial<Plan
 });
 
 describe("buildPlan", () => {
+  it("favours cruises from preferred ports", () => {
+    const sailings = [
+      sailing("Alpha", "2026-12-05"),
+      sailing("Alpha", "2026-12-12", { startPort: "Barcelona, Spain", endPort: "Barcelona, Spain" }),
+    ];
+    const trainers = [trainer(1, { homeBase: null })];
+    expect(plan({ sailings, trainers }).proposals[0].sailing.startPort).toBe("Miami, Florida");
+    const preferred = plan({ sailings, trainers, settings: { ...settings, preferredPorts: ["Barcelona, Spain"] } }).proposals[0];
+    expect(preferred.sailing.startPort).toBe("Barcelona, Spain");
+    expect(preferred.reason).toMatch(/not trained before, preferred port\.$/);
+  });
+
   it("trains each ship once, departure day at home base when balanced", () => {
     const result = plan({ sailings: [sailing("Alpha", "2026-12-05"), sailing("Alpha", "2026-12-12"), sailing("Beta", "2026-12-06")] });
     expect(result.proposals.map((p) => [p.sailing.ship, p.type, p.sailing.startDate.slice(0, 10)])).toEqual([

@@ -3,8 +3,10 @@ import type { BeforeListTableServerProps } from "payload";
 
 import { SailingImportButton } from "./SailingImportButton";
 
-/** Download Excel Template and Import Excel actions above the sailings list. */
-export function SailingActions({ payload }: BeforeListTableServerProps) {
+/** Download Excel Template and Import Excel actions above the sailings list (admins only). */
+export function SailingActions({ payload, user }: BeforeListTableServerProps) {
+  // Trainers view the schedule only.
+  if (user?.role !== "admin") return null;
   const base = `${payload.config.routes.api}/cruise-sailings`;
   return (
     <div className="sailing-actions">

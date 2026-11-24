@@ -8,15 +8,16 @@ Font.registerHyphenationCallback((word) => [word]);
 type Column = { key: keyof ReportRow; label: string; width: string };
 
 const COLUMNS: Column[] = [
-  { key: "dates", label: "Date", width: "13%" },
-  { key: "time", label: "Time", width: "9%" },
-  { key: "timeZone", label: "Time zone", width: "11%" },
+  { key: "dates", label: "Date", width: "12%" },
+  { key: "time", label: "Time", width: "8%" },
+  { key: "timeZone", label: "Time zone", width: "10%" },
   { key: "type", label: "Training type", width: "11%" },
   { key: "trainer", label: "Trainer", width: "10%" },
-  { key: "cruiseLine", label: "Cruise line", width: "11%" },
+  { key: "cruiseLine", label: "Cruise line", width: "10%" },
   { key: "ship", label: "Ship", width: "10%" },
-  { key: "startPort", label: "Start port", width: "11%" },
-  { key: "cruiseDates", label: "Cruise dates", width: "14%" },
+  { key: "startPort", label: "Start port", width: "10%" },
+  { key: "cruiseDates", label: "Cruise dates", width: "11%" },
+  { key: "cost", label: "Travel cost", width: "8%" },
 ];
 
 const styles = StyleSheet.create({
@@ -60,8 +61,8 @@ function ReportDocument({ report, generated }: { report: Report; generated: stri
   const grouped = report.groups.some((group) => group.heading);
   // Grouped sections name the trainer in their heading, so the column is left out.
   const columns = grouped ? COLUMNS.filter((column) => column.key !== "trainer") : COLUMNS;
-  const widen = grouped ? { ...columns[columns.length - 1], width: "24%" } : null;
-  const shown = widen ? [...columns.slice(0, -1), widen] : columns;
+  // Grouped by trainer, the Cruise dates column takes the Trainer column's width.
+  const shown = grouped ? columns.map((column) => (column.key === "cruiseDates" ? { ...column, width: "21%" } : column)) : columns;
   const hasRows = report.groups.some((group) => group.rows.length);
 
   return (

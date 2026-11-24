@@ -8,6 +8,15 @@ export type CruiseChoice = { cruiseLine: string; ship: string; port: string };
 
 export const noChoice: CruiseChoice = { cruiseLine: "", ship: "", port: "" };
 
+/** Combinations with a preferred ship and a preferred port; an empty list allows every ship or port. */
+export function preferredCombos(combos: CruiseCombo[], preferred: { ships: string[]; ports: string[] }): CruiseCombo[] {
+  return combos.filter(
+    (combo) =>
+      (preferred.ships.length === 0 || preferred.ships.includes(combo.ship)) &&
+      (preferred.ports.length === 0 || preferred.ports.includes(combo.port)),
+  );
+}
+
 const FIELDS = ["cruiseLine", "ship", "port"] as const satisfies (keyof CruiseChoice)[];
 
 const unique = (values: string[]) => [...new Set(values)].sort((a, b) => a.localeCompare(b));
@@ -28,7 +37,8 @@ export function optionsFor(combos: CruiseCombo[], choice: CruiseChoice, field: k
  */
 export function changeChoice(combos: CruiseCombo[], choice: CruiseChoice, field: keyof CruiseChoice, value: string): CruiseChoice {
   const next = { ...choice, [field]: value };
-  if (!value) return next;
+  // A ship belongs to its cruise line: clearing the line clears the ship too.
+  if (!value) return field === "cruiseLine" ? { ...next, ship: "" } : next;
   let filled = true;
   while (filled) {
     filled = false;
@@ -49,7 +59,7 @@ export function cruiseDatesUrl(choice: CruiseChoice, fromDay: string): string {
   params.set("where[and][0][ship][equals]", choice.ship);
   params.set("where[and][1][startPort][equals]", choice.port);
   params.set("where[and][2][startDate][greater_than_equal]", `${fromDay}T00:00:00.000Z`);
-  for (const field of ["ship", "cruiseLine", "startDate", "endDate", "startPort", "arrival", "departure"]) {
+  for (const field of ["ship", "cruiseLine", "startDate", "endDate", "startPort", "endPort", "arrival", "departure"]) {
     params.set(`select[${field}]`, "true");
   }
   return `/api/cruise-sailings?${params}`;
@@ -66,3 +76,15 @@ export function cruiseDatesLabel(cruise: CruiseOption): string {
   const dates = endDate ? `${day(startDate, startDate.slice(0, 4) !== endDate.slice(0, 4))} – ${day(endDate)}` : day(startDate);
   return cruise.arrival && cruise.departure ? `${dates} · ${cruise.arrival}–${cruise.departure}` : dates;
 }
+
+/** How the Schedule training form starts the cruise choice. */
+export type PickOrder = "ship" | "port";
+
+export const PICK_ORDERS: { value: PickOrder; label: string }[] = [
+  { value: "ship", label: "By Cruise/Ship" },
+  { value: "port", label: "By port" },
+];
+
+/** The cruise dropdowns in display order: Cruise line, Ship, Port; or Port first. */
+export const pickFields = (order: PickOrder): (keyof CruiseChoice)[] =>
+  order === "port" ? ["port", "cruiseLine", "ship"] : ["cruiseLine", "ship", "port"];

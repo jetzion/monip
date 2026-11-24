@@ -267,7 +267,10 @@ If credentials, content, access, or a business decision is missing:
     and verify a fresh database built from migrations matches the dev
     schema.
 -   Run e2e tests with `pnpm test:e2e` (production build on port 3100);
-    do not stop a developer's `pnpm dev` on port 3000.
+    do not stop a developer's `pnpm dev` on port 3000. `training-preferences.spec.ts`
+    runs as its own project after all the others (`teardown` in
+    `playwright.config.ts`): other specs read that shared setting. As a
+    teardown it also runs after any single spec file you run.
 -   Production servers rename themselves `next-server`; stop them by port
     (`lsof -t -iTCP:<port> -sTCP:LISTEN`), not by `pkill -f "next start"`.
 -   The shell is zsh: unquoted `$VAR` lists are not word-split (use
@@ -291,16 +294,27 @@ If credentials, content, access, or a business decision is missing:
     these accounts sets `E2E_USER_SET=<name>` for its own
     `e2e-<name>-admin@example.com` (the Training Schedule spec uses
     `training`, the training report spec `report`, the chat invitation spec
-    `invite`). Deleting them leaves
+    `invite`, the training preferences spec `prefs`, the trainer role spec
+    `role`, the account menu spec `account`). The script also makes `e2e-<name>-trainer@example.com`. Deleting them leaves
     their `payload_preferences` rows; remove rows no longer linked to an
     existing user.
 -   In development, `payload run` scripts sync the schema before running,
     so hand-made constraints vanish; use `NODE_ENV=production` to avoid it.
+-   Firecrawl (`FIRECRAWL_API_KEY`) is called only on the server
+    (`lib/training/firecrawl.ts`, from `POST /api/training-sessions/estimate`) to
+    look up travel prices; send only airports, dates, the departure city, and
+    the port, never trainer names. Tests mock it. Never log or expose the key.
+    `.env.local` overrides `.env`: a stale key there was rejected (401) while
+    the working one in `.env` went unused; restart `pnpm dev` after a change.
 -   Cruise sailings and the Training Schedule (sessions, trainers, port
     time zones, the training report and its PDF) are commercially
-    sensitive: keep them admin-only and out of public pages, search, the
-    sitemap, and the chat.
+    sensitive: keep them to admins and trainers (role `trainer`: view-only
+    sailings, trainers, and port time zones; no website content) and out of
+    public pages, search, the sitemap, and the chat. Content access uses
+    `isContentEditor` (admins and editors), never "any logged-in user", and
+    content collections are `hidden` from trainers in the admin menu.
 -   Custom admin root views (such as `/admin/training-report`, registered
     in `payload.config.ts` under `admin.components.views`) get no admin
     layout or access check from Payload: wrap them in `DefaultTemplate`
-    and check the admin role in the view.
+    and check the role in the view (admin, or admin or trainer for the
+    training tools).

@@ -1,7 +1,7 @@
 import type { ArrayField, GlobalConfig } from "payload";
 
-import { isLoggedIn } from "../access/content";
-import { isAdminField } from "../access/roles";
+import { isContentEditor } from "../access/content";
+import { isAdminField, hiddenFromTrainers } from "../access/roles";
 import { revalidateSiteGlobal } from "../hooks/revalidate";
 import { fixedPages, pickFixedPageQuestions } from "../lib/invitation/hooks";
 
@@ -33,12 +33,13 @@ export const ChatInvitation: GlobalConfig = {
   slug: "chat-invitation",
   label: "Chat invitation",
   admin: {
+    hidden: hiddenFromTrainers,
     description:
       "A short question shown beside the \"Chat with us\" button for 10 seconds. Never shown on Contact, Privacy, or the 404 page.",
   },
   access: {
     read: () => true,
-    update: isLoggedIn,
+    update: isContentEditor,
   },
   hooks: {
     beforeChange: [pickFixedPageQuestions],

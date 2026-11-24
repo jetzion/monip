@@ -130,7 +130,25 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
       )}
 
       <section aria-labelledby="planner-proposals-title">
-        <h3 id="planner-proposals-title">Proposed sessions</h3>
+        <div className="training-planner__table-header">
+          <h3 id="planner-proposals-title">Proposed sessions</h3>
+          <div className="training-planner__actions">
+            <Button type="button" buttonStyle="primary" disabled={busy || count === 0} onClick={accept}>
+              {busy ? "Saving…" : `Accept selected (${count})`}
+            </Button>
+            <Button type="button" buttonStyle="secondary" disabled={busy} onClick={clear}>
+              Clear proposed sessions
+            </Button>
+          </div>
+        </div>
+        {moves.length > 0 && (
+          <p className="training-form__check">Ticked moves are applied first, then ticked sessions are added. Each is checked for conflicts again.</p>
+        )}
+        {error && (
+          <div className="training-form__error" role="alert">
+            <p>{error}</p>
+          </div>
+        )}
         {proposals.length === 0 ? (
           <p>No sessions could be proposed. See the ships not planned below.</p>
         ) : (
@@ -215,21 +233,6 @@ export function TrainingPlannerResults({ proposals, moves, cruises, trainers }: 
           </div>
         )}
       </section>
-
-      <div className="training-form__submit">
-        <Button type="button" buttonStyle="primary" disabled={busy || count === 0} onClick={accept}>
-          {busy ? "Saving…" : `Accept selected (${count})`}
-        </Button>
-        <Button type="button" buttonStyle="secondary" disabled={busy} onClick={clear}>
-          Clear proposed sessions
-        </Button>
-        <p className="training-form__check">Ticked moves are applied first, then ticked sessions are added. Each is checked for conflicts again.</p>
-      </div>
-      {error && (
-        <div className="training-form__error" role="alert">
-          <p>{error}</p>
-        </div>
-      )}
     </>
   );
 }

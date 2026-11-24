@@ -89,7 +89,7 @@ test("the PDF requires an admin and valid months", async ({ request }) => {
 test("editors cannot see the report page", async ({ page }) => {
   await logIn(page, EDITOR);
   await page.goto(REPORT);
-  await expect(page.getByText("Only admins can see the training report.")).toBeVisible();
+  await expect(page.getByText("Only admins and trainers can see the training report.")).toBeVisible();
   await expect(page.getByRole("table")).toHaveCount(0);
 });
 
@@ -149,4 +149,37 @@ test("Download PDF saves the report", async ({ page }) => {
   expect(download.suggestedFilename()).toBe("training-report-2027-03-to-2027-04.pdf");
   const bytes = readFileSync(await download.path());
   expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
+});
+
+test("each session's estimated travel cost is shown and totaled", async ({ page, request }) => {
+  const headers = await auth(request);
+  const today = new Date().toISOString().slice(0, 10);
+  const found = await request.get(
+    `/api/cruise-sailings?limit=1&depth=0&sort=startDate&where[startPort][equals]=Miami, Florida&where[arrival][exists]=true&where[departure][exists]=true&where[startDate][greater_than_equal]=${today}`,
+    { headers },
+  );
+  const cruise = ((await found.json()) as { docs: { id: number; startDate: string }[] }).docs[0];
+  const day = cruise.startDate.slice(0, 10);
+  const before = new Date(Date.parse(`${day}T12:00:00Z`) - 86_400_000).toISOString().slice(0, 10);
+  // Beta has no home base, so a departure day needs travel; the estimate is acknowledged with it.
+  const created = await request.post("/api/training-sessions", {
+    headers,
+    data: {
+      cruise: cruise.id,
+      trainer: betaId,
+      type: "departureDay",
+      travel: { departureCity: "Orlando, Florida", departureDate: `${before}T12:00:00.000Z`, returnDate: `${day}T12:00:00.000Z`, rideshare: true },
+      estimate: {
+        lines: [{ item: "rideshare", label: "Rideshare", detail: "2 trips", amount: 80, source: "Entered" }],
+        acknowledgedAt: new Date().toISOString(),
+      },
+    },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+
+  await logIn(page);
+  await page.goto(`${REPORT}?trainer=${betaId}&from=${day.slice(0, 7)}&to=${day.slice(0, 7)}`);
+  await expect(page.getByRole("columnheader", { name: "Travel cost" })).toBeVisible();
+  await expect(page.locator(".training-report__table tbody tr").first()).toContainText("$80.00");
+  await expect(page.getByText("1 session · ", { exact: false }).first()).toContainText("$80.00 estimated travel");
 });

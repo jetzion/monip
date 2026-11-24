@@ -1,4 +1,5 @@
 import { localDay } from "./calendar";
+import { usd } from "./estimate";
 import { TRAINING_TYPES, type TrainingType } from "./schedule";
 import { addDays, dayOf } from "./time";
 
@@ -19,6 +20,10 @@ export type ReportSession = {
   endsAt: string;
   timeZone: string;
   trainerId: number;
+  /** Listed, but left out of the totals. */
+  canceled?: boolean;
+  /** The acknowledged travel cost estimate in US dollars, if any. */
+  estimate?: number | null;
   trainer: string;
   cruiseCopy?: {
     ship?: string | null;
@@ -40,9 +45,12 @@ export type ReportRow = {
   ship: string;
   startPort: string;
   cruiseDates: string;
+  /** "$500.00", or "—" without an estimate. */
+  cost: string;
 };
 
-export type ReportTotals = { sessions: number; hours: number; days: number };
+/** Totals of the sessions that are not canceled, plus how many are canceled. */
+export type ReportTotals = { sessions: number; hours: number; days: number; canceled: number; cost: number };
 
 export type ReportGroup = { heading: string | null; rows: ReportRow[]; totals: ReportTotals };
 
@@ -121,21 +129,24 @@ export function reportRow(session: ReportSession): ReportRow {
     dates: dayRange(first, last),
     time: session.type === "onboarding" ? "All day" : `${clock(session.startsAt, session.timeZone)} – ${clock(session.endsAt, session.timeZone)}`,
     timeZone: session.timeZone,
-    type: typeLabel(session.type),
+    type: session.canceled ? `${typeLabel(session.type)} (canceled)` : typeLabel(session.type),
     trainer: session.trainer,
     cruiseLine: copy?.cruiseLine || "—",
     ship: copy?.ship || "—",
     startPort: copy?.startPort || "—",
     cruiseDates: copy?.startDate ? dayRange(dayOf(copy.startDate), dayOf(copy.endDate ?? copy.startDate)) : "—",
+    cost: session.estimate != null ? usd(session.estimate) : "—",
   };
 }
 
 const HOUR = 60 * 60 * 1000;
 
-/** Sessions, hours of timed training, and days of onboarding; whole sessions count. */
+/** Sessions, hours of timed training, days of onboarding (whole sessions count), and estimated travel cost, leaving out canceled sessions. */
 export function totalsOf(sessions: ReportSession[]): ReportTotals {
-  const totals = { sessions: sessions.length, hours: 0, days: 0 };
-  for (const session of sessions) {
+  const counted = sessions.filter((session) => !session.canceled);
+  const totals = { sessions: counted.length, hours: 0, days: 0, canceled: sessions.length - counted.length, cost: 0 };
+  for (const session of counted) {
+    totals.cost += session.estimate ?? 0;
     if (session.type === "onboarding") {
       const { first, last } = daysOf(session);
       totals.days += Math.round((Date.parse(last) - Date.parse(first)) / (24 * HOUR)) + 1;
@@ -148,12 +159,14 @@ export function totalsOf(sessions: ReportSession[]): ReportTotals {
 
 const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
-/** "3 sessions · 6 hours · 4 days of onboarding", leaving out zero hours or days. */
+/** "3 sessions · 6 hours · 4 days of onboarding · $1,200.00 estimated travel · 1 canceled (not counted)", leaving out zeros. */
 export const totalsLabel = (totals: ReportTotals) =>
   [
     plural(totals.sessions, "session"),
     totals.hours ? plural(Math.round(totals.hours * 100) / 100, "hour") : "",
     totals.days ? `${plural(totals.days, "day")} of onboarding` : "",
+    totals.cost ? `${usd(totals.cost)} estimated travel` : "",
+    totals.canceled ? `${totals.canceled} canceled (not counted)` : "",
   ]
     .filter(Boolean)
     .join(" · ");

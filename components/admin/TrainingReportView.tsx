@@ -28,6 +28,7 @@ function ReportTable({ group, showTrainer }: { group: ReportGroup; showTrainer: 
             <th scope="col">Ship</th>
             <th scope="col">Start port</th>
             <th scope="col">Cruise dates</th>
+            <th scope="col">Travel cost</th>
           </tr>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@ function ReportTable({ group, showTrainer }: { group: ReportGroup; showTrainer: 
               <td>{row.ship}</td>
               <td>{row.startPort}</td>
               <td>{row.cruiseDates}</td>
+              <td>{row.cost}</td>
             </tr>
           ))}
         </tbody>
@@ -52,7 +54,7 @@ function ReportTable({ group, showTrainer }: { group: ReportGroup; showTrainer: 
 
 /**
  * Training report at /admin/training-report: one trainer or all, for a range of
- * months, grouped by trainer or listed by date, with a PDF download. Admins only.
+ * months, grouped by trainer or listed by date, with a PDF download. Admins and trainers only.
  */
 export async function TrainingReportView({ initPageResult, params, searchParams }: AdminViewServerProps) {
   const { req, locale, permissions, visibleEntities } = initPageResult;
@@ -60,12 +62,12 @@ export async function TrainingReportView({ initPageResult, params, searchParams 
   const template = { i18n: req.i18n, locale, params, payload, permissions, searchParams, user: user ?? undefined, visibleEntities };
   const admin = payload.config.routes.admin;
 
-  if (user?.collection !== "users" || user.role !== "admin") {
+  if (user?.collection !== "users" || !["admin", "trainer"].includes(user.role ?? "")) {
     return (
       <DefaultTemplate {...template}>
         <Gutter>
           <h1>Training report</h1>
-          <p>Only admins can see the training report.</p>
+          <p>Only admins and trainers can see the training report.</p>
         </Gutter>
       </DefaultTemplate>
     );

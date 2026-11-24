@@ -1,6 +1,9 @@
 import { APIError, type CollectionBeforeDeleteHook, type CollectionBeforeValidateHook } from "payload";
 
 import { describeSession, isFieldError, sessionTimes, TRAINING_TYPES, type FieldError, type TrainingType } from "./schedule";
+import { estimateFingerprint, estimateTotal, NO_ESTIMATE, readSubmittedLines } from "./estimate";
+import { isCancelOnly } from "./session-rules";
+import { blockedRange, NO_TRAVEL, readTravel, trainingDays, travelData, travelError } from "./travel";
 
 const idOf = (value: unknown) =>
   value && typeof value === "object" && "id" in value ? (value as { id: number }).id : (value as number | null | undefined);
@@ -21,9 +24,11 @@ const reject = (error: FieldError): never => {
 /**
  * Sets a session's date, times, time zone, and title from the form and the
  * cruise, copies the cruise details, and rejects sessions that overlap another
- * session for the same trainer.
+ * (not canceled) session for the same trainer.
  */
 export const scheduleSession: CollectionBeforeValidateHook = async ({ data, originalDoc, req }) => {
+  // Canceling changes nothing else; restoring goes through the full checks below.
+  if (data && isCancelOnly(data, originalDoc)) return data;
   const merged = { ...originalDoc, ...data };
   const cruiseId = idOf(merged.cruise);
   const trainerId = idOf(merged.trainer);
@@ -55,25 +60,55 @@ export const scheduleSession: CollectionBeforeValidateHook = async ({ data, orig
   const times = sessionTimes({ ...merged, type }, cruise, zones[0]?.timeZone ?? null);
   if (isFieldError(times)) return reject(times);
 
-  const { docs: clashes } = await req.payload.find({
-    collection: "training-sessions",
-    where: {
-      trainer: { equals: trainerId },
-      startsAt: { less_than: times.endsAt },
-      endsAt: { greater_than: times.startsAt },
-      ...(originalDoc?.id ? { id: { not_equals: originalDoc.id } } : {}),
-    },
-    limit: 1,
-    depth: 0,
-    req,
-  });
-  const clash = clashes[0];
+  // Online training has no trip; in-person travel must surround the training.
+  const travel = type === "online" ? null : readTravel(merged.travel);
+  const travelProblem = travel && travelError(travel, trainingDays(times));
+  if (travelProblem) return reject(travelProblem);
+  const blocked = blockedRange(times, travel);
+  const storedTravel = travel ? travelData(travel) : NO_TRAVEL;
+
+  // A new acknowledgement (its time differs from the stored one) is stamped here,
+  // with the trip, port, and times it was made for. Without travel there is no estimate.
+  const submitted = data?.estimate as { acknowledgedAt?: unknown; lines?: unknown } | undefined;
+  const acknowledged = Boolean(submitted?.acknowledgedAt) && submitted?.acknowledgedAt !== originalDoc?.estimate?.acknowledgedAt;
+  let estimate: object | undefined = travel ? undefined : NO_ESTIMATE;
+  if (travel && acknowledged) {
+    const lines = readSubmittedLines(submitted?.lines);
+    if ("message" in lines) return reject({ path: "estimate", message: lines.message });
+    estimate = {
+      lines,
+      total: estimateTotal(lines),
+      acknowledgedAt: new Date().toISOString(),
+      acknowledgedBy: req.user?.email ?? "",
+      acknowledgedFor: estimateFingerprint(readTravel(storedTravel)!, cruise.startPort ?? null, times),
+    };
+  }
+
+  // Canceled sessions never clash: they no longer take the trainer's time.
+  const clash = merged.canceled
+    ? undefined
+    : (
+        await req.payload.find({
+          collection: "training-sessions",
+          where: {
+            trainer: { equals: trainerId },
+            canceled: { not_equals: true },
+            blockedFrom: { less_than: blocked.blockedTo },
+            blockedTo: { greater_than: blocked.blockedFrom },
+            ...(originalDoc?.id ? { id: { not_equals: originalDoc.id } } : {}),
+          },
+          limit: 1,
+          depth: 0,
+          req,
+        })
+      ).docs[0];
   if (clash) {
-    // The overlap query only matches sessions with both times set.
+    // The overlap query only matches sessions with their times set.
     const booked = describeSession({ ...clash, startsAt: clash.startsAt!, endsAt: clash.endsAt!, timeZone: clash.timeZone ?? "UTC" });
+    const withTravel = travel || clash.blockedFrom !== clash.startsAt || clash.blockedTo !== clash.endsAt ? " (travel days included)" : "";
     reject({
       path: "trainer",
-      message: `This trainer is already booked: ${booked} on ${clash.cruiseCopy?.ship ?? "a cruise"}.`,
+      message: `This trainer is already booked${withTravel}: ${booked} on ${clash.cruiseCopy?.ship ?? "a cruise"}.`,
     });
   }
 
@@ -83,6 +118,9 @@ export const scheduleSession: CollectionBeforeValidateHook = async ({ data, orig
   return {
     ...data,
     ...times,
+    ...blocked,
+    travel: storedTravel,
+    ...(estimate ? { estimate } : {}),
     title: [typeLabel, trainer?.name, cruise.ship].filter(Boolean).join(" · "),
     startTime: online ? merged.startTime : null,
     durationHours: online ? merged.durationHours : null,

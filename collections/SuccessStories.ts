@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
-import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { isContentEditor, publishedOrContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { invitationQuestionField } from "../fields/invitationQuestion";
 import { slugField } from "../fields/slug";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
@@ -11,6 +12,7 @@ export const SuccessStories: CollectionConfig = {
   slug: "success-stories",
   labels: { singular: "Success story", plural: "Success stories" },
   admin: {
+    hidden: hiddenFromTrainers,
     useAsTitle: "title",
     defaultColumns: ["featuredImage", "title", "industry", "_status"],
     description:
@@ -22,10 +24,10 @@ export const SuccessStories: CollectionConfig = {
   defaultSort: "_order",
   versions: autosaveDrafts,
   access: {
-    read: publishedOrLoggedIn,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn,
+    read: publishedOrContentEditor,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   // Stories change the navigation (shown only when one is published), so refresh every page.
   hooks: {

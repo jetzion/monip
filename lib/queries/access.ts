@@ -12,7 +12,7 @@ export async function contentAccess() {
   if (isEnabled) {
     const payload = await getPayloadClient();
     const { user } = await payload.auth({ headers: await headers() });
-    if (user) return { overrideAccess: false, draft: true, user } as const;
+    if (user?.collection === "users" && user.role !== "trainer") return { overrideAccess: false, draft: true, user } as const;
   }
   return { overrideAccess: false, draft: false } as const;
 }

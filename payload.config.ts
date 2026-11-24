@@ -24,6 +24,7 @@ import { Users } from "./collections/Users";
 import { ChatInvitation } from "./globals/ChatInvitation";
 import { TrainingCosts } from "./globals/TrainingCosts";
 import { TrainingPlan } from "./globals/TrainingPlan";
+import { TrainingPreferences } from "./globals/TrainingPreferences";
 import { Home } from "./globals/Home";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -44,10 +45,14 @@ const resendKey = process.env.RESEND_API_KEY;
 export default buildConfig({
   admin: {
     user: Users.slug,
+    // The built-in icon, not Gravatar: Gravatar would send a hash of each user's email to an outside service.
+    avatar: "default",
     importMap: {
       baseDir: path.resolve(dirname),
     },
     components: {
+      // The avatar with a menu (Account, Log out); Payload's avatar link is hidden in custom.scss.
+      actions: ["/components/admin/AccountMenu#AccountMenu"],
       graphics: {
         Logo: "/components/admin/AdminLogo#AdminLogo",
         Icon: "/components/admin/AdminIcon#AdminIcon",
@@ -60,6 +65,10 @@ export default buildConfig({
         trainingPlanner: {
           Component: "/components/admin/TrainingPlannerView#TrainingPlannerView",
           path: "/training-planner",
+        },
+        trainingPreferences: {
+          Component: "/components/admin/TrainingPreferencesView#TrainingPreferencesView",
+          path: "/training-preferences",
         },
       },
     },
@@ -76,7 +85,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Categories, Products, Services, SuccessStories, Clients, Offices, Pages, Inquiries, CruiseSailings, TrainingSessions, Trainers, PortTimeZones],
-  globals: [Home, ChatInvitation, TrainingCosts, TrainingPlan],
+  globals: [Home, ChatInvitation, TrainingCosts, TrainingPlan, TrainingPreferences],
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),
   typescript: {

@@ -1,6 +1,6 @@
 import type { Endpoint, PayloadRequest } from "payload";
 
-import { isAdminUser } from "../../../access/roles";
+import { isTrainingUser } from "../../../access/roles";
 
 import { acceptItems, readSelection } from "./accept";
 import { applyEdit, checkEdit, type Change } from "./edit";
@@ -13,7 +13,7 @@ import { readStoredPlan, type StoredPlan } from "./stored";
 const fail = (status: number, error: string) => Response.json({ error }, { status });
 
 export const denied = (req: PayloadRequest) =>
-  !req.user ? fail(401, "Log in to use the training planner.") : !isAdminUser(req) ? fail(403, "Only admins can use the training planner.") : null;
+  !req.user ? fail(401, "Log in to use the training planner.") : !isTrainingUser(req) ? fail(403, "Only admins and trainers can use the training planner.") : null;
 
 /** The instruction, what the AI applied, and what it could not, sent with a plan made from an instruction. */
 function readAiNote(body: unknown): Pick<StoredPlan, "instruction" | "understood" | "notApplied"> {
@@ -26,7 +26,7 @@ function readAiNote(body: unknown): Pick<StoredPlan, "instruction" | "understood
 const save = (req: PayloadRequest, current: StoredPlan) =>
   req.payload.updateGlobal({ slug: "training-plan", data: { current }, req, user: req.user, overrideAccess: false });
 
-/** POST /api/globals/training-plan/recommend: builds a plan and replaces the stored one (admins only). */
+/** POST /api/globals/training-plan/recommend: builds a plan and replaces the stored one (admins and trainers only). */
 export const recommendEndpoint: Endpoint = {
   path: "/recommend",
   method: "post",
@@ -36,11 +36,13 @@ export const recommendEndpoint: Endpoint = {
     const body = await req.json?.();
     const read = readPlanSettings(body, new Date());
     if ("error" in read) return fail(400, read.error);
-    const plan = buildPlan(await loadPlanInput(req, read.settings));
+    const preferences = await req.payload.findGlobal({ slug: "training-preferences", req, user: req.user, overrideAccess: false });
+    const settings = { ...read.settings, preferredPorts: preferences.ports ?? [] };
+    const plan = buildPlan(await loadPlanInput(req, settings));
     const ai = readAiNote(body);
     const current: StoredPlan = {
       ...ai,
-      settings: read.settings,
+      settings,
       createdAt: new Date().toISOString(),
       createdBy: req.user!.email ?? "",
       plan,
@@ -52,7 +54,7 @@ export const recommendEndpoint: Endpoint = {
   },
 };
 
-/** POST /api/globals/training-plan/accept { proposals: number[], moves: number[] } (admins only). */
+/** POST /api/globals/training-plan/accept { proposals: number[], moves: number[] } (admins and trainers only). */
 export const acceptEndpoint: Endpoint = {
   path: "/accept",
   method: "post",
@@ -87,7 +89,7 @@ function readChange(body: unknown): { index: number; change: Change; save: boole
 /**
  * POST /api/globals/training-plan/edit { index, cruise, trainer, type, startTime?, save }:
  * checks a change to a proposed session and returns a preview with warnings;
- * with save, also stores it (admins only).
+ * with save, also stores it (admins and trainers only).
  */
 export const editEndpoint: Endpoint = {
   path: "/edit",

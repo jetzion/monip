@@ -1,6 +1,6 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 
-import { isAdmin } from "../access/roles";
+import { editTabsHiddenFromTrainers, isAdmin, isTraining } from "../access/roles";
 import { keepBookedTrainer } from "../lib/training/hooks";
 
 /** Keeps the full name used as the title and in the trainer dropdown. */
@@ -10,18 +10,20 @@ const setName: CollectionBeforeChangeHook = ({ data, originalDoc }) => {
   return { ...data, name: `${first} ${last}`.trim() };
 };
 
-/** People who deliver product training on cruises. Admin only. */
+/** People who deliver product training on cruises. Admins manage them; trainers can view them. */
 export const Trainers: CollectionConfig = {
   slug: "trainers",
   labels: { singular: "Trainer", plural: "Trainers" },
   admin: {
+    group: "Training",
+    components: { views: { edit: editTabsHiddenFromTrainers } },
     useAsTitle: "name",
     defaultColumns: ["firstName", "lastName", "updatedAt"],
-    description: "Trainers available in the Training Schedule. Admins only.",
+    description: "Trainers available in the Training Schedule. Admins manage them; trainers can view them.",
   },
   defaultSort: ["lastName", "firstName"],
   access: {
-    read: isAdmin,
+    read: isTraining,
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,

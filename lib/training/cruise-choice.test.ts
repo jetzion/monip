@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { changeChoice, cruiseDatesLabel, cruiseDatesUrl, noChoice, optionsFor, type CruiseCombo } from "./cruise-choice";
+import { changeChoice, cruiseDatesLabel, cruiseDatesUrl, noChoice, optionsFor, pickFields, preferredCombos, type CruiseCombo } from "./cruise-choice";
 
 const combos: CruiseCombo[] = [
   { cruiseLine: "Carnival", ship: "Carnival Conquest", port: "Miami, Florida" },
@@ -8,6 +8,25 @@ const combos: CruiseCombo[] = [
   { cruiseLine: "Carnival", ship: "Carnival Glory", port: "Port Canaveral, Florida" },
   { cruiseLine: "Norwegian", ship: "Norwegian Joy", port: "Miami, Florida" },
 ];
+
+describe("preferredCombos", () => {
+  it("keeps everything without preferences", () => {
+    expect(preferredCombos(combos, { ships: [], ports: [] })).toEqual(combos);
+  });
+
+  it("keeps preferred ships sailing from preferred ports", () => {
+    expect(preferredCombos(combos, { ships: ["Carnival Glory"], ports: [] }).map((combo) => combo.port)).toEqual([
+      "Miami, Florida",
+      "Port Canaveral, Florida",
+    ]);
+    expect(preferredCombos(combos, { ships: [], ports: ["Port Canaveral, Florida"] })).toEqual([combos[2]]);
+    expect(preferredCombos(combos, { ships: ["Carnival Glory", "Norwegian Joy"], ports: ["Miami, Florida"] }).map((combo) => combo.ship)).toEqual([
+      "Carnival Glory",
+      "Norwegian Joy",
+    ]);
+    expect(preferredCombos(combos, { ships: ["Carnival Conquest"], ports: ["Port Canaveral, Florida"] })).toEqual([]);
+  });
+});
 
 describe("optionsFor", () => {
   it("lists everything when nothing is chosen", () => {
@@ -79,9 +98,10 @@ describe("changeChoice", () => {
     });
   });
 
-  it("clears only the cleared dropdown", () => {
+  it("clears the cleared dropdown, and the ship with its cruise line", () => {
     const joy = { cruiseLine: "Norwegian", ship: "Norwegian Joy", port: "Miami, Florida" };
-    expect(changeChoice(combos, joy, "cruiseLine", "")).toEqual({ ...joy, cruiseLine: "" });
+    // A ship belongs to its cruise line; the port stays.
+    expect(changeChoice(combos, joy, "cruiseLine", "")).toEqual({ ...joy, cruiseLine: "", ship: "" });
     expect(changeChoice(combos, joy, "ship", "")).toEqual({ ...joy, ship: "" });
     expect(changeChoice(combos, joy, "port", "")).toEqual({ ...joy, port: "" });
   });
@@ -102,5 +122,12 @@ describe("cruise dates", () => {
     expect(cruiseDatesLabel({ ...cruise, arrival: "" })).toBe("27 Oct – 1 Nov 2026");
     expect(cruiseDatesLabel({ ...cruise, endDate: "2027-01-03T12:00:00.000Z" })).toBe("27 Oct 2026 – 3 Jan 2027");
     expect(cruiseDatesLabel({ ...cruise, endDate: null })).toBe("27 Oct 2026");
+  });
+});
+
+describe("pickFields", () => {
+  it("orders the cruise dropdowns by ship or by port", () => {
+    expect(pickFields("ship")).toEqual(["cruiseLine", "ship", "port"]);
+    expect(pickFields("port")).toEqual(["port", "cruiseLine", "ship"]);
   });
 });

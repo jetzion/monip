@@ -131,6 +131,8 @@ export function buildPlan(full: PlanInput): Plan {
         ? `last trained ${longDay(latest.get(ship)!)}`
         : "not trained before";
   const trainerById = new Map(trainers.map((trainer) => [trainer.id, trainer]));
+  const why = (ship: string, slot: Slot) =>
+    settings.preferredPorts?.includes(slot.sailing.startPort ?? "") ? `${recency(ship)}, preferred port` : recency(ship);
 
   const proposals: Proposal[] = [];
   const waiting: string[] = [];
@@ -141,7 +143,7 @@ export function buildPlan(full: PlanInput): Plan {
       continue;
     }
     book(bookings, slot.trainerId, booking(`proposal:${proposals.length}`, slot.startsAt, slot.endsAt, slot.timeZone, slot.place));
-    proposals.push({ ...slot, reason: reasonFor(slot, trainerById.get(slot.trainerId)!, recency(ship)) });
+    proposals.push({ ...slot, reason: reasonFor(slot, trainerById.get(slot.trainerId)!, why(ship, slot)) });
   }
 
   const moves: Move[] = [];
@@ -152,7 +154,7 @@ export function buildPlan(full: PlanInput): Plan {
     if (move) {
       const trainer = trainerById.get(move.slot.trainerId)!;
       book(bookings, move.slot.trainerId, booking(`proposal:${proposals.length}`, move.slot.startsAt, move.slot.endsAt, move.slot.timeZone, move.slot.place));
-      proposals.push({ ...move.slot, reason: `${reasonFor(move.slot, trainer, recency(ship))} Needs a move: see Moves.` });
+      proposals.push({ ...move.slot, reason: `${reasonFor(move.slot, trainer, why(ship, move.slot))} Needs a move: see Moves.` });
       moves.push(move.move);
       continue;
     }

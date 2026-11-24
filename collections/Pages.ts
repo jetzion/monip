@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
-import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { isContentEditor, publishedOrContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 
@@ -19,6 +20,7 @@ export type PageKey = (typeof PAGE_KEYS)[number]["value"];
 export const Pages: CollectionConfig = {
   slug: "pages",
   admin: {
+    hidden: hiddenFromTrainers,
     useAsTitle: "title",
     defaultColumns: ["title", "key", "_status", "updatedAt"],
     description:
@@ -27,10 +29,10 @@ export const Pages: CollectionConfig = {
   },
   versions: autosaveDrafts,
   access: {
-    read: publishedOrLoggedIn,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn,
+    read: publishedOrContentEditor,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   hooks: {
     afterChange: [revalidateSite],

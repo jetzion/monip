@@ -30,8 +30,10 @@ import { SailingFilters as SailingFilters_0ba85c529e77b4340522f0eed15d2531 } fro
 import { TrainingListView as TrainingListView_b7d1e6dccebff39962c3ba895682b4fe } from '../../../components/admin/TrainingListView'
 import { AdminIcon as AdminIcon_7be396d0766c6c490887ef074dd0ced4 } from '../../../components/admin/AdminIcon'
 import { AdminLogo as AdminLogo_27eed1898e8caadb2fd2266b54bb4509 } from '../../../components/admin/AdminLogo'
+import { AccountMenu as AccountMenu_b93c325b2a001186130a7950fae795ee } from '../../../components/admin/AccountMenu'
 import { TrainingReportView as TrainingReportView_c84ac1425e1050e6d1cd95b85d17f76f } from '../../../components/admin/TrainingReportView'
 import { TrainingPlannerView as TrainingPlannerView_c55a4c273d0c368e42caa260ab9acef1 } from '../../../components/admin/TrainingPlannerView'
+import { TrainingPreferencesView as TrainingPreferencesView_a9939abbe485a54febefe75dacbc1cab } from '../../../components/admin/TrainingPreferencesView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
@@ -69,8 +71,10 @@ export const importMap = {
   "/components/admin/TrainingListView#TrainingListView": TrainingListView_b7d1e6dccebff39962c3ba895682b4fe,
   "/components/admin/AdminIcon#AdminIcon": AdminIcon_7be396d0766c6c490887ef074dd0ced4,
   "/components/admin/AdminLogo#AdminLogo": AdminLogo_27eed1898e8caadb2fd2266b54bb4509,
+  "/components/admin/AccountMenu#AccountMenu": AccountMenu_b93c325b2a001186130a7950fae795ee,
   "/components/admin/TrainingReportView#TrainingReportView": TrainingReportView_c84ac1425e1050e6d1cd95b85d17f76f,
   "/components/admin/TrainingPlannerView#TrainingPlannerView": TrainingPlannerView_c55a4c273d0c368e42caa260ab9acef1,
+  "/components/admin/TrainingPreferencesView#TrainingPreferencesView": TrainingPreferencesView_a9939abbe485a54febefe75dacbc1cab,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }

@@ -116,12 +116,14 @@ export interface Config {
     'chat-invitation': ChatInvitation;
     'training-costs': TrainingCost;
     'training-plan': TrainingPlan;
+    'training-preferences': TrainingPreference;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'chat-invitation': ChatInvitationSelect<false> | ChatInvitationSelect<true>;
     'training-costs': TrainingCostsSelect<false> | TrainingCostsSelect<true>;
     'training-plan': TrainingPlanSelect<false> | TrainingPlanSelect<true>;
+    'training-preferences': TrainingPreferencesSelect<false> | TrainingPreferencesSelect<true>;
   };
   locale: null;
   widgets: {
@@ -159,9 +161,9 @@ export interface User {
   id: number;
   name?: string | null;
   /**
-   * Admins manage users. Editors manage site content.
+   * Admins manage users. Editors manage site content. Trainers use the Training Schedule and its tools.
    */
-  role: 'admin' | 'editor';
+  role: 'admin' | 'editor' | 'trainer';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -598,7 +600,7 @@ export interface Inquiry {
   createdAt: string;
 }
 /**
- * Cruise sailings imported from the fleet calendar workbook. Admins only.
+ * Cruise sailings imported from the fleet calendar workbook. Admins and trainers only; only admins import or edit.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cruise-sailings".
@@ -634,7 +636,7 @@ export interface CruiseSailing {
   createdAt: string;
 }
 /**
- * Product training scheduled on cruises. Admins only.
+ * Product training scheduled on cruises. Admins and trainers only.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "training-sessions".
@@ -663,6 +665,53 @@ export interface TrainingSession {
    */
   endDate?: string | null;
   /**
+   * The trainer's trip, for in-person training away from their home base. The trip days block the trainer from other sessions. To estimate its cost, add or change the trip in the session's details on the Training Schedule.
+   */
+  travel?: {
+    departureCity?: string | null;
+    departureDate?: string | null;
+    returnDate?: string | null;
+    airTravel?: boolean | null;
+    departureAirport?: string | null;
+    destinationAirport?: string | null;
+    /**
+     * When flying home from another airport (a cruise ending elsewhere).
+     */
+    returnAirport?: string | null;
+    hotel?: boolean | null;
+    hotelCheckIn?: string | null;
+    hotelCheckOut?: string | null;
+    carRental?: boolean | null;
+    carPickUp?: string | null;
+    carReturn?: string | null;
+    rideshare?: boolean | null;
+  };
+  /**
+   * Made and acknowledged on the Training Schedule (Estimate cost). A change to the trip, port, or times needs a new estimate.
+   */
+  estimate?: {
+    lines?:
+      | {
+          item?: ('flight' | 'hotel' | 'carRental' | 'rideshare') | null;
+          label?: string | null;
+          detail?: string | null;
+          amount?: number | null;
+          source?: string | null;
+          url?: string | null;
+          note?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    total?: number | null;
+    acknowledgedAt?: string | null;
+    acknowledgedBy?: string | null;
+    acknowledgedFor?: string | null;
+  };
+  /**
+   * The session did not or will not take place. It stays in the calendar and report (not in totals) and no longer blocks the trainer. Untick to restore it.
+   */
+  canceled?: boolean | null;
+  /**
    * The training planner never suggests moving a fixed session, for example when travel is booked.
    */
   fixed?: boolean | null;
@@ -674,6 +723,8 @@ export interface TrainingSession {
    * Set on save. Shown in your computer's time zone; the calendar uses the session's own.
    */
   endsAt?: string | null;
+  blockedFrom?: string | null;
+  blockedTo?: string | null;
   /**
    * Copied on save, so the session stays readable if the cruise changes or is removed.
    */
@@ -690,7 +741,7 @@ export interface TrainingSession {
   createdAt: string;
 }
 /**
- * Trainers available in the Training Schedule. Admins only.
+ * Trainers available in the Training Schedule. Admins manage them; trainers can view them.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "trainers".
@@ -716,7 +767,7 @@ export interface Trainer {
   createdAt: string;
 }
 /**
- * Time zone of each start port, used by the Training Schedule. The port must be spelled exactly as in the Cruise Fleet Schedule.
+ * Time zone of each start port, used by the Training Schedule, and optional travel rates for estimates (empty rates use the defaults in Training planning costs). The port must be spelled exactly as in the Cruise Fleet Schedule.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "port-time-zones".
@@ -731,6 +782,18 @@ export interface PortTimeZone {
    * For example "America/New_York". Search "IANA time zone" plus the city.
    */
   timeZone: string;
+  /**
+   * Typical return fare to this port. Empty: the default Travel, per trip.
+   */
+  flightFare?: number | null;
+  /**
+   * Typical hotel near the port. Empty: the default Hotel, per night.
+   */
+  hotelPerNight?: number | null;
+  /**
+   * One way between the airport and the port. Empty: the default rideshare fare.
+   */
+  rideshareFare?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1110,9 +1173,50 @@ export interface TrainingSessionsSelect<T extends boolean = true> {
   timeZone?: T;
   durationHours?: T;
   endDate?: T;
+  travel?:
+    | T
+    | {
+        departureCity?: T;
+        departureDate?: T;
+        returnDate?: T;
+        airTravel?: T;
+        departureAirport?: T;
+        destinationAirport?: T;
+        returnAirport?: T;
+        hotel?: T;
+        hotelCheckIn?: T;
+        hotelCheckOut?: T;
+        carRental?: T;
+        carPickUp?: T;
+        carReturn?: T;
+        rideshare?: T;
+      };
+  estimate?:
+    | T
+    | {
+        lines?:
+          | T
+          | {
+              item?: T;
+              label?: T;
+              detail?: T;
+              amount?: T;
+              source?: T;
+              url?: T;
+              note?: T;
+              id?: T;
+            };
+        total?: T;
+        acknowledgedAt?: T;
+        acknowledgedBy?: T;
+        acknowledgedFor?: T;
+      };
+  canceled?: T;
   fixed?: T;
   startsAt?: T;
   endsAt?: T;
+  blockedFrom?: T;
+  blockedTo?: T;
   cruiseCopy?:
     | T
     | {
@@ -1148,6 +1252,9 @@ export interface TrainersSelect<T extends boolean = true> {
 export interface PortTimeZonesSelect<T extends boolean = true> {
   port?: T;
   timeZone?: T;
+  flightFare?: T;
+  hotelPerNight?: T;
+  rideshareFare?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1329,7 +1436,7 @@ export interface ChatInvitation {
   createdAt?: string | null;
 }
 /**
- * Estimated costs in US dollars, used by the training planner to compare plans. Leave a value empty while it is unknown. Admins only.
+ * Estimated costs in US dollars, used by the training planner to compare plans and as default rates for travel estimates (Port time zones can set flight, hotel, and rideshare rates per port). Leave a value empty while it is unknown. Admins and trainers only.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "training-costs".
@@ -1349,13 +1456,21 @@ export interface TrainingCost {
    */
   onboardingDay?: number | null;
   /**
-   * A return trip to a port that is not the trainer's home base.
+   * A return trip to a port that is not the trainer's home base. Also the default flight fare in travel estimates.
    */
   trip?: number | null;
   /**
-   * Each night away from home base that is not spent on board.
+   * Each night away from home base that is not spent on board. Also the default hotel rate in travel estimates.
    */
   night?: number | null;
+  /**
+   * Default daily car rental rate in travel estimates.
+   */
+  carRentalPerDay?: number | null;
+  /**
+   * Default one-way rideshare fare between the airport and the port in travel estimates.
+   */
+  rideshareFare?: number | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1374,6 +1489,17 @@ export interface TrainingPlan {
     | number
     | boolean
     | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-preferences".
+ */
+export interface TrainingPreference {
+  id: number;
+  ships?: string[] | null;
+  ports?: string[] | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1490,6 +1616,8 @@ export interface TrainingCostsSelect<T extends boolean = true> {
   onboardingDay?: T;
   trip?: T;
   night?: T;
+  carRentalPerDay?: T;
+  rideshareFare?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1500,6 +1628,17 @@ export interface TrainingCostsSelect<T extends boolean = true> {
  */
 export interface TrainingPlanSelect<T extends boolean = true> {
   current?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-preferences_select".
+ */
+export interface TrainingPreferencesSelect<T extends boolean = true> {
+  ships?: T;
+  ports?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

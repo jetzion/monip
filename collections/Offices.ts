@@ -1,12 +1,14 @@
 import type { CollectionConfig } from "payload";
 
-import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { isContentEditor, publishedOrContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
 
 export const Offices: CollectionConfig = {
   slug: "offices",
   admin: {
+    hidden: hiddenFromTrainers,
     useAsTitle: "name",
     defaultColumns: ["name", "sortOrder", "_status", "updatedAt"],
     description: "Offices shown on the About page map and list.",
@@ -15,10 +17,10 @@ export const Offices: CollectionConfig = {
   defaultSort: "sortOrder",
   versions: autosaveDrafts,
   access: {
-    read: publishedOrLoggedIn,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn,
+    read: publishedOrContentEditor,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   hooks: {
     afterChange: [revalidateSite],

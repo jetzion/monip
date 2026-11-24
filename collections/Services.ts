@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
-import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { isContentEditor, publishedOrContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { slugField } from "../fields/slug";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
@@ -8,6 +9,7 @@ import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
 export const Services: CollectionConfig = {
   slug: "services",
   admin: {
+    hidden: hiddenFromTrainers,
     useAsTitle: "title",
     defaultColumns: ["title", "sortOrder", "_status", "updatedAt"],
     description:
@@ -17,10 +19,10 @@ export const Services: CollectionConfig = {
   defaultSort: "sortOrder",
   versions: autosaveDrafts,
   access: {
-    read: publishedOrLoggedIn,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn,
+    read: publishedOrContentEditor,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   hooks: {
     afterChange: [revalidateSite],

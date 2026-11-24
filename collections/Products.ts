@@ -1,6 +1,7 @@
 import type { CollectionBeforeChangeHook, CollectionConfig, Where } from "payload";
 
-import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { isContentEditor, publishedOrContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { invitationQuestionField } from "../fields/invitationQuestion";
 import { slugField } from "../fields/slug";
 import { pickProductQuestion } from "../lib/invitation/hooks";
@@ -27,6 +28,7 @@ const listField = (name: string, label: string, description: string) => ({
 export const Products: CollectionConfig = {
   slug: "products",
   admin: {
+    hidden: hiddenFromTrainers,
     useAsTitle: "name",
     defaultColumns: ["name", "category", "featured", "_status", "updatedAt"],
     description:
@@ -36,10 +38,10 @@ export const Products: CollectionConfig = {
   versions: autosaveDrafts,
   endpoints: [describeEndpoint],
   access: {
-    read: publishedOrLoggedIn,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn,
+    read: publishedOrContentEditor,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   hooks: {
     beforeChange: [setPublishedAt, pickProductQuestion],

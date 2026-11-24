@@ -11,8 +11,6 @@ const PASSWORD = randomBytes(12).toString("hex");
 const RUN = randomBytes(3).toString("hex");
 const SHIPS = [`E2E Planner Alpha ${RUN}`, `E2E Planner Beta ${RUN}`];
 const PLAN = "/api/globals/training-plan";
-// No real sailings this far ahead, so the plan holds only the test ships.
-const SETTINGS = { from: "2030-03-01", to: "2030-03-31", preset: "balanced" };
 
 const users = (...args: string[]) =>
   execFileSync("pnpm", ["-s", "payload", "run", "scripts/e2e-users.ts", ...args], {
@@ -27,6 +25,9 @@ const auth = async (request: APIRequestContext, email: string) => {
 
 let admin: Record<string, string>;
 const trainerIds: number[] = [];
+// No real sailings this far ahead, so the plan holds only the test ships. Only this
+// spec's trainers (filled in beforeAll): other specs' test trainers may exist meanwhile.
+const SETTINGS = { from: "2030-03-01", to: "2030-03-31", preset: "balanced", trainers: trainerIds };
 const sailingIds: number[] = [];
 
 const sessionsOf = async (request: APIRequestContext) => {
@@ -91,7 +92,7 @@ const login = async (page: Page, email: string) => {
   await page.waitForURL("**/admin");
 };
 
-test("only admins can plan or accept", async ({ page, request, playwright, baseURL }) => {
+test("editors cannot plan or accept", async ({ page, request, playwright, baseURL }) => {
   const editor = await auth(request, EDITOR);
   expect((await request.post(`${PLAN}/recommend`, { headers: editor, data: SETTINGS })).status()).toBe(403);
   expect((await request.post(`${PLAN}/accept`, { headers: editor, data: { proposals: [0], moves: [] } })).status()).toBe(403);
@@ -102,7 +103,7 @@ test("only admins can plan or accept", async ({ page, request, playwright, baseU
   expect((await request.get(PLAN, { headers: editor })).status()).toBe(403);
   await login(page, EDITOR);
   await page.goto("/admin/training-planner");
-  await expect(page.getByText("Only admins can use the training planner.")).toBeVisible();
+  await expect(page.getByText("Only admins and trainers can use the training planner.")).toBeVisible();
 });
 
 test("explains invalid settings", async ({ request }) => {
@@ -121,6 +122,11 @@ test("recommends a plan, accepts part of it, and replaces it on request", async 
   await expect(page.getByText("2 of 2 plannable ships planned: 2 departure day, 0 onboarding, 0 online.")).toBeVisible();
   const sessions = page.getByRole("region", { name: "Proposed sessions" });
   await expect(sessions.getByRole("columnheader", { name: "Embarkation port" })).toBeVisible();
+  // The buttons share the title's line, on the right.
+  const title = (await sessions.getByRole("heading", { name: "Proposed sessions" }).boundingBox())!;
+  const clear = (await sessions.getByRole("button", { name: "Clear proposed sessions" }).boundingBox())!;
+  expect(Math.abs(clear.y + clear.height / 2 - (title.y + title.height / 2))).toBeLessThan(10);
+  expect(clear.x).toBeGreaterThan(title.x + title.width);
   await expect(sessions.getByRole("row", { name: new RegExp(SHIPS[0]) }).getByRole("cell", { name: "Miami, Florida", exact: true })).toBeVisible();
   // Same day, same port: one ship per trainer.
   await expect(sessions.getByRole("row", { name: new RegExp(SHIPS[0]) })).toContainText("Departure day training, 10 Mar 2030, 07:00 – 16:00");

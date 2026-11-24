@@ -1,5 +1,7 @@
+import { initialsOf } from "../admin/initials";
+
 import { addDays } from "./time";
-import type { TrainingType } from "./schedule";
+import { describeSession, type TrainingType } from "./schedule";
 
 /** A session as the calendar shows it. */
 export type CalendarSession = {
@@ -12,6 +14,10 @@ export type CalendarSession = {
   ship: string;
   /** The cruise changed or was removed since the session was saved. */
   needsReview?: boolean;
+  /** Shown greyed out; no longer takes the trainer's time. */
+  canceled?: boolean;
+  /** Still needs travel details or a new travel cost estimate. */
+  travelStatus?: "ok" | "travelNeeded" | "estimateNeeded";
 };
 
 const MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
@@ -62,14 +68,6 @@ export function placeSessions(sessions: CalendarSession[], days: string[]): Map<
   return byDay;
 }
 
-/** Start time in the session's zone, e.g. "08:00"; onboarding runs all day. */
-export const startLabel = (session: CalendarSession) =>
-  session.type === "onboarding"
-    ? "All day"
-    : new Intl.DateTimeFormat("en-GB", { timeZone: session.timeZone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(
-        new Date(session.startsAt),
-      );
-
 /** Range of instants to query so every session touching the grid is found, whatever its zone. */
 export const gridRange = (days: string[]) => ({
   from: `${addDays(days[0], -1)}T00:00:00.000Z`,
@@ -97,4 +95,18 @@ export function calendarHref(params: CalendarParams, changes: CalendarParams): s
   for (const key of CALENDAR_PARAMS) if (merged[key]) query.set(key, merged[key]!);
   const text = query.toString();
   return text ? `?${text}` : "?";
+}
+
+/** What a calendar entry shows: the trainer's initials and the ship, "JE - Carnival Legend". */
+export const entryText = (session: CalendarSession) => `${initialsOf(session.trainer, null)} - ${session.ship}`;
+
+/** The entry's full description, for its hover text and accessible name. */
+export function entryLabel(session: CalendarSession): string {
+  const notes = [
+    session.canceled ? "Canceled." : "",
+    session.travelStatus === "travelNeeded" ? "Travel details needed." : "",
+    session.travelStatus === "estimateNeeded" ? "Estimate needed." : "",
+    session.needsReview ? "Cruise changed: review." : "",
+  ].filter(Boolean);
+  return [...notes, `${describeSession(session)} · ${session.trainer} · ${session.ship}`].join(" ");
 }

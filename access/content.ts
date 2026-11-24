@@ -1,10 +1,12 @@
 import type { Access } from "payload";
 
-/** Any logged-in admin or editor. */
-export const isLoggedIn: Access = ({ req }) => Boolean(req.user);
+import { isContentUser } from "./roles";
 
-/** Logged-in users see drafts; the public sees published documents only. */
-export const publishedOrLoggedIn: Access = ({ req }) => {
-  if (req.user) return true;
+/** Admins and editors (not trainers). */
+export const isContentEditor: Access = ({ req }) => isContentUser(req);
+
+/** Admins and editors see drafts; everyone else sees published documents only. */
+export const publishedOrContentEditor: Access = ({ req }) => {
+  if (isContentUser(req)) return true;
   return { _status: { equals: "published" } };
 };

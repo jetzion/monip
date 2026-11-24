@@ -1,6 +1,6 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 
-import { isAdmin, isAdminField, isAdminOrSelf } from "../access/roles";
+import { editTabsHiddenFromTrainers, hiddenFromTrainers, isAdmin, isAdminField, isAdminOrSelf } from "../access/roles";
 
 /** Makes the first account an admin so someone can manage users. */
 const ensureFirstUserIsAdmin: CollectionBeforeChangeHook = async ({
@@ -16,6 +16,9 @@ const ensureFirstUserIsAdmin: CollectionBeforeChangeHook = async ({
 export const Users: CollectionConfig = {
   slug: "users",
   admin: {
+    // Trainers reach their own account from the avatar menu, not the navigation.
+    hidden: hiddenFromTrainers,
+    components: { views: { edit: editTabsHiddenFromTrainers } },
     useAsTitle: "email",
     defaultColumns: ["email", "name", "role"],
   },
@@ -43,9 +46,10 @@ export const Users: CollectionConfig = {
       options: [
         { label: "Admin", value: "admin" },
         { label: "Editor", value: "editor" },
+        { label: "Trainer", value: "trainer" },
       ],
       admin: {
-        description: "Admins manage users. Editors manage site content.",
+        description: "Admins manage users. Editors manage site content. Trainers use the Training Schedule and its tools.",
       },
       access: {
         create: isAdminField,

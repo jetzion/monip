@@ -1,12 +1,14 @@
 import type { CollectionConfig } from "payload";
 
-import { isLoggedIn, publishedOrLoggedIn } from "../access/content";
+import { isContentEditor, publishedOrContentEditor } from "../access/content";
+import { hiddenFromTrainers } from "../access/roles";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 import { revalidateSite, revalidateSiteOnDelete } from "../hooks/revalidate";
 
 export const Clients: CollectionConfig = {
   slug: "clients",
   admin: {
+    hidden: hiddenFromTrainers,
     useAsTitle: "name",
     defaultColumns: ["logo", "name", "_status", "updatedAt"],
     description:
@@ -18,10 +20,10 @@ export const Clients: CollectionConfig = {
   defaultSort: "_order",
   versions: autosaveDrafts,
   access: {
-    read: publishedOrLoggedIn,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn,
+    read: publishedOrContentEditor,
+    create: isContentEditor,
+    update: isContentEditor,
+    delete: isContentEditor,
   },
   hooks: {
     afterChange: [revalidateSite],

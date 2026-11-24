@@ -105,6 +105,7 @@ describe("reportRow", () => {
       ship: "Wonder",
       startPort: "Miami",
       cruiseDates: "3 Oct 2026 – 10 Oct 2026",
+      cost: "—",
     });
   });
 
@@ -121,17 +122,33 @@ describe("reportRow", () => {
 });
 
 describe("totals", () => {
+  it("shows each session's estimated travel cost and totals it, without canceled sessions", () => {
+    const totals = totalsOf([session({ estimate: 500 }), session({ estimate: 120.5 }), session({}), session({ estimate: 900, canceled: true })]);
+    expect(totals.cost).toBe(620.5);
+    expect(totalsLabel(totals)).toBe("3 sessions · 24 hours · $620.50 estimated travel · 1 canceled (not counted)");
+    expect(reportRow(session({ estimate: 1250 })).cost).toBe("$1,250.00");
+    expect(reportRow(session({})).cost).toBe("—");
+  });
+
+  it("lists canceled sessions but leaves them out of the totals", () => {
+    const canceled = session({ canceled: true });
+    const totals = totalsOf([session({}), canceled]);
+    expect(totals).toEqual({ sessions: 1, hours: 8, days: 0, canceled: 1, cost: 0 });
+    expect(totalsLabel(totals)).toBe("1 session · 8 hours · 1 canceled (not counted)");
+    expect(reportRow(canceled).type).toBe("Departure day training (canceled)");
+  });
+
   it("adds hours of timed sessions and days of onboarding", () => {
     const totals = totalsOf([
       session({}),
       session({ type: "online", startsAt: "2026-10-05T13:00:00.000Z", endsAt: "2026-10-05T15:00:00.000Z" }),
       session({ type: "onboarding", startsAt: "2026-10-03T04:00:00.000Z", endsAt: "2026-10-11T04:00:00.000Z" }),
     ]);
-    expect(totals).toEqual({ sessions: 3, hours: 10, days: 8 });
+    expect(totals).toEqual({ sessions: 3, hours: 10, days: 8, canceled: 0, cost: 0 });
     expect(totalsLabel(totals)).toBe("3 sessions · 10 hours · 8 days of onboarding");
-    expect(totalsLabel({ sessions: 1, hours: 1, days: 1 })).toBe("1 session · 1 hour · 1 day of onboarding");
-    expect(totalsLabel({ sessions: 2, hours: 6, days: 0 })).toBe("2 sessions · 6 hours");
-    expect(totalsLabel({ sessions: 0, hours: 0, days: 0 })).toBe("0 sessions");
+    expect(totalsLabel({ sessions: 1, hours: 1, days: 1, canceled: 0, cost: 0 })).toBe("1 session · 1 hour · 1 day of onboarding");
+    expect(totalsLabel({ sessions: 2, hours: 6, days: 0, canceled: 0, cost: 0 })).toBe("2 sessions · 6 hours");
+    expect(totalsLabel({ sessions: 0, hours: 0, days: 0, canceled: 0, cost: 0 })).toBe("0 sessions");
   });
 });
 
@@ -158,8 +175,8 @@ describe("buildReport", () => {
       ["Ann Lee", [2]],
       ["Bo Diaz", [3, 1]],
     ]);
-    expect(report.groups[1].totals).toEqual({ sessions: 2, hours: 4, days: 0 });
-    expect(report.totals).toEqual({ sessions: 3, hours: 6, days: 0 });
+    expect(report.groups[1].totals).toEqual({ sessions: 2, hours: 4, days: 0, canceled: 0, cost: 0 });
+    expect(report.totals).toEqual({ sessions: 3, hours: 6, days: 0, canceled: 0, cost: 0 });
   });
 
   it("lists by date in one section", () => {

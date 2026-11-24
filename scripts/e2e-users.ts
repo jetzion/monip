@@ -1,6 +1,6 @@
 /**
- * Creates or deletes the e2e test accounts (e2e-admin@example.com and
- * e2e-editor@example.com). Used by the e2e tests; local only.
+ * Creates or deletes the e2e test accounts (e2e-admin@example.com,
+ * e2e-editor@example.com, and e2e-trainer@example.com). Used by the e2e tests; local only.
  * Run with: pnpm payload run scripts/e2e-users.ts create <password>
  *           pnpm payload run scripts/e2e-users.ts delete
  * E2E_USER_SET=<name> uses e2e-<name>-admin@example.com and
@@ -15,7 +15,11 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const set = process.env.E2E_USER_SET ? `${process.env.E2E_USER_SET}-` : "";
-const E2E_USERS = { admin: `e2e-${set}admin@example.com`, editor: `e2e-${set}editor@example.com` } as const;
+const E2E_USERS = {
+  admin: `e2e-${set}admin@example.com`,
+  editor: `e2e-${set}editor@example.com`,
+  trainer: `e2e-${set}trainer@example.com`,
+} as const;
 
 const [action, password] = process.argv.slice(2);
 const payload = await getPayload({ config });

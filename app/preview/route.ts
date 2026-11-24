@@ -16,6 +16,9 @@ export async function GET(request: Request) {
   if (!user) {
     return new Response("Log in to the admin to preview drafts.", { status: 401 });
   }
+  if (user.collection !== "users" || user.role === "trainer") {
+    return new Response("Only admins and editors can preview drafts.", { status: 403 });
+  }
 
   (await draftMode()).enable();
   redirect(path);

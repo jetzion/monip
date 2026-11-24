@@ -3,17 +3,17 @@ import Link from "next/link";
 
 import {
   calendarHref,
+  entryLabel,
+  entryText,
   monthTitle,
   placeSessions,
   shiftMonth,
-  startLabel,
   type CalendarParams,
   type CalendarSession,
 } from "@/lib/training/calendar";
-import { describeSession, TRAINING_TYPES } from "@/lib/training/schedule";
+import { TRAINING_TYPES } from "@/lib/training/schedule";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const SHORT_TYPE = { online: "Online", departureDay: "Departure day", onboarding: "Onboarding" } as const;
 
 const dayNumber = (day: string) => Number(day.slice(8, 10));
 
@@ -88,13 +88,18 @@ export function TrainingCalendar({ month, today, days, sessions, params }: Props
                         <li key={session.id}>
                           <Link
                             href={calendarHref(params, { calSession: String(session.id) })}
-                            className={`training-calendar__entry training-calendar__entry--${session.type}`}
+                            className={`training-calendar__entry training-calendar__entry--${session.type}${session.canceled ? " training-calendar__entry--canceled" : ""}`}
                             aria-current={selected === String(session.id) ? "true" : undefined}
-                            title={`${session.needsReview ? "Cruise changed: review. " : ""}${describeSession(session)}`}
+                            // The entry shows initials and ship; the full description is the hover text and accessible name.
+                            title={entryLabel(session)}
+                            aria-label={entryLabel(session)}
                           >
+                            {session.canceled && <span className="training-calendar__canceled">Canceled</span>}
                             {session.needsReview && <span className="training-calendar__review">Review</span>}
-                            <span className="training-calendar__time">{startLabel(session)}</span>{" "}
-                            {SHORT_TYPE[session.type]} · {session.trainer} · {session.ship}
+                            {session.travelStatus && session.travelStatus !== "ok" && (
+                              <span className="training-calendar__travel">{session.travelStatus === "travelNeeded" ? "Travel" : "Estimate"}</span>
+                            )}
+                            {entryText(session)}
                           </Link>
                         </li>
                       ))}
