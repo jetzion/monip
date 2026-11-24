@@ -32,15 +32,16 @@ export function pricePrompt(travel: Travel, port: string): string {
     ? `the multi-city (open-jaw) economy fare: ${travel.departureAirport} to ${travel.destinationAirport} on ${travel.departureDate}, and ${travel.returnAirport} back to ${travel.departureAirport} on ${travel.returnDate}`
     : `the round-trip economy fare from ${travel.departureAirport} to ${travel.destinationAirport}, departing ${travel.departureDate} and returning ${travel.returnDate}`;
   const asks: Record<EstimateItem, string> = {
-    flight: `${route} (a fare for these dates if shown, otherwise the typical or "from" fare for this route on an airline route page or fare comparison site such as Google Flights, Kayak, Skyscanner, or Expedia)`,
-    hotel: `the typical nightly rate of a mid-range hotel near the ${port} cruise port, from ${travel.hotelCheckIn} to ${travel.hotelCheckOut}`,
-    carRental: `the typical daily rate of an economy rental car picked up at ${travel.destinationAirport || `the airport nearest ${port}`}, from ${travel.carPickUp} to ${travel.carReturn}`,
-    rideshare: `the typical one-way Uber or Lyft fare from ${travel.destinationAirport || `the airport nearest ${port}`} to the ${port} cruise port`,
+    flight: `${route} (the average of the standard economy fares shown for these dates, otherwise the average fare for this route on an airline route page or fare comparison site such as Google Flights, Kayak, Skyscanner, or Expedia)`,
+    hotel: `the average nightly rate of a mid-range hotel near the ${port} cruise port, from ${travel.hotelCheckIn} to ${travel.hotelCheckOut}`,
+    carRental: `the average daily rate, with taxes and fees, of an economy rental car picked up at ${travel.destinationAirport || `the airport nearest ${port}`}, from ${travel.carPickUp} to ${travel.carReturn}`,
+    rideshare: `the average one-way Uber or Lyft fare from ${travel.destinationAirport || `the airport nearest ${port}`} to the ${port} cruise port`,
   };
   const items = neededItems(travel);
   return [
-    "Estimate travel costs in US dollars for one business traveller. Find:",
+    "Estimate realistic travel costs in US dollars for one business traveller. Find:",
     ...items.map((item, index) => `${index + 1}. ${asks[item]} (answer key ${KEYS[item]});`),
+    'Use a realistic average price, what a traveller would usually pay. Do not pick the lowest price, a "from" or "starting at" price, a promotional or sale price, or a basic economy fare; when a page lists several options, use the middle of the range.',
     "For each, give a number in US dollars (converted if needed), the URL of the page it came from, and a short note on what the price covers. Use null when no price can be found; do not guess.",
   ].join("\n");
 }

@@ -35,6 +35,7 @@ describe("pricePrompt", () => {
     expect(prompt).toContain("near the Miami, Florida cruise port");
     expect(prompt).toContain("rideshareOneWay");
     expect(prompt).not.toContain("carRentalPerDay");
+    expect(prompt).toContain("Do not pick the lowest price");
   });
 });
 
