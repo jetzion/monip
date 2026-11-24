@@ -429,9 +429,9 @@ test("the calendar shows sessions by day, filters them, and opens their details"
 
   await logIn(page);
   await page.goto(`${LIST}?calMonth=${month}`);
-  await expect(entry(page, first, "departureDay")).toContainText(`${initialsOf(TRAINER_NAME, null)} - ${cruise.ship}`);
+  await expect(entry(page, first, "departureDay")).toContainText(`${initialsOf(TRAINER.firstName, TRAINER.lastName)} - ${cruise.ship}`);
   await expect(entry(page, first, "departureDay")).toHaveAttribute("aria-label", new RegExp(`${cruise.arrival} – .* · ${TRAINER_NAME} · `));
-  await expect(entry(page, first, "onboarding")).toContainText(`${initialsOf(SECOND_NAME, null)} - ${cruise.ship}`);
+  await expect(entry(page, first, "onboarding")).toContainText(`${initialsOf(SECOND_TRAINER.firstName, SECOND_TRAINER.lastName)} - ${cruise.ship}`);
   await expect(entry(page, first, "onboarding")).toHaveAttribute("aria-label", new RegExp(`^Onboarding training, .* · ${SECOND_NAME} · `));
   await expect(entry(page, last, "onboarding")).toHaveCount(1);
 
@@ -484,7 +484,7 @@ test("a session is deleted from its details after confirming", async ({ page, re
   await logIn(page);
   await page.goto(`${LIST}?calMonth=2030-01`);
   const online = entry(page, "2030-01-03", "online");
-  await expect(online).toContainText(`${initialsOf(TRAINER_NAME, null)} - ${cruise.ship}`);
+  await expect(online).toContainText(`${initialsOf(TRAINER.firstName, TRAINER.lastName)} - ${cruise.ship}`);
   await expect(online).toHaveAttribute("aria-label", new RegExp(`^Online training, 3 Jan 2030, 09:00 – .* · ${TRAINER_NAME} · `));
   await online.click();
   page.once("dialog", (dialog) => void dialog.accept());

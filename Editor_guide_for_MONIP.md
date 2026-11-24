@@ -16,7 +16,7 @@ The admin is at https://monip-group.vercel.app/admin, a temporary address until 
 | Editor | Create, edit, preview, publish, and unpublish products, categories, services, client logos, success stories, offices, pages, the Home page text, chat invitation questions, and images | See other users, change roles, read inquiries, or switch the chat invitation on or off |
 | Trainer | Use the Training Schedule (schedule, edit, delete, cancel, and restore sessions for any trainer), Training preferences, the training planner, the training report, and the travel rates of each port in Port time zones; view the Cruise Fleet Schedule, Trainers, and Port time zones (Training planning costs, the default rates, is not in their navigation) | Edit or delete a session once it has started (cancel or restore only), import or edit sailings, manage trainers or port time zones, or see website content, inquiries, or other users (Users is not in their navigation; they open their own account from the avatar menu) |
 
-To open your account page or log out, click your avatar at the top right (your initials in a circle of your own colour, from your Name, or your email when no name is set): its menu shows who is signed in, **Account**, and **Log out**. You can change your own name and password from your account page. Only an admin can change someone's role.
+To open your account page or log out, click your avatar at the top right (your initials in a circle of your own colour, from your First and Last name, or your email when neither is set): its menu shows who is signed in, **Account**, and **Log out**. You can change your own first name, last name, and password from your account page. Only an admin can change someone's role.
 
 ## Adding and editing a product
 
@@ -179,7 +179,7 @@ Until the email service is set up, notification emails are not delivered: check 
 
 **The calendar**
 
-- Shows one month; use the **Previous month**, **This month**, and **Next month** buttons. Each session shows the trainer's initials and the ship (for example "JE - Carnival Legend"), colored by type (see the legend); hover over it for the full description (time, type, trainer, ship). Onboarding appears on every day it covers.
+- Shows one month; use the **Previous month**, **This month**, and **Next month** buttons. Each session shows the trainer's initials (the first letters of their First name and Last name) and the ship (for example "JE - Carnival Legend"), colored by type (see the legend); hover over it for the full description (time, type, trainer, ship). Onboarding appears on every day it covers.
 - Times are shown in each session's own time zone, which the details name.
 - **Filter** by Trainer, Cruise, and Training type; **Clear filters** shows everything again.
 - **Click a session** to see its full details, with **Edit**, **Delete** (asks first), and **Close**. Editing opens the session's own page; saving checks for conflicts again.

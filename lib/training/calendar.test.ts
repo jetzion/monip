@@ -22,6 +22,7 @@ const session = (overrides: Partial<CalendarSession>): CalendarSession => ({
   endsAt: "2026-10-01T19:30:00.000Z",
   timeZone: "America/New_York",
   trainer: "Ann Lee",
+  trainerInitials: "AL",
   ship: "Carnival Conquest",
   ...overrides,
 });
@@ -91,7 +92,7 @@ describe("calendar URLs", () => {
 
 describe("calendar entries", () => {
   it("show the trainer's initials and the ship", () => {
-    expect(entryText(session({ trainer: "Jack Etzion", ship: "Carnival Legend" }))).toBe("JE - Carnival Legend");
+    expect(entryText(session({ trainerInitials: "JE", ship: "Carnival Legend" }))).toBe("JE - Carnival Legend");
   });
 
   it("keep the full description, with any notes, for hover text and screen readers", () => {

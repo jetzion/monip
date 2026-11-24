@@ -24,7 +24,11 @@ export function AccountMenu() {
       button={
         <span className="account-menu__avatar">
           <span className="account-menu__initials" style={{ backgroundColor: avatarColor(user.id) }} aria-hidden="true">
-            {initialsOf("name" in user ? (user.name as string | null) : null, "email" in user ? (user.email as string) : null)}
+            {initialsOf(
+              "firstName" in user ? (user.firstName as string | null) : null,
+              "lastName" in user ? (user.lastName as string | null) : null,
+              "email" in user ? (user.email as string) : null,
+            )}
           </span>
           <span className="account-menu__label">Account menu</span>
         </span>

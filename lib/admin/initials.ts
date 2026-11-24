@@ -1,8 +1,16 @@
-/** Up to two initials: first and last word of the name, else the start of the email. */
-export function initialsOf(name: string | null | undefined, email: string | null | undefined): string {
-  const words = (name ?? "").trim().split(/\s+/).filter(Boolean);
-  if (words.length >= 2) return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+/**
+ * Up to two initials: the first letters of First name and Last name; with only
+ * one of them, its first two letters; with neither, the start of the email.
+ */
+export function initialsOf(
+  firstName: string | null | undefined,
+  lastName: string | null | undefined,
+  email?: string | null,
+): string {
+  const first = (firstName ?? "").trim();
+  const last = (lastName ?? "").trim();
+  if (first && last) return (first[0] + last[0]).toUpperCase();
+  if (first || last) return (first || last).slice(0, 2).toUpperCase();
   const local = (email ?? "").split("@")[0].replace(/[^a-z0-9]/gi, "");
   return local.slice(0, 2).toUpperCase() || "?";
 }

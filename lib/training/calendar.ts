@@ -1,5 +1,3 @@
-import { initialsOf } from "../admin/initials";
-
 import { addDays } from "./time";
 import { describeSession, type TrainingType } from "./schedule";
 
@@ -11,6 +9,8 @@ export type CalendarSession = {
   endsAt: string;
   timeZone: string;
   trainer: string;
+  /** From the trainer's First name and Last name, for example "JE". */
+  trainerInitials: string;
   ship: string;
   /** The cruise changed or was removed since the session was saved. */
   needsReview?: boolean;
@@ -98,7 +98,7 @@ export function calendarHref(params: CalendarParams, changes: CalendarParams): s
 }
 
 /** What a calendar entry shows: the trainer's initials and the ship, "JE - Carnival Legend". */
-export const entryText = (session: CalendarSession) => `${initialsOf(session.trainer, null)} - ${session.ship}`;
+export const entryText = (session: CalendarSession) => `${session.trainerInitials} - ${session.ship}`;
 
 /** The entry's full description, for its hover text and accessible name. */
 export function entryLabel(session: CalendarSession): string {

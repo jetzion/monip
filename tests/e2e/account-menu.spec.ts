@@ -78,3 +78,26 @@ test("admins keep the Edit and API tabs on record pages", async ({ page }) => {
   await expect(page.locator(".doc-tab", { hasText: "API" })).toBeVisible();
   await expect(page.locator(".doc-tab", { hasText: "Edit" })).toBeVisible();
 });
+
+test("users have First name and Last name; the full name follows them", async ({ page }) => {
+  await page.goto("/admin/login");
+  await page.getByLabel("Email").fill(ADMIN);
+  await page.getByLabel("Password").fill(PASSWORD);
+  await page.getByRole("button", { name: "Login" }).click();
+  await page.waitForURL("**/admin");
+
+  await page.goto("/admin/collections/users");
+  await expect(page.getByRole("columnheader", { name: "First name" })).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "Last name" })).toBeVisible();
+
+  const me = ((await (await page.request.get("/api/users/me")).json()) as { user: { id: number } }).user;
+  await page.goto(`/admin/collections/users/${me.id}`);
+  await expect(page.getByLabel("First name")).toHaveValue("E2E");
+  await expect(page.getByLabel("Last name")).toHaveValue("admin");
+  await expect(page.getByLabel("Name", { exact: true })).toHaveCount(0);
+
+  const saved = await page.request.patch(`/api/users/${me.id}`, { data: { firstName: "Ada", lastName: "Lovelace" } });
+  expect(((await saved.json()) as { doc: { name: string } }).doc.name).toBe("Ada Lovelace");
+  const cleared = await page.request.patch(`/api/users/${me.id}`, { data: { firstName: "", lastName: "" } });
+  expect(((await cleared.json()) as { doc: { name: string | null } }).doc.name).toBeNull();
+});

@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ListViewServerProps, Where } from "payload";
 
 import type { TrainingSession } from "@/payload-types";
+import { initialsOf } from "@/lib/admin/initials";
 
 import { calendarHref, gridRange, localDay, monthGrid, monthOf, readParams, type CalendarSession } from "@/lib/training/calendar";
 import { preferredCombos } from "@/lib/training/cruise-choice";
@@ -50,7 +51,7 @@ export async function TrainingListView({ payload, user, searchParams, collection
     payload.find({
       collection: "trainers",
       sort: ["lastName", "firstName"],
-      select: { name: true, homeBase: true },
+      select: { name: true, firstName: true, lastName: true, homeBase: true },
       populate: { "port-time-zones": { port: true } },
       ...access,
       depth: 1,
@@ -101,6 +102,9 @@ export async function TrainingListView({ payload, user, searchParams, collection
 
   const trainerName = new Map(trainers.docs.map((trainer) => [trainer.id, trainer.name ?? ""]));
   const nameOf = (trainer: unknown) => trainerName.get(typeof trainer === "object" ? (trainer as { id: number }).id : (trainer as number)) ?? "Unknown trainer";
+  const initialsById = new Map(trainers.docs.map((trainer) => [trainer.id, initialsOf(trainer.firstName, trainer.lastName)]));
+  const initialsOfTrainer = (trainer: unknown) =>
+    initialsById.get(typeof trainer === "object" ? (trainer as { id: number }).id : (trainer as number)) ?? "?";
   const trainerOptions = trainers.docs.map((trainer) => ({ label: trainer.name ?? "", value: String(trainer.id) }));
   const homeBases: Record<string, string | null> = Object.fromEntries(
     trainers.docs.map((trainer) => [String(trainer.id), typeof trainer.homeBase === "object" ? (trainer.homeBase?.port ?? null) : null]),
@@ -139,6 +143,7 @@ export async function TrainingListView({ payload, user, searchParams, collection
     endsAt: session.endsAt!,
     timeZone: session.timeZone ?? "UTC",
     trainer: nameOf(session.trainer),
+    trainerInitials: initialsOfTrainer(session.trainer),
     ship: session.cruiseCopy?.ship ?? "Unknown ship",
     needsReview: !session.canceled && Boolean(changesById.get(session.id)?.length),
     canceled: Boolean(session.canceled),

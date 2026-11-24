@@ -2,6 +2,14 @@ import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 
 import { editTabsHiddenFromTrainers, hiddenFromTrainers, isAdmin, isAdminField, isAdminOrSelf } from "../access/roles";
 
+/** Keeps the full name from First and Last name whenever either is saved. */
+const setName: CollectionBeforeChangeHook = ({ data, originalDoc }) => {
+  if (!("firstName" in data) && !("lastName" in data)) return data;
+  const first = data.firstName ?? originalDoc?.firstName ?? "";
+  const last = data.lastName ?? originalDoc?.lastName ?? "";
+  return { ...data, name: `${first} ${last}`.trim() || null };
+};
+
 /** Makes the first account an admin so someone can manage users. */
 const ensureFirstUserIsAdmin: CollectionBeforeChangeHook = async ({
   data,
@@ -20,7 +28,7 @@ export const Users: CollectionConfig = {
     hidden: hiddenFromTrainers,
     components: { views: { edit: editTabsHiddenFromTrainers } },
     useAsTitle: "email",
-    defaultColumns: ["email", "name", "role"],
+    defaultColumns: ["email", "firstName", "lastName", "role"],
   },
   auth: true,
   access: {
@@ -30,13 +38,18 @@ export const Users: CollectionConfig = {
     delete: isAdmin,
   },
   hooks: {
-    beforeChange: [ensureFirstUserIsAdmin],
+    beforeChange: [ensureFirstUserIsAdmin, setName],
   },
   fields: [
     {
-      name: "name",
-      type: "text",
+      type: "row",
+      fields: [
+        { name: "firstName", label: "First name", type: "text" },
+        { name: "lastName", label: "Last name", type: "text" },
+      ],
     },
+    // The full name, kept from First and Last name on save (avatar initials, display).
+    { name: "name", type: "text", admin: { hidden: true } },
     {
       name: "role",
       type: "select",

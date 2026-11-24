@@ -31,7 +31,7 @@ if (action === "create") {
   for (const [role, email] of Object.entries(E2E_USERS)) {
     await payload.create({
       collection: "users",
-      data: { email, password, role: role as keyof typeof E2E_USERS, name: `E2E ${role}` },
+      data: { email, password, role: role as keyof typeof E2E_USERS, firstName: "E2E", lastName: role },
     });
   }
 }

@@ -13,15 +13,20 @@ function contrastWithWhite(hex: string): number {
 }
 
 describe("initialsOf", () => {
-  it("uses the first and last word of the name", () => {
-    expect(initialsOf("Jack Etzion", "x@y.com")).toBe("JE");
-    expect(initialsOf("  maria  de la cruz ", null)).toBe("MC");
+  it("uses the first letters of First name and Last name", () => {
+    expect(initialsOf("Jack", "Etzion", "x@y.com")).toBe("JE");
+    expect(initialsOf(" maria ", "de la Cruz")).toBe("MD");
+    expect(initialsOf("Mary Ann", "Smith")).toBe("MS");
+  });
+
+  it("uses two letters of the only name given", () => {
     expect(initialsOf("Nicola", null)).toBe("NI");
+    expect(initialsOf("", "Lee")).toBe("LE");
   });
 
   it("falls back to the email, then a question mark", () => {
-    expect(initialsOf(null, "declan.smith@example.com")).toBe("DE");
-    expect(initialsOf("", "")).toBe("?");
+    expect(initialsOf(null, null, "declan.smith@example.com")).toBe("DE");
+    expect(initialsOf("", "", "")).toBe("?");
   });
 });
 
