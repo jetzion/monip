@@ -98,6 +98,31 @@ test("on desktop, 4 steps form a loop: right, down, left, then up back to the fi
   await expect(section(page).getByText("Then back to E2E step 1")).toHaveCSS("position", "absolute");
 });
 
+test("on desktop, the loop plays in view: each tag ticks, then its arrow grows to the next card", async ({ page, request }) => {
+  expect((await save(request, published.slice(0, 4).map(step))).ok()).toBe(true);
+  await page.clock.install();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/");
+  const loop = section(page).locator("[data-process-step]");
+  await expect(loop).toHaveCount(0);
+  await section(page).scrollIntoViewIfNeeded();
+  await expect(loop).toHaveAttribute("data-process-step", "0");
+  // 8 steps of 2s (tick, grow, ...), then 1s holding the full loop before it starts again.
+  for (const [ms, next] of [...[1, 2, 3, 4, 5, 6, 7, 8].map((n) => [2000, n] as const), [1000, 0] as const]) {
+    await page.clock.runFor(ms);
+    await expect(loop).toHaveAttribute("data-process-step", String(next));
+  }
+});
+
+test("on desktop with reduced motion, the loop stays complete and still", async ({ page, request }) => {
+  expect((await save(request, published.slice(0, 4).map(step))).ok()).toBe(true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/");
+  await section(page).scrollIntoViewIfNeeded();
+  await expect(section(page).locator("[data-process-step]")).toHaveCount(0);
+});
+
 test("leaves out a step whose service is unpublished, renumbers the rest, and stacks them", async ({ page, request }) => {
   const [a, b, c] = published;
   const steps = [step(draft, 0), step(a, 1), step(b, 2), step(c, 3)];

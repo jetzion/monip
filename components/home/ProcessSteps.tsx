@@ -1,9 +1,9 @@
 import { cn } from "cn";
 import { ArrowDown, RotateCcw } from "lucide-react";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 
 import { SectionHeading } from "@/components/content/SectionHeading";
+import { ProcessLoop } from "@/components/home/ProcessLoop";
 import { CmsImage } from "@/components/media/CmsImage";
 import { compactCardTitle } from "@/components/ui/card-title";
 import type { ProcessCard } from "@/lib/process-steps";
@@ -15,36 +15,13 @@ type Props = {
   showAllLink: boolean;
 };
 
-/*
- * Desktop loop: 4 cards in a 2 x 2 grid (gaps 6rem x 4rem, equal rows) with a gold
- * track behind them through each card's centre. The track shows in the gaps and
- * ends in an arrowhead at the edge of the next card.
- */
-const CENTRE_X = "calc((100% - 6rem) / 4)";
-const CENTRE_Y = "calc((100% - 4rem) / 4)";
-/** The track's box reaches half its 4px border past the card centres, so the line itself is centred on them. */
-const TRACK_X = "calc((100% - 6rem) / 4 - 2px)";
-const TRACK_Y = "calc((100% - 4rem) / 4 - 2px)";
-
 /** Where each card sits, clockwise: 1 top left, 2 top right, 3 bottom right, 4 bottom left. */
 const PLACES = ["", "", "lg:col-start-2 lg:row-start-2", "lg:col-start-1 lg:row-start-2"];
-
-/** Arrowheads with their tips on the edge of the card they point into (half a gap from the centre). */
-const ARROWS: { clip: string; style: CSSProperties }[] = [
-  // Into 2, at its left edge.
-  { clip: "polygon(0 0, 100% 50%, 0 100%)", style: { left: "calc(50% + 3rem)", top: CENTRE_Y, translate: "-100% -50%" } },
-  // Into 3, at its top edge.
-  { clip: "polygon(0 0, 100% 0, 50% 100%)", style: { left: `calc(100% - ${CENTRE_X})`, top: "calc(50% + 2rem)", translate: "-50% -100%" } },
-  // Into 4, at its right edge.
-  { clip: "polygon(100% 0, 0 50%, 100% 100%)", style: { left: "calc(50% - 3rem)", top: `calc(100% - ${CENTRE_Y})`, translate: "0 -50%" } },
-  // Into 1, at its bottom edge.
-  { clip: "polygon(50% 0, 100% 100%, 0 100%)", style: { left: CENTRE_X, top: "calc(50% - 2rem)", translate: "-50% 0" } },
-];
 
 /**
  * "How we work" as a cycle: one card per step, numbered beside its title, with its
  * service's photo and a link to that service on the Services page. On desktop 4
- * cards sit on a loop of clockwise arrows; otherwise they stack with arrows between
+ * cards sit on a loop of clockwise arrows, animated by ProcessLoop; otherwise they stack with arrows between
  * them and "Then back to" the first step at the end (still read by screen readers in the loop).
  */
 export function ProcessSteps({ heading, cards, showAllLink }: Props) {
@@ -59,18 +36,7 @@ export function ProcessSteps({ heading, cards, showAllLink }: Props) {
           </Link>
         )}
       </div>
-      <div className="relative mt-10">
-        {loop && (
-          <div aria-hidden="true" className="hidden lg:block">
-            <div
-              className="absolute rounded-[2.5rem] border-4 border-gold"
-              style={{ left: TRACK_X, right: TRACK_X, top: TRACK_Y, bottom: TRACK_Y }}
-            />
-            {ARROWS.map(({ clip, style }, index) => (
-              <span key={index} className="absolute z-20 size-4 bg-gold" style={{ ...style, clipPath: clip }} />
-            ))}
-          </div>
-        )}
+      <ProcessLoop loop={loop}>
         <ol
           className={cn(
             "grid gap-3",
@@ -91,7 +57,8 @@ export function ProcessSteps({ heading, cards, showAllLink }: Props) {
                   <div className="flex items-center gap-2.5">
                     <span
                       aria-hidden="true"
-                      className="flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-gold font-semibold text-navy"
+                      data-process-tag={index}
+                      className="process-tag relative flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-gold font-semibold text-navy"
                     >
                       {index + 1}
                     </span>
@@ -113,7 +80,7 @@ export function ProcessSteps({ heading, cards, showAllLink }: Props) {
             </li>
           ))}
         </ol>
-      </div>
+      </ProcessLoop>
       <p
         className={cn(
           "mt-6 flex items-center justify-center gap-2 text-sm font-semibold text-navy",
