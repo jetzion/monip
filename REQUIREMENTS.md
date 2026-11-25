@@ -315,6 +315,67 @@ Confirmed delivery (may change later):
 -   Keep copy clear, professional, and business-oriented.
 -   Do not publish unsupported environmental or sustainability claims.
 
+### 8.1 Buttons
+
+All buttons follow one standard, implemented in `components/ui/button.tsx`
+(`Button`, `ButtonLink`) and `components/ui/icon-button.ts`. Pages choose a
+variant and size; they never set a button's own size, shape, or colour.
+`components/ui/button-standard.test.ts` enforces this.
+
+**Hierarchy**
+
+| Level | Variant | Use | Look |
+|---|---|---|---|
+| 1. Primary (CTA) | `primary` (default) | The main action in a view: the page band's call to action, Send inquiry | Gold fill, navy text, semibold. **At most one per screen area**, counting the sticky header. |
+| 2. Secondary | `secondary`; `secondary-inverse` on navy bands | The alternative beside a CTA (the homepage's Explore products), the header's "Discuss a project", catalog Search | Same size and shape as Primary; transparent with a 1.5px navy border and navy text (white on navy bands). |
+| 3. Special | Its own component | The floating "Chat with us" launcher and its invitation bubble only | Navy band, gold-ringed avatar, raised shadow; follows the shared state rules below. |
+| Utility | `iconButtonClassName()` (`dark`, `overlay`) | Icon-only controls: carousel, play/pause, menu, chat header | Round, 40px, no fill until hover. |
+
+Text links use the `link-accent` style (navy text, gold underline) and are not buttons.
+
+**Style**
+
+-   Corners 8px (`rounded-lg`) on text buttons; round only for icon
+    buttons and filter pills.
+-   Sizes: `md` 44px tall, 15px text (default, heroes included); `sm`
+    36px, 14px text (header and tight toolbars); `icon` 44px square (a
+    Primary icon action, such as chat Send).
+-   Semibold text; 16px icons with an 8px gap.
+
+**Interactive states**
+
+| State | Primary | Secondary | Utility / Special |
+|---|---|---|---|
+| Hover | Deeper gold (`--gold-hover`, navy text 7.1:1) and a small shadow | Light tint fill, border at full strength | Light fill (icon buttons); gold border (chat launcher) |
+| Focus (keyboard) | 2px ring with a 2px gap: azure on light backgrounds, white on navy | Same | Same |
+| Pressed | Moves down 1px; deeper gold (`--gold-active`) | Moves down 1px; stronger tint | Stronger fill; launcher moves down 1px |
+| Disabled | 50% opacity, not-allowed cursor, no hover change | Same | Same |
+| Loading | Spinner and "Sending...", `aria-busy`, wait cursor | n/a | n/a |
+
+Transitions are 150ms colour and shadow only; nothing scales, and nothing
+moves for visitors who prefer reduced motion.
+
+**Page bands (heroes)**
+
+-   Homepage: gold "Discuss a project" first, outlined "Explore products"
+    second.
+-   Products: gold "Product inquiry" to the contact form; each product
+    page: gold "Product inquiry" carrying that product to the form.
+-   About, Services, Clients, Success Stories and each story: gold
+    "Discuss a project" (`DiscussProjectButton`).
+-   Contact and Privacy: no call to action.
+-   The button sits below the intro (`PageHeader`'s `action`), and the
+    band trims its padding so adding it never makes the band taller.
+
+**Adding a button**
+
+-   Use `Button` or `ButtonLink` with a variant, or `iconButtonClassName`.
+    Pass layout classes only (margin, alignment, width).
+-   Before adding a gold button, check that no other Primary is visible in
+    the same screen area.
+-   A new hand-made `<button>` must be added, with its reason, to the
+    reviewed list in `button-standard.test.ts`.
+
 ## 9. Acceptance Criteria
 
 The initial release is ready for launch when:

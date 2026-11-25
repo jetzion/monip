@@ -5,6 +5,8 @@ import { RotateCcw, Send, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { iconButtonClassName } from "@/components/ui/icon-button";
 import { pickGreeting } from "@/lib/chat/greetings";
 import type { ChatMessage } from "@/lib/chat/validate";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
@@ -198,14 +200,10 @@ export function ChatWidget() {
                 placeholder="Type a message"
                 className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border border-input bg-white px-3 py-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               />
-              <button
-                type="submit"
-                disabled={pending || !draft.trim()}
-                className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
-              >
-                <Send aria-hidden="true" className="size-4" />
+              <Button type="submit" size="icon" disabled={pending || !draft.trim()}>
+                <Send aria-hidden="true" />
                 <span className="sr-only">Send message</span>
-              </button>
+              </Button>
             </div>
           </form>
         </section>
@@ -218,7 +216,7 @@ export function ChatWidget() {
         aria-controls="chat-panel"
         onClick={() => (open ? close() : setOpen(true))}
         className={cn(
-          "header-band fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2.5 rounded-xl border-2 border-white/15 font-semibold text-white shadow-card-hover transition duration-200 hover:border-gold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 motion-safe:hover:-translate-y-0.5",
+          "header-band fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2.5 rounded-xl border-2 border-white/15 font-semibold text-white shadow-card-hover transition-[border-color,box-shadow] duration-150 hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2 motion-safe:active:translate-y-px",
           open ? "hidden w-14 sm:inline-flex" : "inline-flex pl-2 pr-5",
         )}
       >
@@ -238,8 +236,7 @@ export function ChatWidget() {
   );
 }
 
-const iconButton =
-  "inline-flex size-9 items-center justify-center rounded-lg text-white/90 hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white";
+const iconButton = iconButtonClassName({ dark: true });
 
 const bubble =
   "whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm leading-relaxed duration-300 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1";

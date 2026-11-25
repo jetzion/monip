@@ -13,7 +13,7 @@ type Props = {
 export const VISIBLE_TAGS = 4;
 
 const arrowClassName =
-  "flex size-7 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition-colors hover:bg-white/20 disabled:opacity-30 disabled:hover:bg-white/10";
+  "flex size-7 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition-colors hover:bg-white/20 active:bg-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white/10";
 
 /** One row of tags (e.g. catalog categories), 4 visible; scrolls sideways when there are more. */
 export function TagScroller({ count, label, children }: Props) {

@@ -63,7 +63,7 @@ export function CatalogSearch({ params }: { params: CatalogParams }) {
         className="h-11 bg-white"
       />
       {params.category && <input type="hidden" name="category" value={params.category} />}
-      <Button type="submit" className="h-11 px-5">
+      <Button type="submit" variant="secondary">
         Search
       </Button>
     </form>

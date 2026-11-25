@@ -64,21 +64,11 @@ export default async function HomePage() {
         title={hero.headline}
         intro={hero.intro}
       >
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-          <div className="flex flex-wrap gap-3">
-            <ButtonLink href="/products" className="h-11 px-5 text-base sm:px-6">
-              {hero.productsButtonLabel}
-            </ButtonLink>
-            <ButtonLink href="/contact" variant="outline-inverse" className="h-11 px-5 text-base sm:px-6">
-              {hero.contactButtonLabel}
-            </ButtonLink>
-          </div>
-          <Link
-            href="/about"
-            className="font-semibold text-gold underline decoration-2 underline-offset-4 hover:text-gold-hover"
-          >
-            {hero.aboutLinkLabel}
-          </Link>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <ButtonLink href="/contact">{hero.contactButtonLabel}</ButtonLink>
+          <ButtonLink href="/products" variant="secondary-inverse">
+            {hero.productsButtonLabel}
+          </ButtonLink>
         </div>
       </PageHeader>
       {clients.length > 0 && <ClientLogos clients={clients} intro={clientLogos?.intro} />}

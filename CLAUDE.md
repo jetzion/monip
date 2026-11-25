@@ -124,6 +124,11 @@ useful work and explain any proposed migration.
 ### Design and content
 
 -   Follow the approved MONIP brand assets and design tokens.
+-   Buttons follow the standard in `REQUIREMENTS.md` section 8.1: use
+    `Button`/`ButtonLink` variants or `iconButtonClassName`, never your own
+    button size or colour, and at most one gold Primary per screen area.
+    `components/ui/button-standard.test.ts` enforces it; update the standard
+    there and in 8.1 together.
 -   Make layouts responsive across mobile, tablet, and desktop.
 -   Prioritize authentic, approved product imagery.
 -   Do not alter product imagery in ways that misrepresent the actual

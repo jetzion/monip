@@ -6,6 +6,7 @@ import { cn } from "cn";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { Children, useCallback, useEffect, useState, useSyncExternalStore, type CSSProperties } from "react";
 
+import { iconButtonClassName } from "@/components/ui/icon-button";
 import { drumPlace } from "@/lib/carousel-drum";
 
 import { prefersReducedMotion, subscribeReducedMotion } from "./HeroControls";
@@ -202,7 +203,6 @@ export function FeaturedCarousel({ children, autoplay, seconds }: Props) {
               <CarouselButton
                 label={paused ? "Play featured products" : "Pause featured products"}
                 onClick={togglePause}
-                variant="quiet"
               >
                 {paused ? <Play aria-hidden="true" className="size-4 fill-current" /> : <Pause aria-hidden="true" className="size-4 fill-current" />}
               </CarouselButton>
@@ -217,23 +217,12 @@ export function FeaturedCarousel({ children, autoplay, seconds }: Props) {
 type ButtonProps = {
   label: string;
   onClick: () => void;
-  /** Light grey arrows; the quieter borderless style for pause and play. */
-  variant?: "solid" | "quiet";
   children: React.ReactNode;
 };
 
-function CarouselButton({ label, onClick, variant = "solid", children }: ButtonProps) {
+function CarouselButton({ label, onClick, children }: ButtonProps) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex size-9 shrink-0 items-center justify-center rounded-full transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-95",
-        variant === "solid"
-          ? "bg-slate-200 text-slate-700 hover:bg-slate-300 hover:text-slate-900"
-          : "text-navy hover:bg-navy/10",
-      )}
-    >
+    <button type="button" onClick={onClick} className={iconButtonClassName()}>
       {children}
       <span className="sr-only">{label}</span>
     </button>

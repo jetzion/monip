@@ -86,9 +86,38 @@ test("the only Discuss a project link in the page body is the hero button", asyn
 test("hero buttons open the products and contact pages", async ({ page }) => {
   await page.goto("/");
   const hero = page.getByRole("main").locator("section").first();
+  // Discuss a project is the gold primary, first; Explore products the outlined secondary.
+  await expect(hero.getByRole("link")).toHaveText(["Discuss a project", "Explore products"]);
   await expect(hero.getByRole("link", { name: "Discuss a project" })).toHaveAttribute("href", "/contact");
   await hero.getByRole("link", { name: "Explore products" }).click();
   await expect(page).toHaveURL(/\/products$/);
+});
+
+test("page heroes end with one call to action, none on Contact and Privacy", async ({ page }) => {
+  const ctas: [string, string | null][] = [
+    ["/about", "Discuss a project"],
+    ["/services", "Discuss a project"],
+    ["/clients", "Discuss a project"],
+    ["/success-stories", "Discuss a project"],
+    ["/products", "Product inquiry"],
+    ["/contact", null],
+    ["/privacy", null],
+  ];
+  for (const [path, name] of ctas) {
+    await page.goto(path);
+    const band = page.locator("section.header-band").first();
+    const cta = band.getByRole("link", { name: /^(Discuss a project|Product inquiry)$/ });
+    if (name === null) {
+      await expect(cta, path).toHaveCount(0);
+      continue;
+    }
+    await expect(cta, path).toHaveText(name);
+    await expect(cta, path).toHaveAttribute("href", "/contact");
+    // Below the intro, not beside it.
+    const intro = await band.locator("h1 + p").boundingBox();
+    const button = await cta.boundingBox();
+    expect(button!.y, path).toBeGreaterThan(intro!.y + intro!.height);
+  }
 });
 
 test("homepage scrolls all published client logos and pauses on hover", async ({ page, request }) => {
@@ -116,13 +145,6 @@ test("client logos stand still with reduced motion", async ({ browser }) => {
   const band = page.getByRole("region", { name: "Our clients" });
   await expect(band.locator(".logo-marquee-track")).toHaveCSS("animation-name", "none");
   await page.close();
-});
-
-test("hero links to the About page for more detail", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("link", { name: "More about MONIP Group" }).click();
-  await expect(page).toHaveURL(/\/about$/);
-  await expect(page.getByRole("heading", { level: 1, name: /^About/ })).toBeVisible();
 });
 
 test("visitor submits the general contact form", async ({ page }) => {

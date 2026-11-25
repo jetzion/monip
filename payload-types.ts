@@ -1314,17 +1314,13 @@ export interface Home {
     headline: string;
     intro: string;
     /**
-     * Gold button to the Products page.
-     */
-    productsButtonLabel: string;
-    /**
-     * Outlined button to the Contact page.
+     * Gold button to the Contact page, shown first.
      */
     contactButtonLabel: string;
     /**
-     * Link to the About page.
+     * Outlined button to the Products page, shown second.
      */
-    aboutLinkLabel: string;
+    productsButtonLabel: string;
     /**
      * What plays behind the headline. Text stays on a dark overlay so it remains readable.
      */
@@ -1639,9 +1635,8 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         headline?: T;
         intro?: T;
-        productsButtonLabel?: T;
         contactButtonLabel?: T;
-        aboutLinkLabel?: T;
+        productsButtonLabel?: T;
         background?: T;
         video?: T;
         slides?:

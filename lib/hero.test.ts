@@ -12,7 +12,6 @@ const hero = (fields: Partial<Home["hero"]>): Home["hero"] => ({
   intro: "i",
   productsButtonLabel: "p",
   contactButtonLabel: "c",
-  aboutLinkLabel: "a",
   background: "video",
   transitionSeconds: 1.2,
   overlayOpacity: 100,

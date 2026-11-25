@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/content/PageHeader";
 import { SectionHeading } from "@/components/content/SectionHeading";
 import { CatalogFilters, CatalogSearch } from "@/components/products/CatalogFilters";
 import { ProductCard } from "@/components/products/ProductCard";
+import { ButtonLink } from "@/components/ui/button-link";
 import { catalogHref, parseCatalogParams } from "@/lib/catalog-params";
 import { contentAccess } from "@/lib/queries/access";
 import { getCategories } from "@/lib/queries/categories";
@@ -48,6 +49,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
         title={page?.title ?? "Products"}
         headline={page?.headline}
         intro={page?.intro}
+        action={<ButtonLink href="/contact">Product inquiry</ButtonLink>}
         aside={
           <CatalogFilters
             params={params}

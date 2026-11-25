@@ -1,5 +1,6 @@
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { ContentPage } from "@/components/content/ContentPage";
+import { DiscussProjectButton } from "@/components/content/DiscussProjectButton";
 import { OfficesMap } from "@/components/content/OfficesMap";
 import { contentPageMetadata, requirePage } from "@/lib/content-page";
 import { contentAccess } from "@/lib/queries/access";
@@ -12,7 +13,7 @@ export default async function Page() {
   const [page, offices] = await Promise.all([requirePage("about"), getPublishedOffices(access)]);
   return (
     <>
-      <ContentPage page={page}>{offices.length > 0 && <OfficesMap offices={offices} />}</ContentPage>
+      <ContentPage page={page} action={<DiscussProjectButton />}>{offices.length > 0 && <OfficesMap offices={offices} />}</ContentPage>
       <ChatInvitation page="about" />
     </>
   );

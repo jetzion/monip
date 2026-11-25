@@ -15,7 +15,7 @@ export async function SiteHeader() {
           <nav aria-label="Main">
             <NavLinks items={main} variant="desktop" />
           </nav>
-          <ButtonLink href="/contact" className="h-9 px-4">
+          <ButtonLink href="/contact" variant="secondary" size="sm">
             Discuss a project
           </ButtonLink>
         </div>

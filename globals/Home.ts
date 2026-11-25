@@ -68,9 +68,8 @@ export const Home: GlobalConfig = {
           defaultValue:
             "MONIP Group brings together global sourcing expertise, creative product development, and strategic merchandising to help cruise lines and retail businesses stand out in competitive markets. We go beyond finding products.",
         },
-        label("productsButtonLabel", "Explore products", "Gold button to the Products page."),
-        label("contactButtonLabel", "Discuss a project", "Outlined button to the Contact page."),
-        label("aboutLinkLabel", "More about MONIP Group", "Link to the About page."),
+        label("contactButtonLabel", "Discuss a project", "Gold button to the Contact page, shown first."),
+        label("productsButtonLabel", "Explore products", "Outlined button to the Products page, shown second."),
         {
           name: "background",
           type: "radio",

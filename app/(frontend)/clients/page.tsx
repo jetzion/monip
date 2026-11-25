@@ -1,3 +1,4 @@
+import { DiscussProjectButton } from "@/components/content/DiscussProjectButton";
 import { PageHeader } from "@/components/content/PageHeader";
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { CmsImage } from "@/components/media/CmsImage";
@@ -17,7 +18,7 @@ export default async function ClientsPage() {
 
   return (
     <>
-      <PageHeader title={page.title} headline={page.headline} intro={page.intro} />
+      <PageHeader title={page.title} headline={page.headline} intro={page.intro} action={<DiscussProjectButton />} />
       {clients.length > 0 && (
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <ul aria-label="Client logos" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 lg:gap-6">

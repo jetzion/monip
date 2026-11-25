@@ -3,6 +3,8 @@
 import { Menu, X } from "lucide-react";
 import { startTransition, useEffect, useState, ViewTransition } from "react";
 
+import { iconButtonClassName } from "@/components/ui/icon-button";
+
 import { NavLinks } from "./NavLinks";
 
 type Props = { items: { href: string; label: string }[] };
@@ -27,7 +29,7 @@ export function MobileNav({ items }: Props) {
         aria-expanded={open}
         aria-controls="mobile-nav"
         onClick={() => toggle(!open)}
-        className="inline-flex size-10 items-center justify-center border border-border"
+        className={iconButtonClassName()}
       >
         {open ? <X aria-hidden="true" className="size-5" /> : <Menu aria-hidden="true" className="size-5" />}
         <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>

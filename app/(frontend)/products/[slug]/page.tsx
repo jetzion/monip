@@ -100,8 +100,9 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
       <PageHeader
         title={product.name}
         intro={product.summary}
+        action={<ButtonLink href={`/contact?product=${encodeURIComponent(product.slug)}`}>Product inquiry</ButtonLink>}
         eyebrow={
-          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-on-dark-muted">
+          <nav aria-label="Breadcrumb" className="mb-4 text-sm text-on-dark-muted">
             <ol className="flex flex-wrap gap-2">
               <li>
                 <Link href="/products" className="text-white underline-offset-4 hover:underline">
@@ -135,12 +136,6 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
             </div>
           )}
           <SpecSheet rows={specs} />
-          <ButtonLink
-            href={`/contact?product=${encodeURIComponent(product.slug)}`}
-            className="h-11 self-start px-6"
-          >
-            Product inquiry
-          </ButtonLink>
         </div>
       </div>
       <ChatInvitation page="product" pick={product.invitationQuestion} />

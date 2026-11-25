@@ -164,7 +164,7 @@ lead-time information unless MONIP explicitly approves it.
 
 ### Home (global)
 
--   `hero` (headline, intro, products and contact button labels, about link label, background) and
+-   `hero` (headline, intro, products and contact button labels, background; the "More about MONIP Group" link was removed 2026-11-25) and
     `process` ("How we work": `heading` and exactly 4 `steps`, each a `service` (photo and
     link), `title`, and `description`; empty hides the section). `featuredServices` was
     removed on 2026-11-25 (How we work replaced the "Our services" cards); drafts and Live Preview. Link targets are in
@@ -635,7 +635,7 @@ Update this section as decisions are confirmed.
 | Frontend | Next.js 16.4 + TypeScript; `cacheComponents` disabled for Payload; experimental `globalNotFound` for unmatched URLs | Confirmed |
 | CMS | Payload CMS 3.91 inside the Next.js app, admin at `/admin` (replaced Sanity). Pinned below the newest release when it is inside pnpm's minimum release age | Confirmed |
 | Hosting | Vercel | Confirmed |
-| Styling | Tailwind CSS v4 + shadcn/ui; "Indigo Signature" palette from the logo (indigo #3d4ea0, navy #141b3a, azure #1767ad). One vivid accent, warm gold `--gold` #f5a524 (2026-11-12): primary buttons (gold with navy text, 8.4:1), links (navy text with a gold underline on light backgrounds via `link-accent`; gold text on navy), and small highlights (section bars, active nav underline, footer and form top borders, map dots, card hover, selected thumbnail). Never gold text or focus rings on white (2:1). Outline buttons, tags, focus rings, and the chat button stay indigo/azure. Tinted page background #e6ebf4 with white cards (visible shadow-card), navy header-band page headers, white header and footer panels | Confirmed |
+| Styling | Tailwind CSS v4 + shadcn/ui; "Indigo Signature" palette from the logo (indigo #3d4ea0, navy #141b3a, azure #1767ad). One vivid accent, warm gold `--gold` #f5a524 (2026-11-12): primary buttons (gold with navy text, 8.4:1), links (navy text with a gold underline on light backgrounds via `link-accent`; gold text on navy), and small highlights (section bars, active nav underline, footer and form top borders, map dots, card hover, selected thumbnail). Never gold text or focus rings on white (2:1). Buttons follow REQUIREMENTS.md 8.1 (2026-11-25): one gold Primary per screen area and a gold call to action below each page band's intro (none on Contact and Privacy), outlined navy Secondary (the header CTA, catalog Search, the homepage's Explore products), deeper gold on hover (`--gold-hover` #e9961a), one azure focus ring (white on navy); the chat Send button is gold. Tinted page background #e6ebf4 with white cards (visible shadow-card), navy header-band page headers, white header and footer panels | Confirmed |
 | Package manager | pnpm | Confirmed |
 | Testing | Vitest unit tests; Playwright e2e + axe against a production build | Confirmed |
 | Content updates | Hooks call `revalidatePath` on publish/unpublish only (not draft autosaves) | Confirmed |

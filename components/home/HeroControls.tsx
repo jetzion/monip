@@ -1,4 +1,7 @@
+import { cn } from "cn";
 import { Pause, Play } from "lucide-react";
+
+import { iconButtonClassName } from "@/components/ui/icon-button";
 
 /** Dark gradient over the hero background so the headline stays readable. */
 export function HeroOverlay({ opacity = 1 }: { opacity?: number }) {
@@ -20,7 +23,7 @@ export function HeroPauseButton({ playing, onToggle, what }: PauseProps) {
     <button
       type="button"
       onClick={onToggle}
-      className="absolute bottom-4 right-4 z-20 inline-flex select-none size-10 items-center justify-center rounded-full border border-white/30 bg-navy/60 text-white backdrop-blur transition-colors hover:bg-navy/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      className={cn(iconButtonClassName({ overlay: true }), "absolute bottom-4 right-4 z-20")}
     >
       {playing ? <Pause aria-hidden="true" className="size-4" /> : <Play aria-hidden="true" className="size-4" />}
       <span className="sr-only">{playing ? `Pause ${what}` : `Play ${what}`}</span>

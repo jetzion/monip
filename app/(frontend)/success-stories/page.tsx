@@ -1,3 +1,4 @@
+import { DiscussProjectButton } from "@/components/content/DiscussProjectButton";
 import { PageHeader } from "@/components/content/PageHeader";
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { StoryCard } from "@/components/stories/StoryCard";
@@ -14,7 +15,7 @@ export default async function SuccessStoriesPage() {
 
   return (
     <>
-      <PageHeader title={page.title} headline={page.headline} intro={page.intro} />
+      <PageHeader title={page.title} headline={page.headline} intro={page.intro} action={<DiscussProjectButton />} />
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         {stories.length === 0 ? (
           <div className="rounded-xl border border-border bg-card p-8 shadow-card">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
+import { DiscussProjectButton } from "@/components/content/DiscussProjectButton";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { ImageMorph } from "@/components/media/ImageMorph";
@@ -83,8 +84,9 @@ export default async function StoryPage({ params }: PageProps<"/success-stories/
       <PageHeader
         title={story.title}
         intro={story.summary}
+        action={<DiscussProjectButton />}
         eyebrow={
-          <nav aria-label="Breadcrumb" className="mb-6 text-sm text-on-dark-muted">
+          <nav aria-label="Breadcrumb" className="mb-4 text-sm text-on-dark-muted">
             <ol className="flex flex-wrap gap-2">
               <li>
                 <Link href="/success-stories" className="text-white underline-offset-4 hover:underline">
@@ -134,7 +136,7 @@ export default async function StoryPage({ params }: PageProps<"/success-stories/
 
         <div className="mt-12 flex flex-wrap gap-4 border-t border-border pt-8">
           <ButtonLink href="/contact">Discuss your project</ButtonLink>
-          <ButtonLink href="/success-stories" variant="outline">
+          <ButtonLink href="/success-stories" variant="secondary">
             All success stories
           </ButtonLink>
         </div>

@@ -9,13 +9,15 @@ type Props = {
   page: Pick<Page, "title" | "headline" | "intro" | "image" | "body">;
   /** Extra sections after the body, e.g. the offices map on About. */
   children?: React.ReactNode;
+  /** The header band's call to action. */
+  action?: React.ReactNode;
 };
 
 /** Layout for CMS-managed text pages (About, Privacy). */
-export function ContentPage({ page, children }: Props) {
+export function ContentPage({ page, children, action }: Props) {
   return (
     <article>
-      <PageHeader title={page.title} headline={page.headline} intro={page.intro} />
+      <PageHeader title={page.title} headline={page.headline} intro={page.intro} action={action} />
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 sm:py-16">
         {page.image && (
           <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">

@@ -66,7 +66,7 @@ export function ProductGallery({ images, morphName }: Props) {
                   onClick={(event) => select(index, event.currentTarget.firstElementChild as HTMLElement)}
                   aria-pressed={active}
                   aria-label={`Show image: ${image.name || image.alt}`}
-                  className="group flex w-full cursor-pointer flex-col gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  className="group flex w-full cursor-pointer flex-col gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2"
                 >
                   <span
                     className={cn(

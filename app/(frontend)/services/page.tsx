@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
+import { DiscussProjectButton } from "@/components/content/DiscussProjectButton";
 import { PageHeader } from "@/components/content/PageHeader";
 import { CmsImage } from "@/components/media/CmsImage";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -33,6 +34,7 @@ export default async function ServicesPage() {
         title={page?.title ?? "Services"}
         headline={page?.headline}
         intro={page?.intro}
+        action={<DiscussProjectButton />}
         aside={
           <nav aria-label="Services on this page">
             <TagScroller count={services.length} label="services">
@@ -78,7 +80,7 @@ export default async function ServicesPage() {
         </div>
 
         <div className="mt-12">
-          <ButtonLink href="/contact" className="h-11 px-6">
+          <ButtonLink href="/contact">
             Discuss a project
           </ButtonLink>
         </div>

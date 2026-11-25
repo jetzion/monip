@@ -1,5 +1,6 @@
 "use client";
 
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 
@@ -107,7 +108,8 @@ export function InquiryForm({ productSlug, productName }: Props) {
         </p>
       )}
 
-      <Button type="submit" disabled={pending} className="h-11 self-start px-6">
+      <Button type="submit" disabled={pending} aria-busy={pending} className="self-start">
+        {pending && <LoaderCircle aria-hidden="true" className="motion-safe:animate-spin" />}
         {pending ? "Sending..." : "Send inquiry"}
       </Button>
       <p className="text-xs text-muted-foreground">
@@ -143,9 +145,7 @@ function SentDialog({ productName }: { productName?: string }) {
         email. Returning to the home page in {SENT_SECONDS} seconds.
       </p>
       <form method="dialog" className="mt-5">
-        <Button type="submit" className="h-11 px-6">
-          Go to home page
-        </Button>
+        <Button type="submit">Go to home page</Button>
       </form>
     </dialog>
   );
