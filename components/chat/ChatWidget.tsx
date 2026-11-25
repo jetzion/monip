@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "cn";
-import { RotateCcw, Send, X } from "lucide-react";
+import { MessageCircle, RotateCcw, Send, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -14,6 +14,7 @@ import { CHAT_OPENED_EVENT, OPEN_CHAT_EVENT, markChatOpened } from "@/lib/invita
 
 import { AssistantAvatar } from "./AssistantAvatar";
 import { TypedReply } from "./TypedReply";
+import { useScrollLag } from "./useScrollLag";
 
 /** Display name of the assistant; also set in the system prompt (lib/chat/knowledge.ts). */
 const ASSISTANT_NAME = "David";
@@ -36,6 +37,7 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const opened = useRef(false);
+  useScrollLag(toggleRef);
 
   // The chat invitation opens the chat; once open, the invitation is not shown again this visit.
   useEffect(() => {
@@ -216,8 +218,8 @@ export function ChatWidget() {
         aria-controls="chat-panel"
         onClick={() => (open ? close() : setOpen(true))}
         className={cn(
-          "header-band fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2.5 rounded-xl border-2 border-white/15 font-semibold text-white shadow-card-hover transition-[border-color,box-shadow] duration-150 hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2 motion-safe:active:translate-y-px",
-          open ? "hidden w-14 sm:inline-flex" : "inline-flex pl-2 pr-5",
+          "header-band fixed bottom-4 right-4 z-50 h-12 items-center justify-center gap-2 rounded-full border-2 border-white/15 font-semibold text-white shadow-[0_18px_40px_-8px_rgb(10_22_60/0.5),0_6px_14px_-4px_rgb(10_22_60/0.3)] transition-[border-color,box-shadow] duration-150 hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2 motion-safe:active:translate-y-px",
+          open ? "hidden w-12 sm:inline-flex" : "inline-flex px-5",
         )}
       >
         {open ? (
@@ -227,7 +229,7 @@ export function ChatWidget() {
           </>
         ) : (
           <>
-            <AssistantAvatar className="size-10 rounded-full ring-2 ring-gold" />
+            <MessageCircle aria-hidden="true" className="size-5 text-gold" />
             Chat with us
           </>
         )}
