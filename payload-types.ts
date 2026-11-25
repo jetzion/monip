@@ -1380,6 +1380,19 @@ export interface Home {
       | null;
   };
   /**
+   * Featured products (ticked on each product, newest first) roll through a carousel. With fewer than 6 they show as a grid instead. Visitors can pause it, drag it, or use the arrows.
+   */
+  featuredCarousel: {
+    /**
+     * Never for visitors who have reduced motion turned on.
+     */
+    autoplay?: boolean | null;
+    /**
+     * How long each product stays in the centre, 3 to 10.
+     */
+    seconds: number;
+  };
+  /**
    * One success story shown large under How we work: its featured image, title, and summary, with a link to the full story. Visitors see it only when the chosen story is published.
    */
   spotlight: {
@@ -1582,6 +1595,12 @@ export interface HomeSelect<T extends boolean = true> {
               description?: T;
               id?: T;
             };
+      };
+  featuredCarousel?:
+    | T
+    | {
+        autoplay?: T;
+        seconds?: T;
       };
   spotlight?:
     | T

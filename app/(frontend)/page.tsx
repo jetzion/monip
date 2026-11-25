@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/content/PageHeader";
 import { SectionHeading } from "@/components/content/SectionHeading";
 import { AuroraBand } from "@/components/home/AuroraBand";
 import { ClientLogos } from "@/components/home/ClientLogos";
+import { FeaturedCarousel } from "@/components/home/FeaturedCarousel";
 import { HeroSlideshow } from "@/components/home/HeroSlideshow";
 import { HeroVideo } from "@/components/home/HeroVideo";
 import { ProcessSteps } from "@/components/home/ProcessSteps";
@@ -20,6 +21,9 @@ import { getHomeContent } from "@/lib/queries/home";
 import { getFeaturedProducts } from "@/lib/queries/products";
 import { getStoryById } from "@/lib/queries/stories";
 
+/** Fewer featured products than this show as a grid: the loop needs more cards than fit at once. */
+const MIN_FOR_CAROUSEL = 6;
+
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
@@ -27,9 +31,9 @@ export const metadata: Metadata = {
 /** Copy is edited in the CMS (Home page global); link targets are fixed here. */
 export default async function HomePage() {
   const access = await contentAccess();
-  const [{ hero, process: howWeWork, spotlight }, featured, clients, sections] = await Promise.all([
+  const [{ hero, process: howWeWork, spotlight, featuredCarousel: carousel }, featured, clients, sections] = await Promise.all([
     getHomeContent(access),
-    getFeaturedProducts(4),
+    getFeaturedProducts(12),
     getPublishedClients(access),
     getAvailableSections(),
   ]);
@@ -89,29 +93,38 @@ export default async function HomePage() {
           <StorySpotlight heading={spotlight?.heading ?? ""} story={story} />
         </AuroraBand>
       )}
-      <AuroraBand shade="sky">
-        {featured.length > 0 && (
-          <section aria-labelledby="featured-heading" className="mb-10">
+      {featured.length > 0 && (
+        <AuroraBand shade="sky">
+          <section aria-labelledby="featured-heading">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <SectionHeading id="featured-heading">Featured products</SectionHeading>
               <Link href="/products" className="link-accent text-sm">
                 View all products
               </Link>
             </div>
-            <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {featured.map((product, index) => (
-                <li key={product.slug} className="flex">
-                  {/* On phones the first card is above the fold (LCP). */}
-                  <ProductCard product={product} eager={index === 0} compact />
-                </li>
-              ))}
-            </ul>
+            {featured.length >= MIN_FOR_CAROUSEL ? (
+              // Wider than the page content on large screens (up to 1600px), so the cards are bigger.
+              <div className="mx-[calc(50%-50vw)] mt-4">
+                <div className="mx-auto max-w-[1600px]">
+                  <FeaturedCarousel autoplay={carousel?.autoplay ?? true} seconds={carousel?.seconds ?? 5}>
+                    {featured.map((product) => (
+                      <ProductCard key={product.slug} product={product} compact />
+                    ))}
+                  </FeaturedCarousel>
+                </div>
+              </div>
+            ) : (
+              <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {featured.map((product) => (
+                  <li key={product.slug} className="flex">
+                    <ProductCard product={product} compact />
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
-        )}
-        <ButtonLink href="/contact" className="h-10 px-5">
-          Discuss a project
-        </ButtonLink>
-      </AuroraBand>
+        </AuroraBand>
+      )}
       <ChatInvitation page="home" />
     </>
   );

@@ -236,6 +236,39 @@ export const Home: GlobalConfig = {
       ],
     },
     {
+      name: "featuredCarousel",
+      type: "group",
+      label: "Featured products carousel",
+      admin: {
+        description:
+          "Featured products (ticked on each product, newest first) roll through a carousel. With fewer than 6 they show as a grid instead. Visitors can pause it, drag it, or use the arrows.",
+      },
+      fields: [
+        {
+          type: "row",
+          fields: [
+            {
+              name: "autoplay",
+              label: "Roll automatically",
+              type: "checkbox",
+              defaultValue: true,
+              admin: { width: "50%", description: "Never for visitors who have reduced motion turned on." },
+            },
+            {
+              name: "seconds",
+              label: "Seconds per product",
+              type: "number",
+              required: true,
+              defaultValue: 5,
+              min: 3,
+              max: 10,
+              admin: { width: "50%", step: 1, description: "How long each product stays in the centre, 3 to 10." },
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "spotlight",
       type: "group",
       label: "Success story spotlight",

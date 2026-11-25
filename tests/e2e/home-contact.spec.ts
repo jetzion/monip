@@ -1,18 +1,64 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type APIRequestContext } from "@playwright/test";
 
-test("homepage shows the 4 most recently published featured products, four across", async ({ page, request }) => {
-  const response = await request.get("/api/products?where[featured][equals]=true&sort=-publishedAt&limit=4&depth=0");
-  const names = ((await response.json()) as { docs: { name: string }[] }).docs.map((doc) => doc.name);
-  expect(names.length).toBeGreaterThan(0);
+const featuredNames = async (request: APIRequestContext) => {
+  const response = await request.get("/api/products?where[featured][equals]=true&sort=-publishedAt&limit=12&depth=0");
+  return ((await response.json()) as { docs: { name: string; slug: string }[] }).docs;
+};
+
+test("homepage rolls up to 12 featured products, newest first, the centre card in front of a turning drum", async ({ page, request }) => {
+  const products = await featuredNames(request);
+  // The carousel needs at least 6; fewer show as a grid.
+  expect(products.length).toBeGreaterThanOrEqual(6);
 
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
-  const cards = page.getByRole("region", { name: "Featured products" }).getByRole("article");
-  await expect(cards.getByRole("heading")).toHaveText(names);
-  if (names.length === 4) {
-    const tops = await cards.evaluateAll((all) => all.map((card) => card.getBoundingClientRect().top));
-    expect(new Set(tops).size).toBe(1);
+  const carousel = page.getByRole("group", { name: "Featured products" });
+  await expect(carousel.getByRole("article").getByRole("heading")).toHaveText(products.map((product) => product.name));
+  // On a drum: the centre card faces the viewer, neighbours turn 24 degrees, outer cards 48
+  // (the last slide sits left of the first).
+  const angles = await carousel
+    .locator("li[aria-roledescription=slide]")
+    .evaluateAll((lis) => lis.map((li) => Number.parseFloat(li.style.getPropertyValue("--ry"))));
+  for (const [index, angle] of [[0, 0], [1, 24], [2, 48], [angles.length - 1, -24]]) {
+    expect(Math.abs(angles[index] - angle)).toBeLessThan(1);
   }
+
+  await expect(carousel.getByRole("button", { name: "Show product 1", exact: true })).toHaveAttribute("aria-current", "true");
+  // Default: the next product every 5 seconds.
+  await expect(carousel.getByRole("button", { name: "Show product 2", exact: true })).toHaveAttribute("aria-current", "true", { timeout: 8000 });
+});
+
+test("visitors can pause the carousel, step through it, and open a product", async ({ page, request }) => {
+  const products = await featuredNames(request);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/");
+  const carousel = page.getByRole("group", { name: "Featured products" });
+  // Pointing at it holds it still.
+  await carousel.hover();
+  await page.waitForTimeout(6000);
+  await expect(carousel.getByRole("button", { name: "Show product 1", exact: true })).toHaveAttribute("aria-current", "true");
+  await carousel.getByRole("button", { name: "Pause featured products" }).click();
+  await carousel.getByRole("button", { name: "Play featured products" }).click();
+  // Playing again rolls on and runs the countdown, with the pointer still on the button.
+  await expect(carousel.locator(".carousel-countdown")).toHaveCSS("animation-play-state", "running");
+  await expect(carousel.getByRole("button", { name: "Show product 2", exact: true })).toHaveAttribute("aria-current", "true", { timeout: 8000 });
+  await carousel.getByRole("button", { name: "Pause featured products" }).click();
+  await expect(carousel.getByRole("button", { name: "Play featured products" })).toBeVisible();
+  await carousel.getByRole("button", { name: "Next product" }).click();
+  await expect(carousel.getByRole("button", { name: "Show product 3", exact: true })).toHaveAttribute("aria-current", "true");
+  await carousel.getByRole("link", { name: products[2].name, exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`/products/${products[2].slug}$`));
+});
+
+test("featured products do not roll with reduced motion", async ({ browser }) => {
+  const page = await browser.newPage({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const carousel = page.getByRole("group", { name: "Featured products" });
+  await expect(carousel.getByRole("button", { name: "Next product" })).toBeVisible();
+  await expect(carousel.getByRole("button", { name: /Pause|Play/ })).toHaveCount(0);
+  await page.waitForTimeout(6000);
+  await expect(carousel.getByRole("button", { name: "Show product 1", exact: true })).toHaveAttribute("aria-current", "true");
+  await page.close();
 });
 
 test("header call to action opens the contact page", async ({ page }) => {
@@ -28,11 +74,9 @@ test("homepage shows the published CMS copy", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Merchandising and product sourcing for business");
 });
 
-test("a Discuss a project button under the products opens the contact page", async ({ page }) => {
+test("the only Discuss a project link in the page body is the hero button", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByText("Have a product or program in mind?")).toHaveCount(0);
-  await page.getByRole("main").getByRole("link", { name: "Discuss a project" }).last().click();
-  await expect(page).toHaveURL(/\/contact$/);
+  await expect(page.getByRole("main").getByRole("link", { name: "Discuss a project" })).toHaveCount(1);
 });
 
 test("hero buttons open the products and contact pages", async ({ page }) => {

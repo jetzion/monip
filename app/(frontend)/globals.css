@@ -490,3 +490,22 @@
     animation: none;
   }
 }
+
+/* Featured products carousel (components/home/FeaturedCarousel.tsx): the current dot fills with
+   gold over the time each product stays in the centre. */
+@keyframes carousel-countdown {
+  from {
+    transform: scaleX(0);
+  }
+}
+.carousel-countdown {
+  animation: carousel-countdown 5s linear both;
+}
+/* Deeper, layered shadow for the carousel cards so they look lifted off the page on the drum. */
+.drum-card article,
+.drum-card article:hover {
+  box-shadow:
+    0 2px 4px rgb(20 27 58 / 0.1),
+    0 12px 24px -6px rgb(20 27 58 / 0.22),
+    0 32px 48px -16px rgb(20 27 58 / 0.32);
+}
