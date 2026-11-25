@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   },
   images: {
     localPatterns: [{ pathname: "/api/media/file/**" }],
+    // Matches the media files' 1-hour cache (payload.config.ts), so a replaced image shows within the hour.
+    minimumCacheTTL: 60 * 60,
   },
   turbopack: {
     rules: {

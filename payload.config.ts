@@ -115,6 +115,9 @@ export default buildConfig({
       collections: { media: true },
       alwaysInsertFields: true,
       clientUploads: true,
+      // A replaced file keeps its URL; a 1-hour cache (default: 1 year) lets the new file show within
+      // the hour. images.minimumCacheTTL in next.config.ts matches it.
+      cacheControlMaxAge: 60 * 60,
     }),
   ],
 });
