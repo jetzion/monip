@@ -122,3 +122,58 @@ test("accepts exactly 4 steps", async ({ request }) => {
   const five = [...published.slice(0, 4), published[0]].map(step);
   expect((await save(request, five)).status()).toBe(400);
 });
+
+// In this file, not its own: specs in parallel workers writing the Home global overwrite each other's pages.
+test.describe("Success story spotlight", () => {
+  const SPOTLIGHT = "E2E success story";
+  type Story = { id: number; title: string; slug: string; summary: string };
+  type Spotlight = { heading: string; story: number | null };
+  let originalSpotlight: Spotlight;
+  let story: Story;
+  let draftStory: Story;
+
+  const choose = (request: APIRequestContext, id: number | null) =>
+    request.post(HOME, { headers, data: { _status: "published", spotlight: { heading: SPOTLIGHT, story: id } } });
+  const spotlight = (page: Page) => page.getByRole("region", { name: SPOTLIGHT });
+
+  test.beforeAll(async ({ request }) => {
+    const home = (await (await request.get(`${HOME}?depth=0`)).json()) as { spotlight?: Spotlight };
+    originalSpotlight = { heading: home.spotlight?.heading ?? "Success story", story: home.spotlight?.story ?? null };
+    const list = await request.get("/api/success-stories?where[_status][equals]=published&limit=1&depth=0");
+    [story] = ((await list.json()) as { docs: Story[] }).docs;
+    expect(story).toBeDefined();
+    const created = await request.post("/api/success-stories?draft=true", {
+      headers,
+      data: { title: "E2E draft story", summary: "Not published.", _status: "draft" },
+    });
+    expect(created.ok()).toBe(true);
+    draftStory = ((await created.json()) as { doc: Story }).doc;
+  });
+
+  test.afterAll(async ({ request }) => {
+    await request.post(HOME, { headers, data: { _status: "published", spotlight: originalSpotlight } });
+    await request.delete(`/api/success-stories/${draftStory.id}`, { headers });
+  });
+
+  test("shows the chosen story's image, title, and summary, linking to the story", async ({ page, request }) => {
+    expect((await choose(request, story.id)).ok()).toBe(true);
+    await page.goto("/");
+    await expect(spotlight(page).getByRole("heading", { level: 3 })).toHaveText(story.title);
+    await expect(spotlight(page)).toContainText(story.summary);
+    await expect(spotlight(page).locator("img")).toHaveCount(1);
+    await expect(spotlight(page)).not.toContainText("Development placeholder");
+    await spotlight(page).getByRole("link", { name: "Read the story" }).click();
+    await expect(page).toHaveURL(new RegExp(`/success-stories/${story.slug}$`));
+  });
+
+  test("is hidden from visitors without a story or with an unpublished one", async ({ page, request }) => {
+    expect((await choose(request, null)).ok()).toBe(true);
+    await page.goto("/");
+    await expect(spotlight(page)).toHaveCount(0);
+
+    expect((await choose(request, draftStory.id)).ok()).toBe(true);
+    await page.goto("/");
+    await expect(spotlight(page)).toHaveCount(0);
+    await expect(page.getByText("E2E draft story")).toHaveCount(0);
+  });
+});

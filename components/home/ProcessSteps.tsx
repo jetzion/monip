@@ -50,7 +50,7 @@ const ARROWS: { clip: string; style: CSSProperties }[] = [
 export function ProcessSteps({ heading, cards, showAllLink }: Props) {
   const loop = cards.length === PLACES.length;
   return (
-    <section aria-labelledby="process-heading" className="mb-16">
+    <section aria-labelledby="process-heading">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading id="process-heading">{heading}</SectionHeading>
         {showAllLink && (

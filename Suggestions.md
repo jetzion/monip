@@ -24,7 +24,7 @@ trust.
 3. **Make product names and photos consistent.** "Sun glasses - man" sits next
    to "Touch of Luxury Rings". Use one naming style, and shoot products on the
    same background in the same light.
-4. **Alternate the section backgrounds.** Services on white, products on a
+4. **Alternate the section backgrounds** (built 2026-11-25: aurora bands in alternating shades of blue)**.** Services on white, products on a
    light tint, the closing call to action on navy, so the page does not read
    as one long block.
 
@@ -32,7 +32,7 @@ trust.
 
 5. **Client logo strip under the hero.** Greyscale logos that turn to colour on
    hover, from the Clients collection. Logos need MONIP's approval.
-6. **Success story spotlight.** One large story from Success Stories: an image
+6. **Success story spotlight** (built 2026-11-25; MONIP chooses the story)**.** One large story from Success Stories: an image
    on one side; the challenge, what MONIP did and the result on the other.
 7. **"How we work" in 3–4 steps:** Strategy → Design → Sourcing → Delivery.
    Turns the four services into one connected offer.

@@ -1379,6 +1379,16 @@ export interface Home {
         }[]
       | null;
   };
+  /**
+   * One success story shown large under How we work: its featured image, title, and summary, with a link to the full story. Visitors see it only when the chosen story is published.
+   */
+  spotlight: {
+    heading: string;
+    /**
+     * Leave empty to hide the section. Write the summary as challenge, what MONIP did, and the result.
+     */
+    story?: (number | null) | SuccessStory;
+  };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1572,6 +1582,12 @@ export interface HomeSelect<T extends boolean = true> {
               description?: T;
               id?: T;
             };
+      };
+  spotlight?:
+    | T
+    | {
+        heading?: T;
+        story?: T;
       };
   _status?: T;
   updatedAt?: T;

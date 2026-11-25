@@ -54,3 +54,18 @@ export async function getPublishedStoryRefs() {
   });
   return docs.map(({ slug, updatedAt }) => ({ slug, updatedAt }));
 }
+
+/** One story for the homepage spotlight; null when it is not published (or not visible in this mode). */
+export async function getStoryById(id: number, access: ContentAccess = publicAccess) {
+  const payload = await getPayloadClient();
+  const { docs } = await payload.find({
+    collection: "success-stories",
+    ...access,
+    depth: 1,
+    limit: 1,
+    where: { id: { equals: id } },
+    select: cardFields,
+    populate,
+  });
+  return docs[0] ?? null;
+}

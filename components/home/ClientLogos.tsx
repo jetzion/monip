@@ -1,20 +1,12 @@
 import { cn } from "cn";
-import Link from "next/link";
+import type { CSSProperties } from "react";
 
 import { CmsImage } from "@/components/media/CmsImage";
 import { logoHeight } from "@/lib/client-logo";
 import { populated } from "@/lib/payload";
 import type { Client, Media } from "@/payload-types";
 
-import { LogoMarquee } from "./LogoMarquee";
-
 type ClientLogo = Pick<Client, "id" | "name" | "logo">;
-
-type Props = {
-  clients: ClientLogo[];
-  /** Link to the Clients page; hidden when that page is not published. */
-  showAllLink: boolean;
-};
 
 /** Fewer logos than this are repeated so one copy of the list is wider than the strip. */
 const MIN_PER_LOOP = 8;
@@ -47,30 +39,27 @@ function LogoList({ logos, count, hidden }: { logos: ClientLogo[]; count: number
   );
 }
 
-/** Homepage band of all client logos scrolling in the editors' order, greyscale until hovered. */
-export function ClientLogos({ clients, showAllLink }: Props) {
+/**
+ * Homepage band of all client logos scrolling in the editors' order (keyframes in globals.css),
+ * greyscale until hovered and paused on hover. With reduced motion it stands still.
+ */
+export function ClientLogos({ clients }: { clients: ClientLogo[] }) {
   const repeats = Math.ceil(MIN_PER_LOOP / clients.length);
   const logos = Array.from({ length: repeats }, () => clients).flat();
   return (
     <section aria-labelledby="clients-heading" className="border-b border-border bg-card">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-4">
-          <h2 id="clients-heading" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Our clients
-          </h2>
-          {showAllLink && (
-            <Link href="/clients" className="link-accent text-sm">
-              View all clients
-            </Link>
-          )}
-        </div>
-        <div className="mt-6">
-          <LogoMarquee seconds={logos.length * SECONDS_PER_LOGO}>
-            <div className="logo-marquee-track flex w-max motion-reduce:w-full">
-              <LogoList logos={logos} count={clients.length} />
-              <LogoList logos={logos} count={clients.length} hidden />
-            </div>
-          </LogoMarquee>
+      <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
+        <h2 id="clients-heading" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          Our clients
+        </h2>
+        <div
+          className="logo-marquee mt-2 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] motion-reduce:[mask-image:none]"
+          style={{ "--marquee-duration": `${logos.length * SECONDS_PER_LOGO}s` } as CSSProperties}
+        >
+          <div className="logo-marquee-track flex w-max motion-reduce:w-full">
+            <LogoList logos={logos} count={clients.length} />
+            <LogoList logos={logos} count={clients.length} hidden />
+          </div>
         </div>
       </div>
     </section>

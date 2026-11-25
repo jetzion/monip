@@ -4,10 +4,12 @@ import Link from "next/link";
 import { ChatInvitation } from "@/components/chat/ChatInvitation";
 import { PageHeader } from "@/components/content/PageHeader";
 import { SectionHeading } from "@/components/content/SectionHeading";
+import { AuroraBand } from "@/components/home/AuroraBand";
 import { ClientLogos } from "@/components/home/ClientLogos";
 import { HeroSlideshow } from "@/components/home/HeroSlideshow";
 import { HeroVideo } from "@/components/home/HeroVideo";
 import { ProcessSteps } from "@/components/home/ProcessSteps";
+import { StorySpotlight } from "@/components/home/StorySpotlight";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ButtonLink } from "@/components/ui/button-link";
 import { heroBackground } from "@/lib/hero";
@@ -16,6 +18,7 @@ import { contentAccess } from "@/lib/queries/access";
 import { getAvailableSections, getPublishedClients, getServicesByIds } from "@/lib/queries/content";
 import { getHomeContent } from "@/lib/queries/home";
 import { getFeaturedProducts } from "@/lib/queries/products";
+import { getStoryById } from "@/lib/queries/stories";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -24,14 +27,18 @@ export const metadata: Metadata = {
 /** Copy is edited in the CMS (Home page global); link targets are fixed here. */
 export default async function HomePage() {
   const access = await contentAccess();
-  const [{ hero, process }, featured, clients, sections] = await Promise.all([
+  const [{ hero, process: howWeWork, spotlight }, featured, clients, sections] = await Promise.all([
     getHomeContent(access),
     getFeaturedProducts(4),
     getPublishedClients(access),
     getAvailableSections(),
   ]);
-  const steps = process?.steps ?? [];
+  const steps = howWeWork?.steps ?? [];
   const cards = processCards(steps, await getServicesByIds(steps.map((step) => serviceId(step.service)), access));
+  const storyRef = spotlight?.story;
+  const story = storyRef ? await getStoryById(typeof storyRef === "object" ? storyRef.id : storyRef, access) : null;
+  // Without a published story the section is hidden, except as a placeholder in development and Live Preview.
+  const showSpotlight = story !== null || process.env.NODE_ENV === "development" || access.draft;
   const background = heroBackground(hero);
 
   return (
@@ -70,12 +77,19 @@ export default async function HomePage() {
           </Link>
         </div>
       </PageHeader>
-      {clients.length > 0 && <ClientLogos clients={clients} showAllLink={sections.clients} />}
+      {clients.length > 0 && <ClientLogos clients={clients} />}
 
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        {cards.length > 0 && (
-          <ProcessSteps heading={process?.heading ?? ""} cards={cards} showAllLink={sections.services} />
-        )}
+      {cards.length > 0 && (
+        <AuroraBand>
+          <ProcessSteps heading={howWeWork?.heading ?? ""} cards={cards} showAllLink={sections.services} />
+        </AuroraBand>
+      )}
+      {showSpotlight && (
+        <AuroraBand shade="pale">
+          <StorySpotlight heading={spotlight?.heading ?? ""} story={story} />
+        </AuroraBand>
+      )}
+      <AuroraBand shade="sky">
         {featured.length > 0 && (
           <section aria-labelledby="featured-heading" className="mb-10">
             <div className="flex flex-wrap items-end justify-between gap-4">
@@ -97,7 +111,7 @@ export default async function HomePage() {
         <ButtonLink href="/contact" className="h-10 px-5">
           Discuss a project
         </ButtonLink>
-      </div>
+      </AuroraBand>
       <ChatInvitation page="home" />
     </>
   );

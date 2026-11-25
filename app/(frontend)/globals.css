@@ -140,12 +140,25 @@
     @apply bg-background text-foreground;
     line-height: 1.6;
   }
-  /* Pastel "aurora" backdrop: two fixed layers of colour streams that drift slowly, so cards appear to float. */
+  /* Pastel "aurora" backdrop: two layers of colour streams that drift slowly, so cards appear to float.
+     Fixed behind the whole page; homepage bands (.aurora-band) repeat it in their own shade. */
+  :root {
+    --aurora-base: #e8f0fb;
+    --aurora-1: rgb(120 182 242);
+    --aurora-2: rgb(146 170 246);
+    --aurora-3: rgb(160 220 236);
+    --aurora-4: rgb(132 178 246);
+    --aurora-5: rgb(178 214 250 / 0.9);
+    --aurora-6: rgb(222 212 250 / 0.95);
+    --aurora-7: rgb(140 204 246 / 0.9);
+  }
   body {
-    background-color: #e8f0fb;
+    background-color: var(--aurora-base);
   }
   body::before,
-  body::after {
+  body::after,
+  .aurora-band::before,
+  .aurora-band::after {
     content: "";
     position: fixed;
     inset: -12%;
@@ -153,25 +166,60 @@
     pointer-events: none;
     will-change: transform;
   }
-  body::before {
+  body::before,
+  .aurora-band::before {
     background-image:
-      radial-gradient(max(24vw, 10rem) 85% at 8% 0%, rgb(120 182 242), transparent 75%),
-      radial-gradient(max(22vw, 9rem) 85% at 38% 0%, rgb(146 170 246), transparent 75%),
-      radial-gradient(max(22vw, 9rem) 80% at 68% 0%, rgb(160 220 236), transparent 75%),
-      radial-gradient(max(27vw, 11rem) 90% at 96% 0%, rgb(132 178 246), transparent 75%);
+      radial-gradient(max(24vw, 10rem) 85% at 8% 0%, var(--aurora-1), transparent 75%),
+      radial-gradient(max(22vw, 9rem) 85% at 38% 0%, var(--aurora-2), transparent 75%),
+      radial-gradient(max(22vw, 9rem) 80% at 68% 0%, var(--aurora-3), transparent 75%),
+      radial-gradient(max(27vw, 11rem) 90% at 96% 0%, var(--aurora-4), transparent 75%);
     animation: aurora-a 32s ease-in-out infinite alternate;
   }
-  body::after {
+  body::after,
+  .aurora-band::after {
     background-image:
-      linear-gradient(to bottom, transparent 40%, #e8f0fb 92%),
-      radial-gradient(max(22vw, 9rem) 80% at 22% 0%, rgb(178 214 250 / 0.9), transparent 75%),
-      radial-gradient(max(24vw, 10rem) 90% at 52% 0%, rgb(222 212 250 / 0.95), transparent 75%),
-      radial-gradient(max(22vw, 9rem) 80% at 80% 0%, rgb(140 204 246 / 0.9), transparent 75%);
+      linear-gradient(to bottom, transparent 40%, var(--aurora-base) 92%),
+      radial-gradient(max(22vw, 9rem) 80% at 22% 0%, var(--aurora-5), transparent 75%),
+      radial-gradient(max(24vw, 10rem) 90% at 52% 0%, var(--aurora-6), transparent 75%),
+      radial-gradient(max(22vw, 9rem) 80% at 80% 0%, var(--aurora-7), transparent 75%);
     animation: aurora-b 40s ease-in-out infinite alternate;
+  }
+  /* A band's clouds start at its own top edge and stay inside it. */
+  .aurora-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: var(--aurora-base);
+  }
+  .aurora-band::before,
+  .aurora-band::after {
+    position: absolute;
+  }
+  .aurora-pale {
+    --aurora-base: #f6f9fd;
+    --aurora-1: rgb(212 226 246);
+    --aurora-2: rgb(220 226 248);
+    --aurora-3: rgb(216 234 246);
+    --aurora-4: rgb(210 224 246);
+    --aurora-5: rgb(228 238 250 / 0.9);
+    --aurora-6: rgb(234 238 250 / 0.95);
+    --aurora-7: rgb(224 236 250 / 0.9);
+  }
+  .aurora-sky {
+    --aurora-base: #dcebf8;
+    --aurora-1: rgb(96 168 230);
+    --aurora-2: rgb(118 174 236);
+    --aurora-3: rgb(108 194 232);
+    --aurora-4: rgb(92 158 228);
+    --aurora-5: rgb(156 204 244 / 0.9);
+    --aurora-6: rgb(172 204 246 / 0.95);
+    --aurora-7: rgb(124 188 238 / 0.9);
   }
   @media (prefers-reduced-motion: reduce) {
     body::before,
-    body::after {
+    body::after,
+    .aurora-band::before,
+    .aurora-band::after {
       animation: none;
     }
   }
@@ -424,8 +472,8 @@
   }
 }
 
-/* Homepage client logo marquee (components/home/LogoMarquee.tsx): the track holds the list twice
-   and slides by half its width, so the loop is seamless. Paused on hover or by the button. */
+/* Homepage client logo marquee (components/home/ClientLogos.tsx): the track holds the list twice
+   and slides by half its width, so the loop is seamless. Paused on hover. */
 @keyframes logo-marquee {
   to {
     translate: -50% 0;
@@ -434,8 +482,7 @@
 .logo-marquee-track {
   animation: logo-marquee var(--marquee-duration, 40s) linear infinite;
 }
-.logo-marquee:hover .logo-marquee-track,
-.logo-marquee[data-paused] .logo-marquee-track {
+.logo-marquee:hover .logo-marquee-track {
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {

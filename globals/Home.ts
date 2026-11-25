@@ -235,5 +235,31 @@ export const Home: GlobalConfig = {
         },
       ],
     },
+    {
+      name: "spotlight",
+      type: "group",
+      label: "Success story spotlight",
+      admin: {
+        description:
+          "One success story shown large under How we work: its featured image, title, and summary, with a link to the full story. Visitors see it only when the chosen story is published.",
+      },
+      fields: [
+        {
+          name: "heading",
+          type: "text",
+          required: true,
+          maxLength: 60,
+          defaultValue: "Success story",
+        },
+        {
+          name: "story",
+          type: "relationship",
+          relationTo: "success-stories",
+          // ID only: the page loads the published story itself.
+          maxDepth: 0,
+          admin: { description: "Leave empty to hide the section. Write the summary as challenge, what MONIP did, and the result." },
+        },
+      ],
+    },
   ],
 };

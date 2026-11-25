@@ -43,7 +43,7 @@ test("hero buttons open the products and contact pages", async ({ page }) => {
   await expect(page).toHaveURL(/\/products$/);
 });
 
-test("homepage scrolls all published client logos, with a pause button and a Clients link", async ({ page, request }) => {
+test("homepage scrolls all published client logos and pauses on hover", async ({ page, request }) => {
   const response = await request.get("/api/clients?limit=0&depth=0");
   const total = ((await response.json()) as { totalDocs: number }).totalDocs;
   expect(total).toBeGreaterThan(0);
@@ -54,14 +54,12 @@ test("homepage scrolls all published client logos, with a pause button and a Cli
   await expect(band.getByRole("listitem")).toHaveCount(total * Math.ceil(8 / total));
   const track = band.locator(".logo-marquee-track");
   await expect(track).toHaveCSS("animation-play-state", "running");
-  await band.getByRole("button", { name: "Pause client logos" }).click();
+  await band.locator(".logo-marquee").hover();
   await expect(track).toHaveCSS("animation-play-state", "paused");
-  await band.getByRole("button", { name: "Play client logos" }).click();
   await page.mouse.move(0, 0);
   await expect(track).toHaveCSS("animation-play-state", "running");
-
-  await band.getByRole("link", { name: "View all clients" }).click();
-  await expect(page).toHaveURL(/\/clients$/);
+  await expect(band.getByRole("button")).toHaveCount(0);
+  await expect(band.getByRole("link")).toHaveCount(0);
 });
 
 test("client logos stand still with reduced motion", async ({ browser }) => {
@@ -69,7 +67,6 @@ test("client logos stand still with reduced motion", async ({ browser }) => {
   await page.goto("/");
   const band = page.getByRole("region", { name: "Our clients" });
   await expect(band.locator(".logo-marquee-track")).toHaveCSS("animation-name", "none");
-  await expect(band.getByRole("button")).toBeHidden();
   await page.close();
 });
 
