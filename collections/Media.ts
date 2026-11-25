@@ -4,6 +4,7 @@ import { isContentEditor } from '../access/content'
 import { hiddenFromTrainers } from '../access/roles'
 import { altFromFilename } from '../lib/media-alt'
 import { measureContentBoxHook } from '../lib/media/measure-hook'
+import { logUploadDone, logUploadSaved, logUploadStart } from '../lib/media/upload-log'
 
 /** Uploads without alt text (e.g. through the API) get it from the file name. */
 const defaultAlt: CollectionBeforeValidateHook = ({ data }) => {
@@ -26,8 +27,11 @@ export const Media: CollectionConfig = {
     delete: isContentEditor,
   },
   hooks: {
+    beforeOperation: [logUploadStart],
     beforeValidate: [defaultAlt],
     beforeChange: [measureContentBoxHook],
+    afterChange: [logUploadSaved],
+    afterOperation: [logUploadDone],
   },
   fields: [
     {

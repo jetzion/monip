@@ -4,6 +4,7 @@ import type { CollectionBeforeChangeHook, PayloadRequest } from "payload";
 
 import { measureContentBox } from "./content-box";
 import { readStoredMedia } from "./stored-file";
+import { logUploadStep } from "./upload-log";
 
 const MEASURABLE = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
 
@@ -34,8 +35,11 @@ export const measureContentBoxHook: CollectionBeforeChangeHook = async ({ collec
     const upload = req.file?.clientUploadContext as { _objectKey?: string } | undefined;
     const objectKey = data._objectKey ?? upload?._objectKey ?? originalDoc?._objectKey;
     const folder = [data.prefix ?? originalDoc?.prefix, objectKey].filter(Boolean).join("/");
+    logUploadStep(req, "measure: reading image");
     const bytes = await imageBytes(req, filename, data.filesize ?? originalDoc?.filesize, staticDir, folder);
+    logUploadStep(req, `measure: read ${bytes.length} bytes`);
     const measured = await measureContentBox(bytes);
+    logUploadStep(req, "measure: done");
     const width = data.width ?? originalDoc?.width;
     const height = data.height ?? originalDoc?.height;
     data.contentBox = measured.width === width && measured.height === height ? measured.box : null;

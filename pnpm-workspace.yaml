@@ -2,3 +2,5 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: false
+patchedDependencies:
+  '@payloadcms/storage-vercel-blob@3.91.0': patches/@payloadcms__storage-vercel-blob@3.91.0.patch

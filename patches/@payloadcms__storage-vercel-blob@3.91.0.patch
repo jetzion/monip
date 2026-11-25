@@ -1,0 +1,15 @@
+diff --git a/dist/authorizeFileOverwrite.js b/dist/authorizeFileOverwrite.js
+index 2f9b2e934b542fbd445184072d64bef308f6aa14..4dcef588f82a2af47583e9345929f5aa22708061 100644
+--- a/dist/authorizeFileOverwrite.js
++++ b/dist/authorizeFileOverwrite.js
+@@ -76,6 +76,10 @@ async function canUpdateDoc({ collectionSlug, doc, req }) {
+     return result.docs.length === 1;
+ }
+ export async function authorizeClientOverwrite({ collectionPrefix: collectionPrefixArg, collections, req, requestedCollectionSlug, requestedFilename, requestedStorageFilePath, useCompositePrefixes = false }) {
++    // MONIP patch: never overwrite in place. The match below ignores `_objectKey`, so
++    // re-uploading an existing filename wrote to a path the new doc did not point at (broken
++    // image) and could replace an older root-level image. Every upload now gets its own folder.
++    return false;
+     if (!isStoragePathWithinCollectionPrefix({
+         collectionPrefix: collectionPrefixArg,
+         docPrefix: requestedStorageFilePath

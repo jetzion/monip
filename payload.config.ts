@@ -115,8 +115,9 @@ export default buildConfig({
       collections: { media: true },
       alwaysInsertFields: true,
       clientUploads: true,
-      // A replaced file keeps its URL; a 1-hour cache (default: 1 year) lets the new file show within
-      // the hour. images.minimumCacheTTL in next.config.ts matches it.
+      // Uploads never overwrite in place (patches/@payloadcms__storage-vercel-blob@*.patch): each
+      // gets its own folder. The 1-hour cache (default: 1 year) is kept as a safety margin;
+      // images.minimumCacheTTL in next.config.ts matches it.
       cacheControlMaxAge: 60 * 60,
     }),
   ],
