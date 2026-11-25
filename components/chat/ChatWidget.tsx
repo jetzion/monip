@@ -218,7 +218,7 @@ export function ChatWidget() {
         aria-controls="chat-panel"
         onClick={() => (open ? close() : setOpen(true))}
         className={cn(
-          "fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2.5 rounded-full bg-primary font-semibold text-primary-foreground shadow-card-hover transition duration-200 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 motion-safe:hover:-translate-y-0.5",
+          "header-band fixed bottom-4 right-4 z-50 h-14 items-center justify-center gap-2.5 rounded-xl border-2 border-white/15 font-semibold text-white shadow-card-hover transition duration-200 hover:border-gold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 motion-safe:hover:-translate-y-0.5",
           open ? "hidden w-14 sm:inline-flex" : "inline-flex pl-2 pr-5",
         )}
       >
@@ -229,7 +229,7 @@ export function ChatWidget() {
           </>
         ) : (
           <>
-            <AssistantAvatar className="size-10 rounded-full ring-2 ring-white/40" />
+            <AssistantAvatar className="size-10 rounded-full ring-2 ring-gold" />
             Chat with us
           </>
         )}

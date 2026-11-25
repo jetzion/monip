@@ -61,10 +61,10 @@ export function ProcessLoop({ loop, children }: { loop: boolean; children: React
         <div aria-hidden="true" className="hidden lg:block">
           {ARROWS.map(({ length, style }, index) => (
             <div key={index} className="absolute origin-left" style={style}>
-              <div className="absolute -top-2 left-0 h-4" style={arrowState(index, step, length)}>
-                <span className="absolute inset-y-1.5 left-0 right-3 bg-gold" />
+              <div className="absolute -top-2.5 left-0 h-5" style={arrowState(index, step, length)}>
+                <span className="absolute inset-y-[7px] left-0 right-4 bg-gold" />
                 <span
-                  className="absolute right-0 top-0 size-4 bg-gold"
+                  className="absolute right-0 top-0 size-5 bg-gold"
                   style={{ clipPath: "polygon(0 0, 100% 50%, 0 100%)" }}
                 />
               </div>
