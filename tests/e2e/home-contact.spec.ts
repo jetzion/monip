@@ -43,6 +43,36 @@ test("hero buttons open the products and contact pages", async ({ page }) => {
   await expect(page).toHaveURL(/\/products$/);
 });
 
+test("homepage scrolls all published client logos, with a pause button and a Clients link", async ({ page, request }) => {
+  const response = await request.get("/api/clients?limit=0&depth=0");
+  const total = ((await response.json()) as { totalDocs: number }).totalDocs;
+  expect(total).toBeGreaterThan(0);
+
+  await page.goto("/");
+  const band = page.getByRole("region", { name: "Our clients" });
+  // Fewer than 8 logos are repeated to fill the strip; the second (moving) copy is hidden from assistive tech.
+  await expect(band.getByRole("listitem")).toHaveCount(total * Math.ceil(8 / total));
+  const track = band.locator(".logo-marquee-track");
+  await expect(track).toHaveCSS("animation-play-state", "running");
+  await band.getByRole("button", { name: "Pause client logos" }).click();
+  await expect(track).toHaveCSS("animation-play-state", "paused");
+  await band.getByRole("button", { name: "Play client logos" }).click();
+  await page.mouse.move(0, 0);
+  await expect(track).toHaveCSS("animation-play-state", "running");
+
+  await band.getByRole("link", { name: "View all clients" }).click();
+  await expect(page).toHaveURL(/\/clients$/);
+});
+
+test("client logos stand still with reduced motion", async ({ browser }) => {
+  const page = await browser.newPage({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const band = page.getByRole("region", { name: "Our clients" });
+  await expect(band.locator(".logo-marquee-track")).toHaveCSS("animation-name", "none");
+  await expect(band.getByRole("button")).toBeHidden();
+  await page.close();
+});
+
 test("hero links to the About page for more detail", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "More about MONIP Group" }).click();
@@ -68,16 +98,10 @@ test("header stays visible after scrolling", async ({ page }) => {
   expect(box?.y).toBe(0);
 });
 
-test("home product and service cards share the name size and show no category tag", async ({ page }) => {
+// How we work cards use the same name size (checked in home-process.spec.ts, which controls that section's data).
+test("home product cards use the compact name size and show no category tag", async ({ page }) => {
   await page.goto("/");
-  const nameSize = (region: string) =>
-    page
-      .getByRole("region", { name: region })
-      .getByRole("article")
-      .first()
-      .getByRole("heading")
-      .evaluate((el) => getComputedStyle(el).fontSize);
-  expect(await nameSize("Featured products")).toBe("17px");
-  expect(await nameSize("Our services")).toBe("17px");
+  const name = page.getByRole("region", { name: "Featured products" }).getByRole("article").first().getByRole("heading");
+  expect(await name.evaluate((el) => getComputedStyle(el).fontSize)).toBe("17px");
   await expect(page.getByRole("region", { name: "Featured products" }).locator("article p.rounded-full")).toHaveCount(0);
 });

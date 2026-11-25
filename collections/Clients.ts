@@ -12,7 +12,7 @@ export const Clients: CollectionConfig = {
     useAsTitle: "name",
     defaultColumns: ["logo", "name", "_status", "updatedAt"],
     description:
-      "Client logos shown on the Our clients page, in this order. Drag the handle on the left to reorder. Publish only clients MONIP has approval to name.",
+      "Client logos shown on the Our clients page, in this order, and scrolling on the homepage. Drag the handle on the left to reorder. Publish only clients MONIP has approval to name.",
     livePreview: livePreview(() => "/clients"),
   },
   // Drag-and-drop ordering in the list; adds a hidden `_order` field.

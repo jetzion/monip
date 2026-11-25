@@ -1,0 +1,78 @@
+import { cn } from "cn";
+import Link from "next/link";
+
+import { CmsImage } from "@/components/media/CmsImage";
+import { logoHeight } from "@/lib/client-logo";
+import { populated } from "@/lib/payload";
+import type { Client, Media } from "@/payload-types";
+
+import { LogoMarquee } from "./LogoMarquee";
+
+type ClientLogo = Pick<Client, "id" | "name" | "logo">;
+
+type Props = {
+  clients: ClientLogo[];
+  /** Link to the Clients page; hidden when that page is not published. */
+  showAllLink: boolean;
+};
+
+/** Fewer logos than this are repeated so one copy of the list is wider than the strip. */
+const MIN_PER_LOOP = 8;
+const SECONDS_PER_LOGO = 5;
+
+/** One copy of the list; repeats (beyond the first `count`) are hidden when not moving. */
+function LogoList({ logos, count, hidden }: { logos: ClientLogo[]; count: number; hidden?: boolean }) {
+  return (
+    <ul
+      aria-hidden={hidden || undefined}
+      className={cn(
+        "flex shrink-0 items-center gap-12 pr-12",
+        hidden ? "motion-reduce:hidden" : "motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-x-8 motion-reduce:gap-y-6 motion-reduce:pr-0",
+      )}
+    >
+      {logos.map((client, index) => (
+        <li
+          key={`${client.id}-${index}`}
+          className={cn("flex h-16 shrink-0 items-center", index >= count && "motion-reduce:hidden")}
+        >
+          <div
+            className="flex opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+            style={{ height: logoHeight(populated<Media>(client.logo), 0.75) }}
+          >
+            <CmsImage image={client.logo} sizes="160px" className="h-full w-auto object-contain" />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Homepage band of all client logos scrolling in the editors' order, greyscale until hovered. */
+export function ClientLogos({ clients, showAllLink }: Props) {
+  const repeats = Math.ceil(MIN_PER_LOOP / clients.length);
+  const logos = Array.from({ length: repeats }, () => clients).flat();
+  return (
+    <section aria-labelledby="clients-heading" className="border-b border-border bg-card">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div className="flex flex-wrap items-baseline justify-between gap-4">
+          <h2 id="clients-heading" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Our clients
+          </h2>
+          {showAllLink && (
+            <Link href="/clients" className="link-accent text-sm">
+              View all clients
+            </Link>
+          )}
+        </div>
+        <div className="mt-6">
+          <LogoMarquee seconds={logos.length * SECONDS_PER_LOGO}>
+            <div className="logo-marquee-track flex w-max motion-reduce:w-full">
+              <LogoList logos={logos} count={clients.length} />
+              <LogoList logos={logos} count={clients.length} hidden />
+            </div>
+          </LogoMarquee>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -191,19 +191,49 @@ export const Home: GlobalConfig = {
       ],
     },
     {
-      name: "featuredServices",
-      type: "relationship",
-      label: "Featured services",
-      relationTo: "services",
-      hasMany: true,
-      maxRows: 4,
-      // IDs only: the page loads the services itself, published ones only.
-      maxDepth: 0,
+      name: "process",
+      type: "group",
+      label: "How we work",
       admin: {
-        isSortable: true,
         description:
-          "Up to 4 services shown as cards above Featured products, in this order (drag to reorder). Only published services appear. Leave empty to show the first 4 by the Services sort order.",
+          "MONIP's process as a cycle under the client logos: one numbered card per step, each with its service's photo and a link to it, the last leading back to the first. The section appears only when it has its 4 steps.",
       },
+      fields: [
+        {
+          name: "heading",
+          type: "text",
+          required: true,
+          maxLength: 60,
+          defaultValue: "How we work",
+        },
+        {
+          name: "steps",
+          type: "array",
+          minRows: 4,
+          maxRows: 4,
+          labels: { singular: "Step", plural: "Steps" },
+          admin: { description: "Exactly 4 steps, in order (drag to reorder); the 4th leads back to the 1st. Leave empty to hide the section." },
+          fields: [
+            {
+              name: "service",
+              type: "relationship",
+              relationTo: "services",
+              required: true,
+              // ID only: the page loads published services itself.
+              maxDepth: 0,
+              admin: { description: "Gives the card its photo and link. Only published services appear." },
+            },
+            {
+              name: "title",
+              type: "text",
+              required: true,
+              maxLength: 30,
+              admin: { description: 'Shown on the card; can differ from the service name (e.g. "Merchandising").' },
+            },
+            { name: "description", type: "textarea", required: true, maxLength: 160 },
+          ],
+        },
+      ],
     },
   ],
 };

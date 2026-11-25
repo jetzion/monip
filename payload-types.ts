@@ -474,7 +474,7 @@ export interface SuccessStory {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Client logos shown on the Our clients page, in this order. Drag the handle on the left to reorder. Publish only clients MONIP has approval to name.
+ * Client logos shown on the Our clients page, in this order, and scrolling on the homepage. Drag the handle on the left to reorder. Publish only clients MONIP has approval to name.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clients".
@@ -1357,9 +1357,28 @@ export interface Home {
     overlayOpacity: number;
   };
   /**
-   * Up to 4 services shown as cards above Featured products, in this order (drag to reorder). Only published services appear. Leave empty to show the first 4 by the Services sort order.
+   * MONIP's process as a cycle under the client logos: one numbered card per step, each with its service's photo and a link to it, the last leading back to the first. The section appears only when it has its 4 steps.
    */
-  featuredServices?: (number | Service)[] | null;
+  process: {
+    heading: string;
+    /**
+     * Exactly 4 steps, in order (drag to reorder); the 4th leads back to the 1st. Leave empty to hide the section.
+     */
+    steps?:
+      | {
+          /**
+           * Gives the card its photo and link. Only published services appear.
+           */
+          service: number | Service;
+          /**
+           * Shown on the card; can differ from the service name (e.g. "Merchandising").
+           */
+          title: string;
+          description: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1541,7 +1560,19 @@ export interface HomeSelect<T extends boolean = true> {
         transitionSeconds?: T;
         overlayOpacity?: T;
       };
-  featuredServices?: T;
+  process?:
+    | T
+    | {
+        heading?: T;
+        steps?:
+          | T
+          | {
+              service?: T;
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+      };
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

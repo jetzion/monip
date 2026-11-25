@@ -165,8 +165,9 @@ lead-time information unless MONIP explicitly approves it.
 ### Home (global)
 
 -   `hero` (headline, intro, products and contact button labels, about link label, background) and
-    `featuredServices` (up to 4 services, ordered; empty shows the first 4 by
-    sort order; published only); drafts and Live Preview. Link targets are in
+    `process` ("How we work": `heading` and exactly 4 `steps`, each a `service` (photo and
+    link), `title`, and `description`; empty hides the section). `featuredServices` was
+    removed on 2026-11-25 (How we work replaced the "Our services" cards); drafts and Live Preview. Link targets are in
     code. The closing call-to-action box and its fields were removed on
     2026-11-12 (a plain "Discuss a project" button follows the featured
     products).
@@ -181,7 +182,8 @@ lead-time information unless MONIP explicitly approves it.
 
 -   `name`, `logo` (required upload); drafts; `orderable` (drag-and-drop
     order stored in `_order`, fractional index; replaced `sortOrder`). Shown as a logo grid
-    on `/clients` under the "Our clients" page title and intro.
+    on `/clients` under the "Our clients" page title and intro; all of them also
+    scroll in a greyscale "Our clients" band under the homepage hero.
 
 ### Office
 
@@ -681,7 +683,7 @@ Update this section as decisions are confirmed.
 | Page transitions | React `<ViewTransition>` in `app/(frontend)/template.tsx` (re-exported by `products/` and `success-stories/` so detail pages fade too): old page fades out in 250 ms, new page fades in and rises 8 px over 450 ms. Product and success story card photos morph into their detail page photo over 700 ms (`components/media/ImageMorph.tsx`). Header stays put (`view-transition-name: site-header`); none under reduced motion; browser Back and catalog filtering swap instantly. Also frosted sticky header, nav hover hint, balanced headings, brand text selection. Page body sits on a pastel "aurora" backdrop (two fixed `body::before/::after` gradient layers drifting over 32 s and 40 s; still under reduced motion) so cards appear to float. Navigation: active underline glides between links (`nav-indicator` view transition), hover underline draws from the centre, header slims 80 to 64 px over the first 140 px of scroll (CSS scroll-driven, skipped where unsupported), mobile menu drops open with staggered links and retracts on close. Chat restyled to match: header band, card-style replies, gradient user messages, typing dots; David shown with an illustrated face (`components/chat/AssistantAvatar.tsx`, chosen over a photo so the AI is not mistaken for a real employee) (2026-11-05) | Confirmed |
 | Product gallery | Primary image plus gallery as thumbnails under a large preview; clicking a thumbnail morphs it (moves and enlarges, 550 ms view transition `gallery-pick`) into the preview; selected thumbnail outlined, its optional Media **Image name** underlined (migration `20261105_195838_media_image_name`). Instant swap under reduced motion or without the View Transitions API (2026-11-05) | Confirmed |
 | Catalog order | Products grouped in one section per category (heading and count), ordered by category Sort order, then title, then product name; also for search results. Product card titles are `h3` under the section `h2` (2026-11-05) | Confirmed |
-| Homepage | Copy edited in the Home global; hero has headline, intro, a gold "Explore products" button, an outlined "Discuss a project" button, and a "More about MONIP Group" link to About (buttons removed 2026-10-23, restored 2026-11-25 with CMS-edited labels). Since 2026-11-12: hero, then 4 admin-chosen service cards (images cropped to 4:3), then the 4 most recent featured products in compact cards, then a plain "Discuss a project" button; the closing call-to-action box was removed. Hero 20% shorter (padding `py-6 sm:py-15`, was `py-20 sm:py-28`): 452 px on desktop, 428 px on tablet, 546 px on phones with the hero buttons (418, 394, 470 before) | Confirmed |
+| Homepage | Copy edited in the Home global; hero has headline, intro, a gold "Explore products" button, an outlined "Discuss a project" button, and a "More about MONIP Group" link to About (buttons removed 2026-10-23, restored 2026-11-25 with CMS-edited labels). Since 2026-11-12: hero, then an "Our clients" band (all published client logos scrolling right to left in an endless CSS loop, about 5 s per logo, repeated to at least 8; greyscale until hovered; pauses on hover or with a pause button (WCAG 2.2.2); still and wrapped, without the button, for reduced motion; "View all clients" link when the Clients page is published; added 2026-11-25), then "How we work" as a cycle (4 numbered cards, one per step: the step's service photo cropped to 4:3, the step title and description, linking to that service on the Services page; on desktop the 4 cards sit clockwise in a 2 x 2 grid (equal rows) on a gold track that runs behind them through each card's centre: it shows in the gaps and ends in a plain gold arrowhead (right, down, left, up) touching the edge of the next card; each title is numbered beside it, e.g. "(1) Strategy" (bottom edge of 1, left of 2, top of 3, right of 4); below desktop width, or when a step drops out, they stack with gold down arrows between them and a "Then back to" line (screen-reader only in the loop); photo beside the text from tablet width; steps with an unpublished service are left out; hidden when empty; "View all services" link; added 2026-11-25 in place of the "Our services" cards; homepage shows Strategy, Design, Sourcing, and Merchandising (the Programs service), Sustainability stays on the Services page; step wording approved by MONIP 2026-11-25), then the 4 most recent featured products in compact cards, then a plain "Discuss a project" button; the closing call-to-action box was removed. Hero 20% shorter (padding `py-6 sm:py-15`, was `py-20 sm:py-28`): 452 px on desktop, 428 px on tablet, 546 px on phones with the hero buttons (418, 394, 470 before) | Confirmed |
 | Clients page | `/clients`: "Our clients" page (title, intro) + Clients collection (8 logos copied from monip-group.com, trimmed; sized by aspect ratio). Editors order logos by drag and drop in the admin list | Confirmed (MONIP to re-approve each client) |
 | Offices map | About shows a static SVG world map (no map service or tracking) with a pin per Office, plus the list. 5 offices from the old site: Miami (address), Hong Kong, Singapore, Mexico City, Korea (pinned at Seoul; city not stated) | Confirmed (MONIP to confirm offices are current) |
 | Privacy policy | Text supplied in `PRIVACY-POLICY.md`, published as the Privacy policy page. The CMS page is the master copy once published; the file is the original supplied text | Confirmed (privacy email and chat section missing) |
@@ -773,7 +775,7 @@ Update this section as decisions are confirmed.
 - [x] Homepage hero background editable: uploaded MP4 or a slideshow of up to 6 images with per-image display time and Fade, Scale & Zoom, or Slide-In, transition time, and mask opacity; migrations `20261112_173857_hero_background` and `20261112_180120_hero_mask_and_transition_time` (verified against a fresh database); unit and e2e tests; editor guide. Deployed 2026-11-12
 - [x] Media alt text suggested from the file name (extension removed, symbols to spaces) when a file is chosen in the admin (`components/admin/AltField.tsx`); the editor can change it, and typed text is never overwritten; API uploads without alt text get the same default (`lib/media-alt.ts`); unit and e2e tests; editor guide. Deployed 2026-11-12
 - [x] Gold accent (`--gold`) for primary buttons, links, and small highlights on the navy-and-white base; accessibility spec passes (18 tests, axe colour contrast). Deployed 2026-11-12
-- [x] Homepage sections: closing box removed (fields dropped; plain "Discuss a project" button instead), featured products 4 across in compact cards, "Our services" section with up to 4 admin-chosen services (`featuredServices` on Home); migration `20261112_191539_home_sections` (verified against a fresh database); unit and e2e tests; editor guide. Deployed 2026-11-12
+- [x] Homepage sections: closing box removed (fields dropped; plain "Discuss a project" button instead), featured products 4 across in compact cards, "Our services" section with up to 4 admin-chosen services (`featuredServices` on Home; replaced by How we work on 2026-11-25); migration `20261112_191539_home_sections` (verified against a fresh database); unit and e2e tests; editor guide. Deployed 2026-11-12
 - [x] Page headers: Title (required), Headline, and Intro editable in Pages for Products, Services (new "services" page key; the page works without an entry), Clients, Success Stories, About, and Privacy; with a headline, the title becomes the small label above it (`PageHeader`). Page banners at least as tall as the Products banner; About body text spans the card. Migration `20261112_211746_pages_services_key` (verified against a fresh database); e2e test `page-headers.spec.ts`; editor guide. Deployed 2026-11-12
 - [x] Products and Services banners: category tags (Products) and service jump links (Services) at the top right of the banner on large screens, compact and 4 across, scrolling sideways with arrow buttons when there are more (`TagScroller`, `components/ui/tag-scroller.tsx`); the selected category scrolls into view. Catalog search moved below the banner, right of the product count. e2e test `category-scroller.spec.ts`. Open question: 3 across on phones, where 4 cuts off longer names. Deployed 2026-11-12
 - [x] Product photo framing: on upload, the Media hook (`lib/media/measure-hook.ts`) trims the white background with sharp and stores the product's position as `contentBox` (hidden, fractions of the image); `FramedImage` zooms it to fill a white 4:3 frame with an 8% margin on product cards (catalog, homepage) and the product page preview and thumbnails. Originals unchanged; other pages ignore the box. Migration `20261112_223616_media_content_box` adds the columns and measures existing media (reads them from Blob during the deploy build); `scripts/measure-media.ts` does the same locally. Unit tests for measuring and framing. Newer uploads sit in an `_objectKey` folder in Blob; `20261112_225948_measure_remaining_media` measured the 10 the first migration missed. Deployed 2026-11-12 (all 76 production images measured)
@@ -787,6 +789,19 @@ Update this section as decisions are confirmed.
     `-2`, `-3` and `progra` should match their titles (e.g. `sourcing`,
     `strategy`, `design`, `programs`). Nothing else links to them, so no
     redirects are needed. Also on production.
+- **After the next production deploy (MONIP, in the admin):** the deploy drops
+    the homepage Featured services, and How we work stays hidden until its
+    steps are entered (decided 2026-11-25: no data copy in the migration). In
+    **Home page → How we work**, enter these 4 steps (wording approved
+    2026-11-25) and publish:
+    1. Service *Strategy*, title "Strategy": "We learn your brand, your guests,
+       and your sales goals, and plan a merchandise strategy around them."
+    2. Service *Design*, title "Design": "We develop products and packaging
+       that fit your brand and destination."
+    3. Service *Sourcing*, title "Sourcing": "We find and manage the right
+       manufacturers for quality, cost, and timing."
+    4. Service *Programs*, title "Merchandising": "We help you present and
+       sell the products on board and in store."
 
 1.  Give e2e tests their own database, created from migrations and
     seeded before each run, so content edits stop breaking tests and
