@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 /** Copy is edited in the CMS (Home page global); link targets are fixed here. */
 export default async function HomePage() {
   const access = await contentAccess();
-  const [{ hero, process: howWeWork, spotlight, featuredCarousel: carousel }, featured, clients, sections] = await Promise.all([
+  const [{ hero, clients: clientLogos, process: howWeWork, spotlight, featuredCarousel: carousel }, featured, clients, sections] = await Promise.all([
     getHomeContent(access),
     getFeaturedProducts(12),
     getPublishedClients(access),
@@ -81,23 +81,25 @@ export default async function HomePage() {
           </Link>
         </div>
       </PageHeader>
-      {clients.length > 0 && <ClientLogos clients={clients} />}
+      {clients.length > 0 && <ClientLogos clients={clients} intro={clientLogos?.intro} />}
 
       {cards.length > 0 && (
         <AuroraBand colors={howWeWork?.colors}>
-          <ProcessSteps heading={howWeWork?.heading ?? ""} cards={cards} showAllLink={sections.services} />
+          <ProcessSteps heading={howWeWork?.heading ?? ""} intro={howWeWork?.intro} cards={cards} showAllLink={sections.services} />
         </AuroraBand>
       )}
       {showSpotlight && (
         <AuroraBand shade="pale" colors={spotlight?.colors}>
-          <StorySpotlight heading={spotlight?.heading ?? ""} story={story} />
+          <StorySpotlight heading={spotlight?.heading ?? ""} intro={spotlight?.intro} story={story} />
         </AuroraBand>
       )}
       {featured.length > 0 && (
         <AuroraBand shade="sky" colors={carousel?.colors}>
           <section aria-labelledby="featured-heading">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <SectionHeading id="featured-heading">Featured products</SectionHeading>
+              <SectionHeading id="featured-heading" intro={carousel?.intro}>
+                Featured products
+              </SectionHeading>
               <Link href="/products" className="link-accent text-sm">
                 View all products
               </Link>

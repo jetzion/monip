@@ -3,8 +3,8 @@
 Ideas to make the home page (https://monip-group.vercel.app/) more attractive,
 modern and engaging.
 
-**Status (checked 2026-11-25):** each item is marked **Done**, **Partly done**
-or **Not started**.
+**Status (checked 2026-11-25):** each item is marked **Done**, **Partly done**,
+**On hold** or **Not started**.
 
 **Current state:** a navy hero (video or slideshow) with "Explore products" and
 "Discuss a project" buttons, then a scrolling client logo strip, the "How we
@@ -46,7 +46,7 @@ stats row and a closing call to action.
 7. **Done (2026-11-25).** **"How we work" in 3–4 steps:** Strategy → Design → Sourcing → Delivery.
    Turns the four services into one connected offer. *Built as a loop of 4
    CMS-edited steps (currently Strategy → Design → Sourcing → Merchandising).*
-8. **Not started.** **Global reach band.** Reuse the About page's world map with the five
+8. **On hold.** **Global reach band.** Reuse the About page's world map with the five
    offices (Miami, Hong Kong, Singapore, Mexico City, Korea).
 9. **Not started (needs real numbers).** **Stats row** (years in business, products delivered, partners). Only with
    real numbers from MONIP, edited in the CMS; leave it out until then.
@@ -59,7 +59,9 @@ stats row and a closing call to action.
     (for example "WHAT WE DO" above "Our services"). *Sections are spaced on
     their own bands and headings have a gold accent bar; there are no text
     labels yet.*
-12. **Not started.** **Larger section headings**, each with a short description underneath.
+12. **Done (2026-11-25).** **Larger section headings**, each with a short description underneath.
+    *Headings are 48px on desktop (36px before). Each section has an **Intro**
+    in the Home page settings, filled with example text for MONIP to replace.*
 13. **Not started.** **A bolder hero headline**: bigger type, one key phrase in gold, and an
     optional rotating line under it ("Cruise lines · Retail · Destinations").
 
@@ -88,7 +90,7 @@ and the hero slideshow. What the home page lacks is motion as you scroll down.
     and each step lights up when the line reaches it. *Built as a timed loop
     that starts when the section comes into view: each step's number ticks
     for 2 seconds, then its arrow grows to the next card.*
-19. **Not started (needs the global reach band).** **World map.** Office pins pulse softly and arcs draw between the offices.
+19. **On hold (needs the global reach band, item 8).** **World map.** Office pins pulse softly and arcs draw between the offices.
 20. **Done (2026-11-25).** **Client logo marquee.** A slow, endless scroll that pauses on hover and
     on keyboard focus. *The logos are not links, so there is nothing to focus.*
 21. **Not started (needs the stats row).** **Count-up stats.** Numbers tick up when they come into view (real figures
@@ -121,10 +123,10 @@ and the hero slideshow. What the home page lacks is motion as you scroll down.
 ## Recommended next steps
 
 - **Content (in the admin):** the remaining placeholders and photos (2–3).
-- **Layout:** closing call to action (10), then the global reach band (8).
+- **Layout:** closing call to action (10). The global reach band (8) is on hold.
 - **Motion:** hero entrance (14), reveal on scroll (17), product card hover
   (23). The map arcs (19) are the most striking extra once the global reach
-  band exists.
+  band (8, on hold) exists.
 
 ## Needed from MONIP
 

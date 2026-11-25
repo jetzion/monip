@@ -39,6 +39,7 @@ import * as migration_20261125_142931_home_process from './20261125_142931_home_
 import * as migration_20261125_154104_home_spotlight from './20261125_154104_home_spotlight';
 import * as migration_20261125_161747_featured_carousel from './20261125_161747_featured_carousel';
 import * as migration_20261125_175729_home_section_colors from './20261125_175729_home_section_colors';
+import * as migration_20261125_200201_home_section_intros from './20261125_200201_home_section_intros';
 
 export const migrations = [
   {
@@ -244,6 +245,11 @@ export const migrations = [
   {
     up: migration_20261125_175729_home_section_colors.up,
     down: migration_20261125_175729_home_section_colors.down,
-    name: '20261125_175729_home_section_colors'
+    name: '20261125_175729_home_section_colors',
+  },
+  {
+    up: migration_20261125_200201_home_section_intros.up,
+    down: migration_20261125_200201_home_section_intros.down,
+    name: '20261125_200201_home_section_intros'
   },
 ];

@@ -151,7 +151,9 @@ export function FeaturedCarousel({ children, autoplay, seconds }: Props) {
           <CarouselButton label="Previous product" onClick={() => go(() => api?.scrollPrev())}>
             <ChevronLeft aria-hidden="true" className="size-5" />
           </CarouselButton>
-          <div className="flex flex-wrap items-center justify-center gap-1.5 px-1">
+          {/* Each dot sits in a 24px button, the smallest touch target WCAG 2.2 allows. Phones have no
+              room for them all, so they show the current dot and a count instead. */}
+          <div className="flex items-center justify-center gap-1.5 sm:gap-0">
             {slides.map((_, index) => (
               <button
                 key={index}
@@ -160,20 +162,30 @@ export function FeaturedCarousel({ children, autoplay, seconds }: Props) {
                 aria-current={index === selected || undefined}
                 onClick={() => go(() => api?.scrollTo(index))}
                 className={cn(
-                  "relative h-2 overflow-hidden rounded-full transition-[width,background-color] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                  index === selected ? "w-7 bg-navy/15" : "w-2 bg-navy/20 hover:bg-navy/45",
+                  "group h-6 min-w-6 items-center justify-center focus-visible:outline-none",
+                  index === selected ? "flex" : "hidden sm:flex",
                 )}
               >
-                {index === selected && (
-                  <span
-                    key={`${selected}-${run}`}
-                    aria-hidden="true"
-                    className="carousel-countdown absolute inset-0 origin-left rounded-full bg-gold"
-                    style={rolling ? { animationDuration: `${seconds}s`, animationPlayState: held ? "paused" : "running" } : { animation: "none" }}
-                  />
-                )}
+                <span
+                  className={cn(
+                    "relative h-2 overflow-hidden rounded-full transition-[width,background-color] duration-300 group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2",
+                    index === selected ? "w-7 bg-navy/15" : "w-2 bg-navy/20 group-hover:bg-navy/45",
+                  )}
+                >
+                  {index === selected && (
+                    <span
+                      key={`${selected}-${run}`}
+                      aria-hidden="true"
+                      className="carousel-countdown absolute inset-0 origin-left rounded-full bg-gold"
+                      style={rolling ? { animationDuration: `${seconds}s`, animationPlayState: held ? "paused" : "running" } : { animation: "none" }}
+                    />
+                  )}
+                </span>
               </button>
             ))}
+            <span className="pr-1 text-sm font-semibold tabular-nums text-navy sm:hidden">
+              {selected + 1} / {slides.length}
+            </span>
           </div>
           <CarouselButton label="Next product" onClick={() => go(() => api?.scrollNext())}>
             <ChevronRight aria-hidden="true" className="size-5" />

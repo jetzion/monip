@@ -10,16 +10,19 @@ type Story = Pick<SuccessStory, "title" | "slug" | "summary" | "featuredImage" |
 
 type Props = {
   heading: string;
+  intro?: string | null;
   /** The chosen published story; null shows the development placeholder. */
   story: Story | null;
 };
 
 /** One success story shown large: image on one side, title and summary on the other. */
-export function StorySpotlight({ heading, story }: Props) {
+export function StorySpotlight({ heading, intro, story }: Props) {
   const customer = story && visibleCustomer(story);
   return (
     <section aria-labelledby="spotlight-heading">
-      <SectionHeading id="spotlight-heading">{heading}</SectionHeading>
+      <SectionHeading id="spotlight-heading" intro={intro}>
+        {heading}
+      </SectionHeading>
       <div className="mt-10 grid overflow-hidden rounded-xl border border-border bg-card shadow-card md:grid-cols-2">
         <div className="aspect-[4/3] bg-tint md:aspect-auto md:min-h-80">
           {story ? (

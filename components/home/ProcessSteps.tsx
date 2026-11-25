@@ -10,6 +10,7 @@ import type { ProcessCard } from "@/lib/process-steps";
 
 type Props = {
   heading: string;
+  intro?: string | null;
   cards: ProcessCard[];
   /** Link to the Services page; hidden when no service is published. */
   showAllLink: boolean;
@@ -24,12 +25,14 @@ const PLACES = ["", "", "lg:col-start-2 lg:row-start-2", "lg:col-start-1 lg:row-
  * cards sit on a loop of clockwise arrows, animated by ProcessLoop; otherwise they stack with arrows between
  * them and "Then back to" the first step at the end (still read by screen readers in the loop).
  */
-export function ProcessSteps({ heading, cards, showAllLink }: Props) {
+export function ProcessSteps({ heading, intro, cards, showAllLink }: Props) {
   const loop = cards.length === PLACES.length;
   return (
     <section aria-labelledby="process-heading">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading id="process-heading">{heading}</SectionHeading>
+        <SectionHeading id="process-heading" intro={intro}>
+          {heading}
+        </SectionHeading>
         {showAllLink && (
           <Link href="/services" className="link-accent text-sm">
             View all services

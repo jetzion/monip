@@ -18,15 +18,15 @@ const users = (...args: string[]) =>
 
 type Service = { id: number; title: string; slug: string; image?: number | null };
 type Step = { service: number; title: string; description: string };
-type Process = { heading: string; steps: Step[] };
+type Process = { heading: string; intro?: string | null; steps: Step[] };
 let headers: Record<string, string>;
 let original: Process;
 let published: Service[];
 let draft: Service;
 
 // Publish explicitly: after an editor's autosave draft, a save without _status stays a draft.
-const save = (request: APIRequestContext, steps: Step[]) =>
-  request.post(HOME, { headers, data: { _status: "published", process: { heading: HEADING, steps } } });
+const save = (request: APIRequestContext, steps: Step[], intro = original.intro) =>
+  request.post(HOME, { headers, data: { _status: "published", process: { heading: HEADING, intro, steps } } });
 
 const step = (service: Service, index: number): Step => ({
   service: service.id,
@@ -45,6 +45,7 @@ test.beforeAll(async ({ request }) => {
   const home = (await (await request.get(`${HOME}?depth=0`)).json()) as { process: Process };
   original = {
     heading: home.process.heading,
+    intro: home.process.intro,
     steps: (home.process.steps ?? []).map(({ service, title, description }) => ({ service, title, description })),
   };
   // The login cookie makes this request an admin's, which also sees drafts: ask for published only.
@@ -134,6 +135,17 @@ test("leaves out a step whose service is unpublished, renumbers the rest, and st
   const xs = await section(page).getByRole("listitem").evaluateAll((lis) => lis.map((li) => li.getBoundingClientRect().x));
   expect(new Set(xs).size).toBe(1);
   await expect(section(page).getByText("Then back to E2E step 2")).toBeVisible();
+});
+
+test("shows the intro from the CMS under the heading, and none when empty", async ({ page, request }) => {
+  const steps = published.slice(0, 4).map(step);
+  expect((await save(request, steps, "E2E intro.")).ok()).toBe(true);
+  await page.goto("/");
+  await expect(section(page).getByText("E2E intro.")).toBeVisible();
+  expect((await save(request, steps, "")).ok()).toBe(true);
+  await page.goto("/");
+  await expect(section(page).getByRole("heading", { name: HEADING })).toBeVisible();
+  await expect(section(page).getByRole("heading", { name: HEADING }).locator("xpath=following-sibling::p")).toHaveCount(0);
 });
 
 test("hides the section without steps", async ({ page, request }) => {

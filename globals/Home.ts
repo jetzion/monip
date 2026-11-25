@@ -18,6 +18,15 @@ const label = (name: string, defaultValue: string, description?: string) => ({
   admin: { description },
 });
 
+/** A sentence or two shown under a section's heading; starts with example text for MONIP to replace. */
+const intro = (defaultValue: string) => ({
+  name: "intro",
+  type: "textarea" as const,
+  maxLength: 200,
+  defaultValue,
+  admin: { description: "A sentence or two under the heading. Leave empty to show none." },
+});
+
 type HeroFields = HomeData["hero"];
 
 /** Homepage copy. Featured products come from the Products "Featured" checkbox. */
@@ -192,6 +201,15 @@ export const Home: GlobalConfig = {
       ],
     },
     {
+      name: "clients",
+      type: "group",
+      label: "Client logos",
+      admin: {
+        description: "The scrolling strip of client logos under the hero. Logos and their order are set in Clients.",
+      },
+      fields: [intro("Cruise lines and retailers we develop, source and merchandise products for.")],
+    },
+    {
       name: "process",
       type: "group",
       label: "How we work",
@@ -207,6 +225,9 @@ export const Home: GlobalConfig = {
           maxLength: 60,
           defaultValue: "How we work",
         },
+        intro(
+          "Four connected steps, from strategy to the shelf: we plan the range, design it, source it, and help you sell it.",
+        ),
         {
           name: "steps",
           type: "array",
@@ -246,6 +267,9 @@ export const Home: GlobalConfig = {
           "Featured products (ticked on each product, newest first) roll through a carousel. With fewer than 6 they show as a grid instead. Visitors can pause it, drag it, or use the arrows.",
       },
       fields: [
+        intro(
+          "A selection of product samples we have designed and sourced. Ask us for something similar, made for your brand.",
+        ),
         {
           type: "row",
           fields: [
@@ -287,6 +311,7 @@ export const Home: GlobalConfig = {
           maxLength: 60,
           defaultValue: "Success story",
         },
+        intro("A look at one project from start to finish: the challenge, what we did, and the result."),
         {
           name: "story",
           type: "relationship",

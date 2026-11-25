@@ -43,7 +43,7 @@ function LogoList({ logos, count, hidden }: { logos: ClientLogo[]; count: number
  * Homepage band of all client logos scrolling in the editors' order (keyframes in globals.css),
  * greyscale until hovered and paused on hover. With reduced motion it stands still.
  */
-export function ClientLogos({ clients }: { clients: ClientLogo[] }) {
+export function ClientLogos({ clients, intro }: { clients: ClientLogo[]; intro?: string | null }) {
   const repeats = Math.ceil(MIN_PER_LOOP / clients.length);
   const logos = Array.from({ length: repeats }, () => clients).flat();
   return (
@@ -52,6 +52,7 @@ export function ClientLogos({ clients }: { clients: ClientLogo[] }) {
         <h2 id="clients-heading" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           Our clients
         </h2>
+        {intro && <p className="mt-1 text-sm text-muted-foreground">{intro}</p>}
         <div
           className="logo-marquee mt-2 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] motion-reduce:[mask-image:none]"
           style={{ "--marquee-duration": `${logos.length * SECONDS_PER_LOGO}s` } as CSSProperties}

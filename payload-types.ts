@@ -1357,10 +1357,23 @@ export interface Home {
     overlayOpacity: number;
   };
   /**
+   * The scrolling strip of client logos under the hero. Logos and their order are set in Clients.
+   */
+  clients?: {
+    /**
+     * A sentence or two under the heading. Leave empty to show none.
+     */
+    intro?: string | null;
+  };
+  /**
    * MONIP's process as a cycle under the client logos: one numbered card per step, each with its service's photo and a link to it, the last leading back to the first. The section appears only when it has its 4 steps.
    */
   process: {
     heading: string;
+    /**
+     * A sentence or two under the heading. Leave empty to show none.
+     */
+    intro?: string | null;
     /**
      * Exactly 4 steps, in order (drag to reorder); the 4th leads back to the 1st. Leave empty to hide the section.
      */
@@ -1401,6 +1414,10 @@ export interface Home {
    */
   featuredCarousel: {
     /**
+     * A sentence or two under the heading. Leave empty to show none.
+     */
+    intro?: string | null;
+    /**
      * Never for visitors who have reduced motion turned on.
      */
     autoplay?: boolean | null;
@@ -1431,6 +1448,10 @@ export interface Home {
    */
   spotlight: {
     heading: string;
+    /**
+     * A sentence or two under the heading. Leave empty to show none.
+     */
+    intro?: string | null;
     /**
      * Leave empty to hide the section. Write the summary as challenge, what MONIP did, and the result.
      */
@@ -1634,10 +1655,16 @@ export interface HomeSelect<T extends boolean = true> {
         transitionSeconds?: T;
         overlayOpacity?: T;
       };
+  clients?:
+    | T
+    | {
+        intro?: T;
+      };
   process?:
     | T
     | {
         heading?: T;
+        intro?: T;
         steps?:
           | T
           | {
@@ -1657,6 +1684,7 @@ export interface HomeSelect<T extends boolean = true> {
   featuredCarousel?:
     | T
     | {
+        intro?: T;
         autoplay?: T;
         seconds?: T;
         colors?:
@@ -1671,6 +1699,7 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         heading?: T;
+        intro?: T;
         story?: T;
         colors?:
           | T
