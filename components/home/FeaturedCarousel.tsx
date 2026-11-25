@@ -94,24 +94,30 @@ export function FeaturedCarousel({ children, autoplay, seconds }: Props) {
     else plugin.stop();
   }, [api, rolling]);
 
-  // Hover or keyboard focus holds the carousel still; leaving resumes it unless paused.
+  // Hover or keyboard focus holds the carousel still; leaving rolls on at once unless paused.
   const hold = useCallback(() => {
     setHeld(true);
     api?.plugins().autoplay?.stop();
   }, [api]);
   const resume = useCallback(() => {
+    if (!held) return;
     setHeld(false);
     setRun((count) => count + 1);
-    if (rolling) api?.plugins().autoplay?.play();
-  }, [api, rolling]);
+    if (!rolling) return;
+    api?.scrollNext();
+    api?.plugins().autoplay?.play();
+  }, [api, held, rolling]);
 
   const go = (move: () => void) => {
     setPaused(true);
     move();
   };
-  // Pressing play starts it at once, even with the pointer still over the carousel.
+  // Pressing play rolls to the next product at once, even with the pointer still over the carousel.
   const togglePause = () => {
-    if (paused) setHeld(false);
+    if (paused) {
+      setHeld(false);
+      api?.scrollNext();
+    }
     setPaused(!paused);
     setRun((count) => count + 1);
   };

@@ -37,17 +37,21 @@ test("visitors can pause the carousel, step through it, and open a product", asy
   await carousel.hover();
   await page.waitForTimeout(6000);
   await expect(carousel.getByRole("button", { name: "Show product 1", exact: true })).toHaveAttribute("aria-current", "true");
+  // Leaving it rolls on at once, without waiting a full turn.
+  await page.mouse.move(0, 0);
+  await expect(carousel.getByRole("button", { name: "Show product 2", exact: true })).toHaveAttribute("aria-current", "true", { timeout: 2000 });
+  await carousel.hover();
   await carousel.getByRole("button", { name: "Pause featured products" }).click();
   await carousel.getByRole("button", { name: "Play featured products" }).click();
-  // Playing again rolls on and runs the countdown, with the pointer still on the button.
+  // Playing again rolls on at once and runs the countdown, with the pointer still on the button.
+  await expect(carousel.getByRole("button", { name: "Show product 3", exact: true })).toHaveAttribute("aria-current", "true", { timeout: 2000 });
   await expect(carousel.locator(".carousel-countdown")).toHaveCSS("animation-play-state", "running");
-  await expect(carousel.getByRole("button", { name: "Show product 2", exact: true })).toHaveAttribute("aria-current", "true", { timeout: 8000 });
   await carousel.getByRole("button", { name: "Pause featured products" }).click();
   await expect(carousel.getByRole("button", { name: "Play featured products" })).toBeVisible();
   await carousel.getByRole("button", { name: "Next product" }).click();
-  await expect(carousel.getByRole("button", { name: "Show product 3", exact: true })).toHaveAttribute("aria-current", "true");
-  await carousel.getByRole("link", { name: products[2].name, exact: true }).click();
-  await expect(page).toHaveURL(new RegExp(`/products/${products[2].slug}$`));
+  await expect(carousel.getByRole("button", { name: "Show product 4", exact: true })).toHaveAttribute("aria-current", "true");
+  await carousel.getByRole("link", { name: products[3].name, exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`/products/${products[3].slug}$`));
 });
 
 test("featured products do not roll with reduced motion", async ({ browser }) => {
