@@ -8,6 +8,11 @@ describe("isActivePath", () => {
     expect(isActivePath("/", "/products")).toBe(false);
   });
 
+  it("reads /index (the homepage re-rendered after a revalidation on Vercel) as the homepage", () => {
+    expect(isActivePath("/", "/index")).toBe(true);
+    expect(isActivePath("/products", "/index")).toBe(false);
+  });
+
   it("matches a section and its child pages", () => {
     expect(isActivePath("/products", "/products")).toBe(true);
     expect(isActivePath("/products", "/products/steel-mug")).toBe(true);

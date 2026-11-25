@@ -252,6 +252,11 @@ If credentials, content, access, or a business decision is missing:
     to `useEffect`: current Chrome returns a Promise from it, React calls
     that as the cleanup, and the page crashes ("destroy is not a
     function"). Use a block body.
+-   On Vercel, a page re-rendered after `revalidatePath("/")` sees the path
+    `/index` in `usePathname()` (the build-time render sees `/`); compare
+    paths through `lib/active-path.ts`, or the homepage fails hydration
+    (React #418, found 2026-11-25). Live checks right after a deploy see
+    the build-time page; publish something first to test a re-render.
 -   Collection hooks throw public `APIError`s with an explicit name:
     production bundling breaks `instanceof ValidationError` and empties
     class names.
