@@ -1939,3 +1939,26 @@ body::before {
     }
   }
 }
+
+// Home page background colours (fields/sectionColors.ts): the picker sits at the right end of the hex input.
+.field-type.text:has(.color-picker) .field-type__wrap {
+  position: relative;
+
+  input[type="text"] {
+    padding-right: 52px;
+  }
+}
+
+.color-picker {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 36px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  transform: translateY(-50%);
+}

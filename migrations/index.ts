@@ -38,6 +38,7 @@ import * as migration_20261125_114540_hero_buttons from './20261125_114540_hero_
 import * as migration_20261125_142931_home_process from './20261125_142931_home_process';
 import * as migration_20261125_154104_home_spotlight from './20261125_154104_home_spotlight';
 import * as migration_20261125_161747_featured_carousel from './20261125_161747_featured_carousel';
+import * as migration_20261125_175729_home_section_colors from './20261125_175729_home_section_colors';
 
 export const migrations = [
   {
@@ -238,6 +239,11 @@ export const migrations = [
   {
     up: migration_20261125_161747_featured_carousel.up,
     down: migration_20261125_161747_featured_carousel.down,
-    name: '20261125_161747_featured_carousel'
+    name: '20261125_161747_featured_carousel',
+  },
+  {
+    up: migration_20261125_175729_home_section_colors.up,
+    down: migration_20261125_175729_home_section_colors.down,
+    name: '20261125_175729_home_section_colors'
   },
 ];

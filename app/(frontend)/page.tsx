@@ -84,17 +84,17 @@ export default async function HomePage() {
       {clients.length > 0 && <ClientLogos clients={clients} />}
 
       {cards.length > 0 && (
-        <AuroraBand>
+        <AuroraBand colors={howWeWork?.colors}>
           <ProcessSteps heading={howWeWork?.heading ?? ""} cards={cards} showAllLink={sections.services} />
         </AuroraBand>
       )}
       {showSpotlight && (
-        <AuroraBand shade="pale">
+        <AuroraBand shade="pale" colors={spotlight?.colors}>
           <StorySpotlight heading={spotlight?.heading ?? ""} story={story} />
         </AuroraBand>
       )}
       {featured.length > 0 && (
-        <AuroraBand shade="sky">
+        <AuroraBand shade="sky" colors={carousel?.colors}>
           <section aria-labelledby="featured-heading">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <SectionHeading id="featured-heading">Featured products</SectionHeading>

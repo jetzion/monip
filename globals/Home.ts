@@ -5,6 +5,7 @@ import type { Home as HomeData } from "../payload-types";
 
 import { isContentEditor, publishedOrContentEditor } from "../access/content";
 import { hiddenFromTrainers } from "../access/roles";
+import { sectionColors } from "../fields/sectionColors";
 import { revalidateHome } from "../hooks/revalidate";
 import { autosaveDrafts, livePreview } from "../lib/live-preview";
 
@@ -233,6 +234,7 @@ export const Home: GlobalConfig = {
             { name: "description", type: "textarea", required: true, maxLength: 160 },
           ],
         },
+        sectionColors,
       ],
     },
     {
@@ -266,6 +268,7 @@ export const Home: GlobalConfig = {
             },
           ],
         },
+        sectionColors,
       ],
     },
     {
@@ -292,6 +295,7 @@ export const Home: GlobalConfig = {
           maxDepth: 0,
           admin: { description: "Leave empty to hide the section. Write the summary as challenge, what MONIP did, and the result." },
         },
+        sectionColors,
       ],
     },
   ],

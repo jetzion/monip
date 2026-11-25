@@ -1378,6 +1378,23 @@ export interface Home {
           id?: string | null;
         }[]
       | null;
+    /**
+     * The section's background: a base colour with two layers of soft drifting clouds. Leave a colour empty to keep the built-in shade. Keep them light so the text stays readable; check in Live Preview.
+     */
+    colors?: {
+      /**
+       * Fills the whole section.
+       */
+      base?: string | null;
+      /**
+       * The main cloud layer.
+       */
+      clouds?: string | null;
+      /**
+       * The second, softer cloud layer.
+       */
+      highlights?: string | null;
+    };
   };
   /**
    * Featured products (ticked on each product, newest first) roll through a carousel. With fewer than 6 they show as a grid instead. Visitors can pause it, drag it, or use the arrows.
@@ -1391,6 +1408,23 @@ export interface Home {
      * How long each product stays in the centre, 3 to 10.
      */
     seconds: number;
+    /**
+     * The section's background: a base colour with two layers of soft drifting clouds. Leave a colour empty to keep the built-in shade. Keep them light so the text stays readable; check in Live Preview.
+     */
+    colors?: {
+      /**
+       * Fills the whole section.
+       */
+      base?: string | null;
+      /**
+       * The main cloud layer.
+       */
+      clouds?: string | null;
+      /**
+       * The second, softer cloud layer.
+       */
+      highlights?: string | null;
+    };
   };
   /**
    * One success story shown large under How we work: its featured image, title, and summary, with a link to the full story. Visitors see it only when the chosen story is published.
@@ -1401,6 +1435,23 @@ export interface Home {
      * Leave empty to hide the section. Write the summary as challenge, what MONIP did, and the result.
      */
     story?: (number | null) | SuccessStory;
+    /**
+     * The section's background: a base colour with two layers of soft drifting clouds. Leave a colour empty to keep the built-in shade. Keep them light so the text stays readable; check in Live Preview.
+     */
+    colors?: {
+      /**
+       * Fills the whole section.
+       */
+      base?: string | null;
+      /**
+       * The main cloud layer.
+       */
+      clouds?: string | null;
+      /**
+       * The second, softer cloud layer.
+       */
+      highlights?: string | null;
+    };
   };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
@@ -1595,18 +1646,39 @@ export interface HomeSelect<T extends boolean = true> {
               description?: T;
               id?: T;
             };
+        colors?:
+          | T
+          | {
+              base?: T;
+              clouds?: T;
+              highlights?: T;
+            };
       };
   featuredCarousel?:
     | T
     | {
         autoplay?: T;
         seconds?: T;
+        colors?:
+          | T
+          | {
+              base?: T;
+              clouds?: T;
+              highlights?: T;
+            };
       };
   spotlight?:
     | T
     | {
         heading?: T;
         story?: T;
+        colors?:
+          | T
+          | {
+              base?: T;
+              clouds?: T;
+              highlights?: T;
+            };
       };
   _status?: T;
   updatedAt?: T;
