@@ -15,7 +15,10 @@ const defaultAlt: CollectionBeforeValidateHook = ({ data }) => {
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  admin: { hidden: hiddenFromTrainers },
+  admin: {
+    hidden: hiddenFromTrainers,
+    defaultColumns: ['filename', 'alt', 'updatedAt', 'download'],
+  },
   access: {
     read: () => true,
     create: isContentEditor,
@@ -27,6 +30,19 @@ export const Media: CollectionConfig = {
     beforeChange: [measureContentBoxHook],
   },
   fields: [
+    {
+      // Not stored: a Download link in the sidebar and a column in the list.
+      name: 'download',
+      type: 'ui',
+      label: 'Download',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '/components/admin/MediaDownload#MediaDownloadField',
+          Cell: '/components/admin/MediaDownload#MediaDownloadCell',
+        },
+      },
+    },
     {
       name: 'alt',
       type: 'text',

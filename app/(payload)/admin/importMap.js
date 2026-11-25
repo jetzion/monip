@@ -1,3 +1,5 @@
+import { MediaDownloadField as MediaDownloadField_a502e1952b0dec6807f92727589f6d7f } from '../../../components/admin/MediaDownload'
+import { MediaDownloadCell as MediaDownloadCell_a502e1952b0dec6807f92727589f6d7f } from '../../../components/admin/MediaDownload'
 import { AltField as AltField_c8023bd6876f2f6eabbe8ee1669f7d06 } from '../../../components/admin/AltField'
 import { CategoryListView as CategoryListView_82b483ff09918e7862fccfb8f41ae622 } from '../../../components/admin/CategoryListView'
 import { DescribeProductButton as DescribeProductButton_d77fb2d212277d9eb398fa125ea2703c } from '../../../components/admin/DescribeProductButton'
@@ -49,6 +51,8 @@ import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/MediaDownload#MediaDownloadField": MediaDownloadField_a502e1952b0dec6807f92727589f6d7f,
+  "/components/admin/MediaDownload#MediaDownloadCell": MediaDownloadCell_a502e1952b0dec6807f92727589f6d7f,
   "/components/admin/AltField#AltField": AltField_c8023bd6876f2f6eabbe8ee1669f7d06,
   "/components/admin/CategoryListView#CategoryListView": CategoryListView_82b483ff09918e7862fccfb8f41ae622,
   "/components/admin/DescribeProductButton#DescribeProductButton": DescribeProductButton_d77fb2d212277d9eb398fa125ea2703c,

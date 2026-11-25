@@ -60,6 +60,8 @@ A product needs a name, a summary, a main image, and a category before it can be
 
 **Images.** Every image needs alt text, a short description of what it shows for people using screen readers, such as "Stainless steel travel mug with black lid". When you choose a file, **Alt text** is filled in from the file name (without the extension, with symbols such as _ and - turned into spaces): "travel-mug_black.jpg" becomes "travel mug black". Rewrite it into a real description before saving; naming files descriptively gives a better starting point. Landscape photos work best: product cards crop images to a 4:3 shape. You can upload from the image field (**Create New**) or in **Media**.
 
+**Downloading an image.** In **Media**, click **Download** on an image's row, or open the image and click **Download original** (top right). You get the original file as it was uploaded, under its file name.
+
 **Image name** (optional, on each image in **Media**): a short name such as "Emerald", shown under the image's thumbnail on the product page; the selected thumbnail's name is underlined. The name belongs to the image, so it shows on every product that uses it.
 
 **Uploading the same file twice** never replaces the first copy: the new one is saved as, for example, "photo-1.jpg", then "photo-2.jpg". To reuse a photo that is already uploaded, choose it from the existing images instead (**Choose from existing** in the image field).
