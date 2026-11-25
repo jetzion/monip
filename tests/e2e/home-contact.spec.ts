@@ -31,8 +31,16 @@ test("homepage shows the published CMS copy", async ({ page }) => {
 test("a Discuss a project button under the products opens the contact page", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByText("Have a product or program in mind?")).toHaveCount(0);
-  await page.getByRole("main").getByRole("link", { name: "Discuss a project" }).click();
+  await page.getByRole("main").getByRole("link", { name: "Discuss a project" }).last().click();
   await expect(page).toHaveURL(/\/contact$/);
+});
+
+test("hero buttons open the products and contact pages", async ({ page }) => {
+  await page.goto("/");
+  const hero = page.getByRole("main").locator("section").first();
+  await expect(hero.getByRole("link", { name: "Discuss a project" })).toHaveAttribute("href", "/contact");
+  await hero.getByRole("link", { name: "Explore products" }).click();
+  await expect(page).toHaveURL(/\/products$/);
 });
 
 test("hero links to the About page for more detail", async ({ page }) => {

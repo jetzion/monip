@@ -1314,6 +1314,14 @@ export interface Home {
     headline: string;
     intro: string;
     /**
+     * Gold button to the Products page.
+     */
+    productsButtonLabel: string;
+    /**
+     * Outlined button to the Contact page.
+     */
+    contactButtonLabel: string;
+    /**
      * Link to the About page.
      */
     aboutLinkLabel: string;
@@ -1517,6 +1525,8 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         headline?: T;
         intro?: T;
+        productsButtonLabel?: T;
+        contactButtonLabel?: T;
         aboutLinkLabel?: T;
         background?: T;
         video?: T;

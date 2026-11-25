@@ -34,6 +34,7 @@ import * as migration_20261123_173851_session_estimate from './20261123_173851_s
 import * as migration_20261123_182933_estimate_sources from './20261123_182933_estimate_sources';
 import * as migration_20261123_192214_return_airport from './20261123_192214_return_airport';
 import * as migration_20261124_120131_user_first_last_name from './20261124_120131_user_first_last_name';
+import * as migration_20261125_114540_hero_buttons from './20261125_114540_hero_buttons';
 
 export const migrations = [
   {
@@ -214,6 +215,11 @@ export const migrations = [
   {
     up: migration_20261124_120131_user_first_last_name.up,
     down: migration_20261124_120131_user_first_last_name.down,
-    name: '20261124_120131_user_first_last_name'
+    name: '20261124_120131_user_first_last_name',
+  },
+  {
+    up: migration_20261125_114540_hero_buttons.up,
+    down: migration_20261125_114540_hero_buttons.down,
+    name: '20261125_114540_hero_buttons'
   },
 ];

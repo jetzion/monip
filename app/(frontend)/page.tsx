@@ -49,12 +49,22 @@ export default async function HomePage() {
         title={hero.headline}
         intro={hero.intro}
       >
-        <Link
-          href="/about"
-          className="mt-4 inline-block font-semibold text-gold underline decoration-2 underline-offset-4 hover:text-gold-hover"
-        >
-          {hero.aboutLinkLabel}
-        </Link>
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink href="/products" className="h-11 px-5 text-base sm:px-6">
+              {hero.productsButtonLabel}
+            </ButtonLink>
+            <ButtonLink href="/contact" variant="outline-inverse" className="h-11 px-5 text-base sm:px-6">
+              {hero.contactButtonLabel}
+            </ButtonLink>
+          </div>
+          <Link
+            href="/about"
+            className="font-semibold text-gold underline decoration-2 underline-offset-4 hover:text-gold-hover"
+          >
+            {hero.aboutLinkLabel}
+          </Link>
+        </div>
       </PageHeader>
 
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">

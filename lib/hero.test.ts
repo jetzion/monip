@@ -10,6 +10,8 @@ const media = (id: number, url: string | null): Media =>
 const hero = (fields: Partial<Home["hero"]>): Home["hero"] => ({
   headline: "h",
   intro: "i",
+  productsButtonLabel: "p",
+  contactButtonLabel: "c",
   aboutLinkLabel: "a",
   background: "video",
   transitionSeconds: 1.2,

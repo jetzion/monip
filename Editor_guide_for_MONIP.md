@@ -94,7 +94,7 @@ Services and pages use the same draft, preview, and publish steps as products. C
 
 **Services.** Each service is a section on the Services page, ordered by **Sort order**, with a required **Summary** plus optional body text and image. The Services page and its menu link appear once at least one service is published.
 
-**Home page.** Open **Home page** (under Globals) to change the homepage text: the headline, intro, and About link label, the background (below), and the featured services. Where the links go is fixed. Edits save as a draft with Live Preview; click **Publish changes** to update the site. Featured products are chosen with the **Featured** checkbox on each product.
+**Home page.** Open **Home page** (under Globals) to change the homepage text: the headline, intro, the two hero button labels (Products and Contact), and the About link label, the background (below), and the featured services. Where the links go is fixed. Edits save as a draft with Live Preview; click **Publish changes** to update the site. Featured products are chosen with the **Featured** checkbox on each product.
 
 **Featured services.** The homepage shows 4 service cards above Featured products: image (cropped to 4:3, so 4:3 images look best), title, and the start of the summary; each links to that service on the Services page. In **Home page**, **Featured services** picks up to 4 services and their order (drag to reorder). Only published services appear. Leave it empty to show the first 4 by the Services **Sort order**.
 
