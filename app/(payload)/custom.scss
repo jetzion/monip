@@ -250,6 +250,14 @@ body::before {
   row-gap: 4px;
 }
 
+// With Live Preview open the form is narrow, so the status row wraps onto a
+// second line whenever autosave shows "Last saved ...", and back when it shows
+// "Saving...". The bar grew and shrank by a line, shifting the page while
+// typing. Reserve both lines so its height stays put.
+body:has(.live-preview-window--is-live-previewing) .doc-controls__wrapper {
+  min-height: calc(var(--doc-controls-height) + 29px);
+}
+
 .doc-controls__value-wrap,
 .doc-controls__value {
   overflow: visible;
